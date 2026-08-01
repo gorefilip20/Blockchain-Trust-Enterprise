@@ -4,7 +4,7 @@ import { getDb, uuidv4 } from '@/lib/db';
 export async function GET() {
   const db = getDb();
   const clients = db.prepare(`
-    SELECT c.*, 
+    SELECT c.*,
       (SELECT COUNT(*) FROM entities WHERE client_id = c.id) as entity_count,
       (SELECT COUNT(*) FROM workflows WHERE client_id = c.id AND status = 'completed') as completed_steps,
       (SELECT COUNT(*) FROM workflows WHERE client_id = c.id) as total_steps
@@ -26,13 +26,13 @@ export async function POST(req: NextRequest) {
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     `).run(id, first_name, last_name, email, phone || null, client_type, notes || null, annual_revenue_usd || null, crypto_holdings_usd || null);
 
-    // Create default workflow steps for onboarding
     const steps = [
-      { num: 1, name: 'Discovery & Structural Scoping' },
-      { num: 2, name: 'Entity Formation & Privacy Shielding' },
-      { num: 3, name: 'Corporate Financial Infrastructure' },
-      { num: 4, name: 'Treasury Setup & Governance' },
-      { num: 5, name: 'Automated Accounting & Sub-Ledger Sync' },
+      { num: 1, name: 'Intake, Profiling & Identity Masking' },
+      { num: 2, name: 'Dual Legal State Filing & Operating Agreements' },
+      { num: 3, name: 'Two-Tier IRS EIN Processing' },
+      { num: 4, name: 'Corporate Treasury Banking & Exchange KYB' },
+      { num: 5, name: 'Web3 Custody Deployment & Governance' },
+      { num: 6, name: 'Sub-Ledger Sync & Tax Integration' },
     ];
     const insertWorkflow = db.prepare(
       'INSERT INTO workflows (id, client_id, step_number, step_name, status) VALUES (?, ?, ?, ?, ?)'
@@ -41,7 +41,6 @@ export async function POST(req: NextRequest) {
       insertWorkflow.run(uuidv4(), id, step.num, step.name, step.num === 1 ? 'in_progress' : 'pending');
     }
 
-    // Update client status to onboarding
     db.prepare("UPDATE clients SET status = 'onboarding' WHERE id = ?").run(id);
 
     return NextResponse.json({ id, ...body }, { status: 201 });

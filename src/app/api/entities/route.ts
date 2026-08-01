@@ -9,14 +9,20 @@ export async function GET(req: NextRequest) {
   let entities;
   if (clientId) {
     entities = db.prepare(`
-      SELECT e.*, c.first_name || ' ' || c.last_name as client_name
-      FROM entities e JOIN clients c ON e.client_id = c.id
-      WHERE e.client_id = ? ORDER BY e.created_at DESC
+      SELECT e.*, c.first_name || ' ' || c.last_name as client_name,
+        pe.entity_name as parent_entity_name
+      FROM entities e
+      JOIN clients c ON e.client_id = c.id
+      LEFT JOIN entities pe ON e.parent_entity_id = pe.id
+      WHERE e.client_id = ? ORDER BY e.tier_type ASC, e.created_at DESC
     `).all(clientId);
   } else {
     entities = db.prepare(`
-      SELECT e.*, c.first_name || ' ' || c.last_name as client_name
-      FROM entities e JOIN clients c ON e.client_id = c.id
+      SELECT e.*, c.first_name || ' ' || c.last_name as client_name,
+        pe.entity_name as parent_entity_name
+      FROM entities e
+      JOIN clients c ON e.client_id = c.id
+      LEFT JOIN entities pe ON e.parent_entity_id = pe.id
       ORDER BY e.created_at DESC
     `).all();
   }
@@ -28,18 +34,36 @@ export async function POST(req: NextRequest) {
   const db = getDb();
   const id = uuidv4();
 
-  const { client_id, entity_name, entity_type, jurisdiction, privacy_shield } = body;
+  const {
+    client_id, entity_name, entity_type, jurisdiction,
+    privacy_shield, tier_type, parent_entity_id,
+    member_type, tax_classification,
+    registered_agent, registered_agent_address
+  } = body;
 
   try {
     db.prepare(`
-      INSERT INTO entities (id, client_id, entity_name, entity_type, jurisdiction, privacy_shield, status)
-      VALUES (?, ?, ?, ?, ?, ?, 'pending')
-    `).run(id, client_id, entity_name, entity_type, jurisdiction || 'Wyoming', privacy_shield ? 1 : 0);
+      INSERT INTO entities (
+        id, client_id, entity_name, entity_type, jurisdiction,
+        privacy_shield, tier_type, parent_entity_id,
+        member_type, tax_classification,
+        registered_agent, registered_agent_address, status
+      )
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending')
+    `).run(
+      id, client_id, entity_name, entity_type,
+      jurisdiction || 'Wyoming',
+      privacy_shield ? 1 : 0,
+      tier_type || 'parent',
+      parent_entity_id || null,
+      member_type || 'multi_member',
+      tax_classification || null,
+      registered_agent || null,
+      registered_agent_address || null
+    );
 
-    // Update client entity_type
     db.prepare('UPDATE clients SET entity_type = ? WHERE id = ?').run(entity_type, client_id);
 
-    // Update workflow step 2 to in_progress
     db.prepare(`
       UPDATE workflows SET status = 'in_progress', started_at = datetime('now')
       WHERE client_id = ? AND step_number = 2 AND status = 'pending'
@@ -55,7 +79,7 @@ export async function POST(req: NextRequest) {
 export async function PUT(req: NextRequest) {
   const body = await req.json();
   const db = getDb();
-  const { id, status, ein, operating_agreement_signed, registered_agent } = body;
+  const { id, status, ein, operating_agreement_signed, registered_agent, registered_agent_address, state_filing_number, tax_classification } = body;
 
   if (!id) return NextResponse.json({ error: 'Entity ID required' }, { status: 400 });
 
@@ -73,6 +97,10 @@ export async function PUT(req: NextRequest) {
     updates.push('ein = ?');
     values.push(ein);
   }
+  if (state_filing_number !== undefined) {
+    updates.push('state_filing_number = ?');
+    values.push(state_filing_number);
+  }
   if (operating_agreement_signed !== undefined) {
     updates.push('operating_agreement_signed = ?');
     values.push(operating_agreement_signed ? 1 : 0);
@@ -80,6 +108,14 @@ export async function PUT(req: NextRequest) {
   if (registered_agent !== undefined) {
     updates.push('registered_agent = ?');
     values.push(registered_agent);
+  }
+  if (registered_agent_address !== undefined) {
+    updates.push('registered_agent_address = ?');
+    values.push(registered_agent_address);
+  }
+  if (tax_classification !== undefined) {
+    updates.push('tax_classification = ?');
+    values.push(tax_classification);
   }
 
   if (updates.length === 0) return NextResponse.json({ error: 'No fields to update' }, { status: 400 });

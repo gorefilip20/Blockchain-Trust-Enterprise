@@ -40,26 +40,31 @@ function initializeDatabase(db: Database.Database) {
       updated_at TEXT DEFAULT (datetime('now'))
     );
 
-    -- Entities (LLCs) table
+    -- Corporate entities with two-tier parent-subsidiary support
     CREATE TABLE IF NOT EXISTS entities (
       id TEXT PRIMARY KEY,
       client_id TEXT NOT NULL REFERENCES clients(id) ON DELETE CASCADE,
       entity_name TEXT NOT NULL,
       entity_type TEXT NOT NULL CHECK(entity_type IN ('holding_llc', 'operating_llc', 'dao_llc')),
       jurisdiction TEXT NOT NULL DEFAULT 'Wyoming',
+      tier_type TEXT NOT NULL DEFAULT 'parent' CHECK(tier_type IN ('parent', 'subsidiary')),
+      parent_entity_id TEXT REFERENCES entities(id) ON DELETE SET NULL,
       ein TEXT,
       state_filing_number TEXT,
       registered_agent TEXT,
+      registered_agent_address TEXT,
       operating_agreement_signed INTEGER DEFAULT 0,
+      privacy_shield INTEGER DEFAULT 1,
+      member_type TEXT CHECK(member_type IN ('single_member', 'multi_member')),
+      tax_classification TEXT CHECK(tax_classification IN ('partnership_1065', 'disregarded_entity', 'c_corp_1120', 's_corp_1120s')),
       status TEXT NOT NULL DEFAULT 'pending' CHECK(status IN ('pending', 'filed', 'approved', 'active', 'dissolved')),
       formed_at TEXT,
       annual_report_due TEXT,
-      privacy_shield INTEGER DEFAULT 1,
       created_at TEXT DEFAULT (datetime('now')),
       updated_at TEXT DEFAULT (datetime('now'))
     );
 
-    -- Workflow steps tracking
+    -- Workflow steps tracking (6-stage)
     CREATE TABLE IF NOT EXISTS workflows (
       id TEXT PRIMARY KEY,
       client_id TEXT NOT NULL REFERENCES clients(id) ON DELETE CASCADE,
@@ -73,7 +78,7 @@ function initializeDatabase(db: Database.Database) {
       created_at TEXT DEFAULT (datetime('now'))
     );
 
-    -- Partners (Attorneys, Registered Agents, Exchanges, Accounting Tools)
+    -- Partners
     CREATE TABLE IF NOT EXISTS partners (
       id TEXT PRIMARY KEY,
       name TEXT NOT NULL,
@@ -90,7 +95,7 @@ function initializeDatabase(db: Database.Database) {
       created_at TEXT DEFAULT (datetime('now'))
     );
 
-    -- Partner assignments to clients
+    -- Partner assignments
     CREATE TABLE IF NOT EXISTS partner_assignments (
       id TEXT PRIMARY KEY,
       partner_id TEXT NOT NULL REFERENCES partners(id),
@@ -101,7 +106,7 @@ function initializeDatabase(db: Database.Database) {
       assigned_at TEXT DEFAULT (datetime('now'))
     );
 
-    -- Treasury accounts (bank + crypto wallets)
+    -- Treasury accounts
     CREATE TABLE IF NOT EXISTS treasury_accounts (
       id TEXT PRIMARY KEY,
       entity_id TEXT NOT NULL REFERENCES entities(id) ON DELETE CASCADE,
@@ -116,15 +121,40 @@ function initializeDatabase(db: Database.Database) {
       created_at TEXT DEFAULT (datetime('now'))
     );
 
-    -- Documents
+    -- Legal documents with download/upload tracking
     CREATE TABLE IF NOT EXISTS documents (
       id TEXT PRIMARY KEY,
       client_id TEXT NOT NULL REFERENCES clients(id) ON DELETE CASCADE,
       entity_id TEXT REFERENCES entities(id),
-      doc_type TEXT NOT NULL CHECK(doc_type IN ('articles_of_organization', 'operating_agreement', 'ein_letter', 'tax_return', 'annual_report', 'resolution', 'trust_deed', 'other')),
+      doc_type TEXT NOT NULL CHECK(doc_type IN (
+        'articles_of_organization', 'operating_agreement', 'ein_letter',
+        'tax_return', 'annual_report', 'resolution', 'trust_deed',
+        'subscription_agreement', 'corporate_tree', 'board_resolution', 'other'
+      )),
       name TEXT NOT NULL,
       file_path TEXT,
-      status TEXT DEFAULT 'draft' CHECK(status IN ('draft', 'pending_review', 'signed', 'filed', 'archived')),
+      raw_markdown_content TEXT,
+      download_url_token TEXT UNIQUE,
+      uploaded_signed_file_url TEXT,
+      status TEXT DEFAULT 'generated' CHECK(status IN ('generated', 'draft', 'downloaded', 'pending_review', 'submitted', 'signed', 'verified', 'filed', 'archived')),
+      downloaded_at TEXT,
+      submitted_at TEXT,
+      reviewed_by TEXT,
+      created_at TEXT DEFAULT (datetime('now')),
+      updated_at TEXT DEFAULT (datetime('now'))
+    );
+
+    -- Web3 vaults (multi-sig custody)
+    CREATE TABLE IF NOT EXISTS web3_vaults (
+      id TEXT PRIMARY KEY,
+      entity_id TEXT NOT NULL REFERENCES entities(id) ON DELETE CASCADE,
+      vault_address TEXT NOT NULL,
+      network TEXT NOT NULL DEFAULT 'ethereum',
+      network_id INTEGER NOT NULL DEFAULT 1,
+      required_signatures INTEGER NOT NULL DEFAULT 2,
+      total_signers INTEGER NOT NULL DEFAULT 3,
+      subledger_api_connected INTEGER DEFAULT 0,
+      status TEXT DEFAULT 'pending' CHECK(status IN ('pending', 'deployed', 'active', 'paused', 'decommissioned')),
       created_at TEXT DEFAULT (datetime('now'))
     );
 
@@ -145,9 +175,9 @@ function initializeDatabase(db: Database.Database) {
       created_at TEXT DEFAULT (datetime('now'))
     );
 
-    -- Insert seed data if empty
-    INSERT OR IGNORE INTO partners (id, name, partner_type, description, specialties, status) 
-    SELECT 'partner-wyoming-cs', 'Wyoming Corporate Services', 'registered_agent', 
+    -- Seed partners
+    INSERT OR IGNORE INTO partners (id, name, partner_type, description, specialties, status)
+    SELECT 'partner-wyoming-cs', 'Wyoming Corporate Services', 'registered_agent',
       'Premier Wyoming registered agent specializing in crypto LLCs with privacy-forward filings',
       '["Wyoming LLC", "Privacy Filings", "DAO LLC", "Annual Compliance"]', 'preferred'
     WHERE NOT EXISTS (SELECT 1 FROM partners WHERE id = 'partner-wyoming-cs');
@@ -157,6 +187,12 @@ function initializeDatabase(db: Database.Database) {
       'National registered agent and corporate compliance services',
       '["Multi-State", "Corporate Compliance", "Annual Reports"]', 'active'
     WHERE NOT EXISTS (SELECT 1 FROM partners WHERE id = 'partner-ct-corp');
+
+    INSERT OR IGNORE INTO partners (id, name, partner_type, description, specialties, status)
+    SELECT 'partner-nw-agent', 'Northwest Registered Agent', 'registered_agent',
+      'Privacy-focused registered agent with free year of service for new formations',
+      '["Privacy Filing", "Delaware LLC", "Wyoming LLC", "Free First Year"]', 'active'
+    WHERE NOT EXISTS (SELECT 1 FROM partners WHERE id = 'partner-nw-agent');
 
     INSERT OR IGNORE INTO partners (id, name, partner_type, description, specialties, status)
     SELECT 'partner-kraken', 'Kraken Institutional', 'exchange',
@@ -193,6 +229,12 @@ function initializeDatabase(db: Database.Database) {
       'UK-focused institutional crypto exchange with corporate accounts',
       '["UK Corporate", "GBP Pairs", "KYB", "Institutional"]', 'active'
     WHERE NOT EXISTS (SELECT 1 FROM partners WHERE id = 'partner-coinpass');
+
+    INSERT OR IGNORE INTO partners (id, name, partner_type, description, specialties, status)
+    SELECT 'partner-fireblocks', 'Fireblocks', 'custodian',
+      'Enterprise-grade digital asset custody and settlement platform',
+      '["MPC Custody", "Institutional", "DeFi Gateway", "Treasury Management"]', 'active'
+    WHERE NOT EXISTS (SELECT 1 FROM partners WHERE id = 'partner-fireblocks');
   `);
 }
 
