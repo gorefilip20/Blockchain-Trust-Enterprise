@@ -79,7 +79,7 @@ export async function processPendingPayments(): Promise<{
         ).run(tx.client_id);
 
         db.prepare(
-          "UPDATE clients SET status = 'active' WHERE id = ? AND status != 'active'"
+          "UPDATE clients SET status = 'active', is_registration_fee_paid = 1 WHERE id = ? AND status != 'active'"
         ).run(tx.client_id);
 
         results.verified++;

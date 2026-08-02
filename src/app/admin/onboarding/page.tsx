@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 
 const STEPS = [
@@ -53,6 +53,11 @@ const stepIcons = [
   <svg key="s6" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="20" x2="18" y2="10" /><line x1="12" y1="20" x2="12" y2="4" /><line x1="6" y1="20" x2="6" y2="14" /><line x1="2" y1="20" x2="22" y2="20" /></svg>,
 ];
 
+interface WalletConfig {
+  blockchain_network: string;
+  receiving_address: string;
+}
+
 export default function AdminOnboardingPage() {
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState(0);
@@ -68,6 +73,27 @@ export default function AdminOnboardingPage() {
   const [revenue, setRevenue] = useState('');
   const [cryptoHoldings, setCryptoHoldings] = useState('');
   const [notes, setNotes] = useState('');
+
+  // Payment gate
+  const [selectedNetwork, setSelectedNetwork] = useState('TRC20');
+  const [paymentTxHash, setPaymentTxHash] = useState('');
+  const [gateways, setGateways] = useState<WalletConfig[]>([]);
+  const [billingPrice, setBillingPrice] = useState(499);
+
+  const loadPaymentConfig = useCallback(async () => {
+    try {
+      const [wRes, bRes] = await Promise.all([
+        fetch('/api/admin/wallets'),
+        fetch('/api/billing'),
+      ]);
+      const wallets = await wRes.json();
+      const billing = await bRes.json();
+      if (Array.isArray(wallets)) setGateways(wallets);
+      if (billing?.price_usd) setBillingPrice(billing.price_usd);
+    } catch { /* silent */ }
+  }, []);
+
+  useEffect(() => { loadPaymentConfig(); }, [loadPaymentConfig]);
 
   // Stage 2: Dual Filing
   const [entityType, setEntityType] = useState('');
@@ -108,7 +134,7 @@ export default function AdminOnboardingPage() {
     setError('');
 
     try {
-      // 1. Create client
+      // 1. Create client with payment fields
       const clientRes = await fetch('/api/clients', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -121,10 +147,28 @@ export default function AdminOnboardingPage() {
           annual_revenue_usd: revenue ? parseFloat(revenue) : null,
           crypto_holdings_usd: cryptoHoldings ? parseFloat(cryptoHoldings) : null,
           notes,
+          payment_tx_hash: paymentTxHash || null,
+          selected_network: selectedNetwork,
         }),
       });
       const client = await clientRes.json();
       if (!client.id) throw new Error(client.error || 'Failed to create client');
+
+      // 1b. Create payment record if TX hash provided
+      if (paymentTxHash) {
+        const destWallet = gateways.find(g => g.blockchain_network === selectedNetwork)?.receiving_address || '';
+        await fetch('/api/payments', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            client_id: client.id,
+            target_network: selectedNetwork,
+            submitted_tx_hash: paymentTxHash,
+            assigned_destination_wallet: destWallet,
+            expected_amount_usd: billingPrice,
+          }),
+        });
+      }
 
       // 2. Create Delaware parent entity
       const parentRes = await fetch('/api/entities', {
@@ -400,6 +444,55 @@ export default function AdminOnboardingPage() {
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1">Notes</label>
               <textarea value={notes} onChange={(e) => setNotes(e.target.value)} rows={3} className={inputClass + ' resize-none'} placeholder="Specific requirements, investment thesis, risk tolerance..." />
+            </div>
+
+            {/* Payment Gate */}
+            <div className="p-5 rounded-xl border-2" style={{ borderColor: '#00D4AA', backgroundColor: 'rgba(0,212,170,0.03)' }}>
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: '#00D4AA' }}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="12" y1="1" x2="12" y2="23" />
+                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="text-sm font-semibold text-slate-900">Dual-Entity Formation Deposit (${billingPrice.toFixed(2)} USD)</h3>
+                  <p className="text-xs text-slate-500">Required crypto payment to activate entity formation pipeline</p>
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <div>
+                  <label className="block text-xs font-medium text-slate-700 mb-1">Select Payment Network</label>
+                  <select
+                    value={selectedNetwork}
+                    onChange={(e) => setSelectedNetwork(e.target.value)}
+                    className={inputClass}
+                  >
+                    <option value="TRC20">TRC20 (TRON Network)</option>
+                    <option value="BEP20">BEP20 (BNB Smart Chain)</option>
+                    <option value="ERC20">ERC20 (Ethereum Mainnet)</option>
+                  </select>
+                </div>
+
+                <div className="p-3 rounded-lg bg-slate-50 border border-[#E2E8F0]">
+                  <div className="text-xs text-slate-500 mb-1">Send ${billingPrice.toFixed(2)} USDT to:</div>
+                  <code className="text-sm font-mono text-slate-800 break-all">
+                    {gateways.find(g => g.blockchain_network === selectedNetwork)?.receiving_address || 'No wallet configured for this network — set up in Settings'}
+                  </code>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-medium text-slate-700 mb-1">Transaction Hash (TxHash)</label>
+                  <input
+                    type="text"
+                    value={paymentTxHash}
+                    onChange={(e) => setPaymentTxHash(e.target.value)}
+                    className={inputClass + ' font-mono'}
+                    placeholder="Paste the transaction hash after sending payment"
+                  />
+                </div>
+              </div>
             </div>
 
             <div className="p-4 rounded-lg border" style={{ backgroundColor: 'rgba(0,82,255,0.03)', borderColor: 'rgba(0,82,255,0.15)' }}>

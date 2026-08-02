@@ -36,6 +36,9 @@ function initializeDatabase(db: Database.Database) {
       annual_revenue_usd REAL,
       crypto_holdings_usd REAL,
       notes TEXT,
+      is_registration_fee_paid INTEGER DEFAULT 0,
+      payment_tx_hash TEXT,
+      selected_network TEXT CHECK(selected_network IN ('BEP20', 'TRC20', 'ERC20')),
       created_at TEXT DEFAULT (datetime('now')),
       updated_at TEXT DEFAULT (datetime('now'))
     );
@@ -176,6 +179,32 @@ function initializeDatabase(db: Database.Database) {
       verified_at TEXT
     );
 
+    -- Billing rules (configurable pricing)
+    CREATE TABLE IF NOT EXISTS billing_rules (
+      id TEXT PRIMARY KEY,
+      package_name TEXT UNIQUE DEFAULT 'Dual-Entity Formation Package',
+      price_usd REAL NOT NULL DEFAULT 499.00,
+      updated_at TEXT DEFAULT (datetime('now'))
+    );
+
+    -- Administrative wallet gateway configuration
+    CREATE TABLE IF NOT EXISTS administrative_wallets (
+      id TEXT PRIMARY KEY,
+      blockchain_network TEXT NOT NULL UNIQUE CHECK(blockchain_network IN ('BEP20', 'TRC20', 'ERC20')),
+      receiving_address TEXT NOT NULL,
+      is_active INTEGER DEFAULT 1,
+      updated_at TEXT DEFAULT (datetime('now'))
+    );
+
+    -- Platform administrators (bcrypt hashed credentials)
+    CREATE TABLE IF NOT EXISTS platform_administrators (
+      id TEXT PRIMARY KEY,
+      username TEXT UNIQUE NOT NULL,
+      password_hash TEXT NOT NULL,
+      role TEXT NOT NULL DEFAULT 'supervisor',
+      created_at TEXT DEFAULT (datetime('now'))
+    );
+
     -- Accounting entries
     CREATE TABLE IF NOT EXISTS accounting_entries (
       id TEXT PRIMARY KEY,
@@ -253,6 +282,14 @@ function initializeDatabase(db: Database.Database) {
       'Enterprise-grade digital asset custody and settlement platform',
       '["MPC Custody", "Institutional", "DeFi Gateway", "Treasury Management"]', 'active'
     WHERE NOT EXISTS (SELECT 1 FROM partners WHERE id = 'partner-fireblocks');
+
+    -- Seed baseline $499 registration pricing
+    INSERT OR IGNORE INTO billing_rules (id, package_name, price_usd)
+    VALUES ('billing-default', 'Dual-Entity Formation Package', 499.00);
+
+    -- Seed default admin user (password: admin123456, bcrypt hash)
+    INSERT OR IGNORE INTO platform_administrators (id, username, password_hash, role)
+    VALUES ('admin-default', 'platform_supervisor', '$2b$10$.CICvqJziE2bjoJlNVMfKuX5PY.uJqtS8T7zJJBVnWlgimoQGdITe', 'supervisor');
   `);
 }
 

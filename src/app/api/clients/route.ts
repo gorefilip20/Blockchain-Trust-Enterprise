@@ -18,13 +18,13 @@ export async function POST(req: NextRequest) {
   const db = getDb();
   const id = uuidv4();
 
-  const { first_name, last_name, email, phone, client_type, notes, annual_revenue_usd, crypto_holdings_usd } = body;
+  const { first_name, last_name, email, phone, client_type, notes, annual_revenue_usd, crypto_holdings_usd, payment_tx_hash, selected_network } = body;
 
   try {
     db.prepare(`
-      INSERT INTO clients (id, first_name, last_name, email, phone, client_type, notes, annual_revenue_usd, crypto_holdings_usd)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `).run(id, first_name, last_name, email, phone || null, client_type, notes || null, annual_revenue_usd || null, crypto_holdings_usd || null);
+      INSERT INTO clients (id, first_name, last_name, email, phone, client_type, notes, annual_revenue_usd, crypto_holdings_usd, payment_tx_hash, selected_network)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `).run(id, first_name, last_name, email, phone || null, client_type, notes || null, annual_revenue_usd || null, crypto_holdings_usd || null, payment_tx_hash || null, selected_network || null);
 
     const steps = [
       { num: 1, name: 'Intake, Profiling & Identity Masking' },

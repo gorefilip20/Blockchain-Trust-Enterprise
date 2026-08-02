@@ -10,10 +10,15 @@ export async function GET(
 
   const doc = db.prepare(
     'SELECT * FROM documents WHERE download_url_token = ?'
-  ).get(token) as { id: string; name: string; raw_markdown_content: string | null; status: string } | undefined;
+  ).get(token) as { id: string; client_id: string; name: string; raw_markdown_content: string | null; status: string } | undefined;
 
   if (!doc) {
     return NextResponse.json({ error: 'Document not found' }, { status: 404 });
+  }
+
+  const client = db.prepare('SELECT is_registration_fee_paid FROM clients WHERE id = ?').get(doc.client_id) as { is_registration_fee_paid: number } | undefined;
+  if (client && !client.is_registration_fee_paid) {
+    return NextResponse.json({ error: 'Access Denied: Registration fee not yet confirmed. Complete payment to unlock documents.' }, { status: 403 });
   }
 
   if (!doc.raw_markdown_content) {

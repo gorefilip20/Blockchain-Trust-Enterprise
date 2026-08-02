@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 
 export default function AdminLoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -15,16 +15,27 @@ export default function AdminLoginPage() {
     setError('');
     setLoading(true);
 
-    // Simulate auth delay
-    await new Promise((r) => setTimeout(r, 800));
+    try {
+      const res = await fetch('/api/admin/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password }),
+      });
 
-    if (email === 'admin@bte.com' && password === 'admin123') {
-      localStorage.setItem('bte-admin-token', 'bte-session-' + Date.now());
-      router.push('/admin/dashboard');
-    } else {
-      setError('Invalid email or password. Please try again.');
+      const data = await res.json();
+
+      if (res.ok && data.token) {
+        localStorage.setItem('bte-admin-token', data.token);
+        localStorage.setItem('bte-admin-user', data.username);
+        router.push('/admin/dashboard');
+      } else {
+        setError(data.error || 'Access Denied: Invalid credentials.');
+      }
+    } catch {
+      setError('Connection failed. Please try again.');
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }
 
   return (
@@ -37,7 +48,7 @@ export default function AdminLoginPage() {
               <span className="text-white text-2xl font-bold">BTE</span>
             </div>
             <h1 className="text-xl font-bold text-slate-900">Blockchain Trust Enterprise</h1>
-            <p className="text-sm text-slate-500 mt-1">Admin Portal</p>
+            <p className="text-sm text-slate-500 mt-1">Supervisor Control Terminal</p>
           </div>
 
           {/* Error */}
@@ -50,12 +61,12 @@ export default function AdminLoginPage() {
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">Email Address</label>
+              <label className="block text-sm font-medium text-slate-700 mb-1.5">Username</label>
               <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@bte.com"
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="platform_supervisor"
                 required
                 className="w-full px-4 py-2.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-[#00D4AA] focus:border-[#00D4AA] outline-none transition-colors"
               />
@@ -86,13 +97,19 @@ export default function AdminLoginPage() {
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                   </svg>
-                  Signing In...
+                  Establishing Connection...
                 </span>
               ) : (
-                'Sign In'
+                'Establish Connection Securely'
               )}
             </button>
           </form>
+
+          <div className="mt-5 p-3 rounded-lg bg-slate-50 border border-slate-200">
+            <p className="text-xs text-slate-500 text-center">
+              Default: <span className="font-mono text-slate-700">platform_supervisor</span> / <span className="font-mono text-slate-700">admin123456</span>
+            </p>
+          </div>
 
           {/* Back to site */}
           <div className="mt-6 text-center">
