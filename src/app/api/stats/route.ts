@@ -59,6 +59,14 @@ export async function GET() {
     SELECT status, COUNT(*) as count FROM documents GROUP BY status
   `).all();
 
+  const totalPayments = db.prepare('SELECT COUNT(*) as count FROM payments').get() as { count: number };
+  const pendingPayments = db.prepare("SELECT COUNT(*) as count FROM payments WHERE status = 'processing_verification'").get() as { count: number };
+  const confirmedPayments = db.prepare("SELECT COUNT(*) as count FROM payments WHERE status = 'confirmed_active'").get() as { count: number };
+
+  const paymentsByNetwork = db.prepare(`
+    SELECT target_network, COUNT(*) as count FROM payments GROUP BY target_network
+  `).all();
+
   return NextResponse.json({
     totalClients: totalClients.count,
     activeClients: activeClients.count,
@@ -78,5 +86,9 @@ export async function GET() {
     workflowProgress,
     recentActivity,
     documentsByStatus,
+    totalPayments: totalPayments.count,
+    pendingPayments: pendingPayments.count,
+    confirmedPayments: confirmedPayments.count,
+    paymentsByNetwork,
   });
 }

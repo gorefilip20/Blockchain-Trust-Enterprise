@@ -22,6 +22,10 @@ interface Stats {
   workflowProgress: Array<{ step_name: string; completed: number; total: number }>;
   recentActivity: Array<{ type: string; description: string; created_at: string }>;
   documentsByStatus: Array<{ status: string; count: number }>;
+  totalPayments: number;
+  pendingPayments: number;
+  confirmedPayments: number;
+  paymentsByNetwork: Array<{ target_network: string; count: number }>;
 }
 
 const typeLabels: Record<string, string> = {
@@ -333,6 +337,40 @@ export default function AdminDashboardPage() {
         </div>
       </div>
 
+      {/* Payment Verification Status */}
+      {(stats.totalPayments > 0 || stats.pendingPayments > 0) && (
+        <div className="mt-6 bg-white rounded-xl border border-[#E2E8F0] p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="font-semibold text-slate-900">Payment Verification Engine</h2>
+            <Link href="/admin/payments" className="text-xs font-medium px-3 py-1.5 rounded-lg transition-colors" style={{ backgroundColor: 'rgba(0,82,255,0.1)', color: '#0052FF' }}>View All</Link>
+          </div>
+          <div className="grid grid-cols-3 gap-4">
+            <div className="p-3 rounded-lg bg-slate-50">
+              <div className="text-xs text-slate-500">Total</div>
+              <div className="text-xl font-bold text-slate-900">{stats.totalPayments}</div>
+            </div>
+            <div className="p-3 rounded-lg" style={{ backgroundColor: 'rgba(245,158,11,0.08)' }}>
+              <div className="text-xs" style={{ color: '#B45309' }}>Pending</div>
+              <div className="text-xl font-bold" style={{ color: '#B45309' }}>{stats.pendingPayments}</div>
+            </div>
+            <div className="p-3 rounded-lg" style={{ backgroundColor: 'rgba(21,128,61,0.08)' }}>
+              <div className="text-xs" style={{ color: '#15803D' }}>Confirmed</div>
+              <div className="text-xl font-bold" style={{ color: '#15803D' }}>{stats.confirmedPayments}</div>
+            </div>
+          </div>
+          {stats.paymentsByNetwork && stats.paymentsByNetwork.length > 0 && (
+            <div className="mt-3 flex gap-2">
+              {stats.paymentsByNetwork.map((n) => (
+                <span key={n.target_network} className="text-xs px-2 py-0.5 rounded-full font-medium" style={{
+                  backgroundColor: n.target_network === 'BEP20' ? '#FEF3C7' : n.target_network === 'TRC20' ? '#FEE2E2' : '#DBEAFE',
+                  color: n.target_network === 'BEP20' ? '#B45309' : n.target_network === 'TRC20' ? '#B91C1C' : '#1D4ED8',
+                }}>{n.target_network}: {n.count}</span>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
       {/* Recent Activity */}
       <div className="mt-6 bg-white rounded-xl border border-[#E2E8F0] p-6">
         <h2 className="font-semibold text-slate-900 mb-4">Recent Activity</h2>
@@ -367,7 +405,7 @@ export default function AdminDashboardPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {[
             { label: 'New Client', desc: 'Start 6-stage onboarding wizard', href: '/admin/onboarding', color: '#00D4AA' },
-            { label: 'Entities', desc: 'Parent-subsidiary structures', href: '/admin/entities', color: '#0052FF' },
+            { label: 'Payments', desc: 'Multi-chain verification', href: '/admin/payments', color: '#0052FF' },
             { label: 'Documents', desc: 'Agreements & filings', href: '/admin/documents', color: '#8B5CF6' },
             { label: 'Treasury', desc: 'Accounts, vaults & wallets', href: '/admin/treasury', color: '#F59E0B' },
           ].map((action) => (

@@ -158,6 +158,24 @@ function initializeDatabase(db: Database.Database) {
       created_at TEXT DEFAULT (datetime('now'))
     );
 
+    -- Crypto payment verification tracking
+    CREATE TABLE IF NOT EXISTS payments (
+      id TEXT PRIMARY KEY,
+      client_id TEXT NOT NULL REFERENCES clients(id) ON DELETE CASCADE,
+      target_network TEXT NOT NULL CHECK(target_network IN ('BEP20', 'TRC20', 'ERC20')),
+      submitted_tx_hash TEXT,
+      assigned_destination_wallet TEXT NOT NULL,
+      expected_amount_usd REAL NOT NULL,
+      verified_amount_tokens REAL,
+      sender_wallet_address TEXT,
+      transaction_block_number INTEGER,
+      status TEXT NOT NULL DEFAULT 'pending' CHECK(status IN ('pending', 'processing_verification', 'confirmed_active', 'failed', 'expired')),
+      processing_stage TEXT NOT NULL DEFAULT 'unprocessed' CHECK(processing_stage IN ('unprocessed', 'fetching_rpc', 'mismatched_parameters', 'fully_reconciled')),
+      rpc_retry_attempts INTEGER DEFAULT 0,
+      created_at TEXT DEFAULT (datetime('now')),
+      verified_at TEXT
+    );
+
     -- Accounting entries
     CREATE TABLE IF NOT EXISTS accounting_entries (
       id TEXT PRIMARY KEY,
