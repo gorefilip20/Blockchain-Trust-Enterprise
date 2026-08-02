@@ -161,6 +161,7 @@ export default function LandingPage() {
     { label: 'Services', href: '#services' },
     { label: 'How It Works', href: '#how-it-works' },
     { label: 'Partners', href: '#partners' },
+    { label: 'LLC Guide', href: '#llc-guide' },
     { label: 'Contact', href: '#contact' },
   ];
 
@@ -377,6 +378,112 @@ export default function LandingPage() {
     {
       question: 'Do you provide legal or tax advice?',
       answer: 'BTE is an entity structuring and concierge platform, not a law firm or accounting practice. We partner with licensed attorneys, CPAs, and tax advisors who provide legal and tax counsel directly. Our role is to orchestrate the entire process and ensure all providers work together seamlessly.',
+    },
+  ];
+
+  const quickSteps = [
+    {
+      num: '1',
+      title: 'Choose Your State',
+      description: 'Each state has different rules, fees, and benefits. Wyoming and Delaware are the most popular for LLCs because of their business-friendly laws and privacy protections.',
+    },
+    {
+      num: '2',
+      title: 'Name Your LLC',
+      description: 'Pick a unique name that includes "LLC" or "Limited Liability Company." Check your state\'s business name database to make sure it\'s available.',
+    },
+    {
+      num: '3',
+      title: 'Appoint a Registered Agent',
+      description: 'This is a person or service with a physical address in your state who receives legal documents on your LLC\'s behalf. You can be your own or hire a service.',
+    },
+    {
+      num: '4',
+      title: 'File Articles of Organization',
+      description: 'Submit this document to your state\'s Secretary of State office (online or by mail). It officially creates your LLC. Fees range from $50 to $350 depending on the state.',
+    },
+    {
+      num: '5',
+      title: 'Create an Operating Agreement',
+      description: 'This internal document outlines ownership, management structure, and rules. Not all states require it, but it\'s highly recommended for asset protection.',
+    },
+    {
+      num: '6',
+      title: 'Get an EIN',
+      description: 'Apply for a free Employer Identification Number from the IRS. You\'ll need it to open a business bank account, file taxes, and hire employees.',
+    },
+  ];
+
+  const detailedGuide = [
+    {
+      num: '1',
+      title: 'Selecting a Name',
+      points: [
+        'Must include an LLC designator ("LLC," "L.L.C.," or "Limited Liability Company")',
+        'Cannot include words that could confuse it with a government agency (e.g., FBI, Treasury)',
+        'Must be distinguishable from other registered businesses in your state',
+        'Check domain name and social media handle availability before finalizing',
+      ],
+    },
+    {
+      num: '2',
+      title: 'Appointing a Registered Agent',
+      points: [
+        'Must have a physical street address in the state of formation (not a P.O. Box)',
+        'Must be available during normal business hours to accept legal documents',
+        'Can be an individual (including yourself) or a professional registered agent service',
+        'Using a professional service adds a layer of privacy and reliability',
+      ],
+    },
+    {
+      num: '3',
+      title: 'Filing Articles of Organization',
+      points: [
+        'This is the official formation document filed with the Secretary of State',
+        'Typically includes: LLC name, registered agent info, management structure, organizer details',
+        'Filing fees range from $50 (e.g., Kentucky) to $350+ (e.g., Massachusetts)',
+        'Processing time varies: 1-2 days for expedited, up to several weeks for standard',
+      ],
+    },
+    {
+      num: '4',
+      title: 'Creating an Operating Agreement',
+      points: [
+        'Defines ownership percentages and capital contributions of each member',
+        'Establishes voting rights and decision-making processes',
+        'Outlines profit and loss distribution among members',
+        'Details procedures for adding/removing members and dissolving the LLC',
+      ],
+    },
+    {
+      num: '5',
+      title: 'Obtaining an EIN',
+      points: [
+        'Apply for free directly through the IRS (online application takes minutes)',
+        'Required for opening business bank accounts and filing federal taxes',
+        'Needed to hire employees or contractors',
+        'Acts as your business\'s "Social Security Number" for tax purposes',
+      ],
+    },
+    {
+      num: '6',
+      title: 'Setting Up a Business Bank Account',
+      points: [
+        'Separates personal and business finances (crucial for liability protection)',
+        'Typically requires: EIN, Articles of Organization, Operating Agreement, and photo ID',
+        'Consider banks that offer business checking with low or no monthly fees',
+        'Keep meticulous records of all deposits, withdrawals, and transfers',
+      ],
+    },
+    {
+      num: '7',
+      title: 'Keeping Your LLC in Good Standing',
+      points: [
+        'File annual reports (or biennial, depending on the state) to maintain active status',
+        'Pay annual renewal fees and any franchise taxes on time',
+        'Maintain a current registered agent at all times',
+        'Stay organized and keep clean financial records to protect your business and help it thrive',
+      ],
     },
   ];
 
@@ -914,41 +1021,120 @@ export default function LandingPage() {
       </section>
 
       {/* ============================================================ */}
-      {/*  FAQ SECTION                                                 */}
+      {/*  LLC FORMATION GUIDE + FAQ SECTION                           */}
       {/* ============================================================ */}
-      <section className="bg-[#F8FAFC] py-20 lg:py-28">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <div className="text-sm font-semibold text-[#0052FF] uppercase tracking-wider mb-3">FAQ</div>
+      <section id="llc-guide" className="bg-[#F8FAFC] py-20 lg:py-28">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <div className="text-sm font-semibold text-[#0052FF] uppercase tracking-wider mb-3">LLC Formation Guide</div>
             <h2 className="text-3xl sm:text-4xl font-bold text-[#0F172A] leading-tight">
-              Frequently Asked Questions
+              How to Form Your LLC
             </h2>
+            <p className="mt-4 text-[#64748B] text-lg">
+              Everything you need to know to form your LLC correctly and avoid common mistakes.
+            </p>
           </div>
 
-          <div className="space-y-3">
-            {faqs.map((faq, i) => (
-              <div
-                key={i}
-                className="bg-white rounded-xl border border-[#E2E8F0] overflow-hidden transition-all duration-200"
-              >
-                <button
-                  className="w-full px-6 py-5 text-left flex items-center justify-between gap-4 hover:bg-[#F8FAFC] transition-colors"
-                  onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                >
-                  <span className="font-semibold text-[#0F172A]">{faq.question}</span>
-                  <ChevronDownIcon
-                    className={`w-5 h-5 text-[#64748B] flex-shrink-0 transition-transform duration-200 ${
-                      openFaq === i ? 'rotate-180' : ''
-                    }`}
-                  />
-                </button>
-                {openFaq === i && (
-                  <div className="px-6 pb-5 animate-fade-in">
-                    <p className="text-[#64748B] leading-relaxed">{faq.answer}</p>
+          <div className="grid lg:grid-cols-2 gap-10">
+            {/* LEFT COLUMN: Quick Reference + Detailed Guide */}
+            <div className="space-y-8">
+              {/* Quick Reference Card */}
+              <div className="bg-white rounded-2xl border border-[#E2E8F0] p-8">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#00D4AA] to-[#0052FF] flex items-center justify-center">
+                    <DocumentIcon className="w-5 h-5 text-white" />
                   </div>
-                )}
+                  <h3 className="text-xl font-bold text-[#0F172A]">Quick Reference: 6 Steps</h3>
+                </div>
+                <div className="space-y-4">
+                  {quickSteps.map((step) => (
+                    <div key={step.num} className="flex gap-4">
+                      <div className="w-8 h-8 rounded-full bg-[#00D4AA]/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <span className="text-sm font-bold text-[#00D4AA]">{step.num}</span>
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-[#0F172A] text-sm">{step.title}</h4>
+                        <p className="text-[#64748B] text-sm leading-relaxed mt-1">{step.description}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
-            ))}
+
+              {/* Detailed Guide */}
+              <div className="bg-white rounded-2xl border border-[#E2E8F0] p-8">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#0052FF] to-[#7C3AED] flex items-center justify-center">
+                    <BuildingIcon className="w-5 h-5 text-white" />
+                  </div>
+                  <h3 className="text-xl font-bold text-[#0F172A]">Detailed Formation Guide</h3>
+                </div>
+                <div className="space-y-6">
+                  {detailedGuide.map((step) => (
+                    <div key={step.num} className="border-l-2 border-[#0052FF]/20 pl-5">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="text-xs font-bold text-white bg-[#0052FF] w-6 h-6 rounded-full flex items-center justify-center">{step.num}</span>
+                        <h4 className="font-semibold text-[#0F172A]">{step.title}</h4>
+                      </div>
+                      <ul className="space-y-1.5">
+                        {step.points.map((point, pi) => (
+                          <li key={pi} className="flex items-start gap-2 text-sm text-[#64748B] leading-relaxed">
+                            <CheckIcon className="w-4 h-4 text-[#00D4AA] flex-shrink-0 mt-0.5" />
+                            <span>{point}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-8 p-4 bg-[#F0FDF4] rounded-xl border border-[#BBF7D0]">
+                  <p className="text-sm text-[#15803D] leading-relaxed font-medium">
+                    Staying organized and keeping clean financial records are the best ways to protect your business and help it thrive. An LLC is only as strong as its compliance practices.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* RIGHT COLUMN: FAQ */}
+            <div>
+              <div className="bg-white rounded-2xl border border-[#E2E8F0] p-8 lg:sticky lg:top-24">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#D97706] to-[#F59E0B] flex items-center justify-center">
+                    <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="12" cy="12" r="10" />
+                      <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                      <line x1="12" y1="17" x2="12.01" y2="17" />
+                    </svg>
+                  </div>
+                  <h3 className="text-xl font-bold text-[#0F172A]">Frequently Asked Questions</h3>
+                </div>
+                <div className="space-y-3">
+                  {faqs.map((faq, i) => (
+                    <div
+                      key={i}
+                      className="bg-[#F8FAFC] rounded-xl border border-[#E2E8F0] overflow-hidden transition-all duration-200"
+                    >
+                      <button
+                        className="w-full px-5 py-4 text-left flex items-center justify-between gap-3 hover:bg-[#F1F5F9] transition-colors"
+                        onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                      >
+                        <span className="font-semibold text-[#0F172A] text-sm">{faq.question}</span>
+                        <ChevronDownIcon
+                          className={`w-5 h-5 text-[#64748B] flex-shrink-0 transition-transform duration-200 ${
+                            openFaq === i ? 'rotate-180' : ''
+                          }`}
+                        />
+                      </button>
+                      {openFaq === i && (
+                        <div className="px-5 pb-4 animate-fade-in">
+                          <p className="text-[#64748B] text-sm leading-relaxed">{faq.answer}</p>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
