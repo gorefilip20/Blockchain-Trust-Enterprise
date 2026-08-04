@@ -494,7 +494,7 @@ export default function LandingPage() {
       {/* ============================================================ */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0A1628]/95 backdrop-blur-md border-b border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16 lg:h-18">
+          <div className="flex justify-between items-center h-16 lg:h-[72px]">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-3">
               <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-[#00D4AA] to-[#0052FF] flex items-center justify-center">
@@ -580,7 +580,7 @@ export default function LandingPage() {
       {/* ============================================================ */}
       {/*  HERO SECTION                                                */}
       {/* ============================================================ */}
-      <section className="gradient-hero relative overflow-hidden pt-28 pb-20 lg:pt-40 lg:pb-28">
+      <section className="gradient-hero relative overflow-hidden pt-36 pb-20 sm:pt-40 lg:pt-44 lg:pb-28">
         {/* Decorative floating elements */}
         <div className="absolute top-20 right-[10%] w-72 h-72 rounded-full bg-[#0052FF]/10 blur-3xl animate-float" />
         <div className="absolute bottom-10 left-[5%] w-56 h-56 rounded-full bg-[#00D4AA]/8 blur-3xl animate-float" style={{ animationDelay: '2s' }} />
@@ -613,7 +613,7 @@ export default function LandingPage() {
             </p>
 
             {/* CTAs */}
-            <div className="mt-10 flex flex-col sm:flex-row gap-4 animate-slide-up" style={{ animationDelay: '0.3s' }}>
+            <div className="mt-10 mb-4 flex flex-col sm:flex-row gap-4 animate-slide-up" style={{ animationDelay: '0.3s' }}>
               <Link
                 href="/contact"
                 className="inline-flex items-center justify-center gap-2 bg-[#00D4AA] hover:bg-[#00B894] text-[#0A1628] px-7 py-3.5 rounded-xl font-semibold text-base transition-colors"
@@ -631,7 +631,7 @@ export default function LandingPage() {
           </div>
 
           {/* Stats bar */}
-          <div className="mt-16 lg:mt-20 grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-8 animate-slide-up" style={{ animationDelay: '0.45s' }}>
+          <div className="mt-14 lg:mt-20 grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 animate-slide-up" style={{ animationDelay: '0.45s' }}>
             {stats.map((stat) => (
               <div key={stat.label} className="glass-card rounded-xl px-6 py-5 text-center">
                 <div className="text-2xl lg:text-3xl font-bold text-white">{stat.value}</div>
@@ -675,7 +675,7 @@ export default function LandingPage() {
             </div>
 
             {/* Feature grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 lg:gap-6">
               {features.map((feature, i) => (
                 <div
                   key={feature.title}
@@ -697,7 +697,7 @@ export default function LandingPage() {
       {/* ============================================================ */}
       {/*  SERVICES SECTION                                            */}
       {/* ============================================================ */}
-      <section id="services" className="bg-[#F8FAFC] py-20 lg:py-28">
+      <section id="services" className="bg-[#F8FAFC] py-20 lg:py-28 overflow-visible">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-16">
             <div className="text-sm font-semibold text-[#0052FF] uppercase tracking-wider mb-3">What We Offer</div>
@@ -710,7 +710,7 @@ export default function LandingPage() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-3 gap-8 pb-4">
             {services.map((service) => (
               <div
                 key={service.title}
