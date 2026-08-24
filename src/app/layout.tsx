@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Blockchain Trust Enterprise — Institutional-Grade Digital Asset Entity Structuring",
-  description: "Enterprise-grade LLC structuring, privacy shielding, and treasury management for crypto investors, Web3 founders, and DAO members. Trusted by institutional clients worldwide.",
+  title: "Blockchain Trust Enterprise — Institutional Markets Workspace",
+  description: "A premium institutional markets workspace for portfolio intelligence, global watchlists, and paper trading.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
