@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import FeatureWorkspace, { type WorkspaceArea } from '../components/FeatureWorkspace';
 import {
   ArrowDownRight,
   ArrowUpRight,
@@ -104,17 +105,17 @@ export default function BrokerageWorkspace() {
           <div className="nav-caption">Workspace</div>
           {navItems.map(({ label, icon: Icon }) => <button key={label} className={`nav-item ${activeNav === label ? 'active' : ''}`} onClick={() => { setActiveNav(label); setSideOpen(false); }}><Icon size={17} /><span>{label}</span>{label === 'Trade' && <em>New</em>}</button>)}
           <div className="nav-caption nav-caption-spaced">Account</div>
-          <button className="nav-item" onClick={() => setNotice('Positions and balances are simulated for this prototype.')}><Wallet size={17} /><span>Balances</span></button>
-          <button className="nav-item" onClick={() => setNotice('Reports are available in the full BTE platform.')}><Download size={17} /><span>Reports</span></button>
-          <button className="nav-item" onClick={() => setNotice('Security center opened.')}><ShieldCheck size={17} /><span>Security center</span></button>
+          <button className={`nav-item ${activeNav === 'Balances' ? 'active' : ''}`} onClick={() => { setActiveNav('Balances'); setSideOpen(false); }}><Wallet size={17} /><span>Balances</span></button>
+          <button className={`nav-item ${activeNav === 'Reports' ? 'active' : ''}`} onClick={() => { setActiveNav('Reports'); setSideOpen(false); }}><Download size={17} /><span>Reports</span></button>
+          <button className={`nav-item ${activeNav === 'Security center' ? 'active' : ''}`} onClick={() => { setActiveNav('Security center'); setSideOpen(false); }}><ShieldCheck size={17} /><span>Security center</span></button>
         </nav>
-        <div className="sidebar-bottom"><div className="live-status"><span className="status-dot" />All systems operational</div><button className="nav-item"><Settings2 size={17} /><span>Settings</span></button><button className="nav-item"><CircleHelp size={17} /><span>Help center</span></button><div className="profile-row"><div className="profile-avatar">JM</div><div><b>Jordan Morgan</b><small>Administrator</small></div><MoreHorizontal size={17} /></div></div>
+        <div className="sidebar-bottom"><div className="live-status"><span className="status-dot" />All systems operational</div><button className={`nav-item ${activeNav === 'Settings' ? 'active' : ''}`} onClick={() => { setActiveNav('Settings'); setSideOpen(false); }}><Settings2 size={17} /><span>Settings</span></button><button className={`nav-item ${activeNav === 'Help center' ? 'active' : ''}`} onClick={() => { setActiveNav('Help center'); setSideOpen(false); }}><CircleHelp size={17} /><span>Help center</span></button><div className="profile-row"><div className="profile-avatar">JM</div><div><b>Jordan Morgan</b><small>Administrator</small></div><MoreHorizontal size={17} /></div></div>
       </aside>
 
       <section className="workspace">
         <header className="topbar"><button className="mobile-menu" onClick={() => setSideOpen((value) => !value)} aria-label="Toggle navigation"><Menu size={21} /></button><div className="breadcrumb"><span>Workspace</span><ChevronRight size={14} /><b>{activeNav}</b></div><div className="topbar-actions"><div className="global-search"><Search size={16} /><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search markets, symbols..." /><kbd><Command size={12} />K</kbd></div><button className="icon-button" aria-label="Notifications"><Bell size={18} /><span className="notification-dot" /></button><button className="icon-button" aria-label="Display settings"><SlidersHorizontal size={18} /></button></div></header>
 
-        <div className="content-wrap">
+        {activeNav !== 'Overview' && <FeatureWorkspace area={activeNav as WorkspaceArea} onNotify={setNotice} onOpenOrder={() => setTradeOpen(true)} />}<div className="content-wrap overview-content">
           <div className="welcome-row"><div><p className="eyebrow"><span className="eyebrow-line" />MONDAY, AUGUST 24, 2026 · MARKET OPEN</p><h1>Good morning, Jordan.</h1><p className="subtitle">A clear view across your global portfolio, powered by institutional-grade intelligence.</p></div><div className="welcome-actions"><button className="secondary-button" onClick={() => setNotice('Export prepared. Download links will appear in the Reports center.')}><Download size={16} /> Export view</button><button className="primary-button" onClick={() => setTradeOpen(true)}><Plus size={17} /> Create order</button></div></div>
 
           <section className="metric-grid"><div className="metric-card metric-card-featured"><div className="metric-label">Total account value <Eye size={15} /></div><div className="metric-value">$284,619.42</div><div className="metric-foot"><ValueChange value="$6,842.18 (2.46%)" /><span>Today</span></div><div className="metric-orbit orbit-one" /><div className="metric-orbit orbit-two" /></div><div className="metric-card"><div className="metric-label">Available to invest <Wallet size={15} /></div><div className="metric-value">$68,420.00</div><div className="metric-foot"><span className="muted">Buying power</span><span className="positive">100%</span></div></div><div className="metric-card"><div className="metric-label">Unrealized P&amp;L <TrendingUp size={15} /></div><div className="metric-value positive-text">+$24,882.64</div><div className="metric-foot"><ValueChange value="8.74%" /><span>Since inception</span></div></div><div className="metric-card"><div className="metric-label">Risk posture <ShieldCheck size={15} /></div><div className="metric-value">Balanced</div><div className="risk-bar"><span /><span /><span /><span /><span /></div><div className="metric-foot"><span className="muted">Moderate allocation</span><span className="accent-text">Review</span></div></div></section>
