@@ -67,3 +67,30 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px s
 @media (max-width: 1100px) { .feature-workspace { padding-left: 25px; padding-right: 25px; }.feature-stat-grid { grid-template-columns: 1fr 1fr; }.research-grid { grid-template-columns: 1fr 1fr; }.research-card:last-child { grid-column: 1 / -1; } }
 @media (max-width: 700px) { .feature-workspace { padding: 22px 16px 0; }.feature-header { display: block; }.feature-header .secondary-button, .feature-header .primary-button { margin-top: 16px; }.feature-subnav { overflow-x: auto; white-space: nowrap; }.feature-subnav > span { min-width: 18px; }.feature-stat-grid { gap: 8px; }.feature-stat { padding: 13px; min-height: 98px; }.feature-stat b { font-size: 17px; }.feature-columns, .trade-command-row { grid-template-columns: 1fr; }.research-grid { grid-template-columns: 1fr; }.research-card:last-child { grid-column: auto; }.market-toolbar { flex-wrap: wrap; }.feature-search { max-width: none; flex-basis: 100%; }.market-toolbar select { flex: 1; }.command-card { align-items: flex-start; }.command-card button { margin-left: auto; }.large-chart { margin-left: 28px; } }
 @media (max-width: 450px) { .feature-subnav button { padding: 0 7px; }.feature-stat-grid { grid-template-columns: 1fr 1fr; }.feature-stat:nth-child(1) { grid-column: 1 / -1; }.feature-stat:nth-child(1) b { font-size: 23px; }.tool-grid { grid-template-columns: 1fr; }.workspace-footer { padding-bottom: 10px; } }
+
+/* Interactive public workspace actions */
+.action-backdrop { position: fixed; inset: 0; z-index: 80; display: flex; justify-content: flex-end; background: rgba(0,0,0,.58); backdrop-filter: blur(4px); }
+.action-drawer { width: min(440px, 100%); min-height: 100%; padding: 34px 28px; background: linear-gradient(145deg, #15232b, #0b1118); border-left: 1px solid rgba(43,214,165,.35); box-shadow: -18px 0 50px rgba(0,0,0,.35); position: relative; overflow-y: auto; }
+.action-drawer h3 { font-size: 23px; line-height: 1.2; letter-spacing: -.04em; margin: 18px 0 10px; }
+.action-drawer > p { color: #93a3ae; font-size: 11px; line-height: 1.75; }
+.drawer-close { position: absolute; top: 18px; right: 18px; display: grid; place-items: center; width: 32px; height: 32px; border-radius: 6px; color: #8396a2; background: rgba(255,255,255,.05); }
+.drawer-close:hover { color: var(--text); background: rgba(255,255,255,.1); }
+.drawer-field { display: block; color: #aebdc6; font: 10px 'DM Mono', monospace; margin-top: 19px; }
+.drawer-field input { display: block; width: 100%; margin-top: 7px; padding: 11px 12px; border: 1px solid #2a3b48; border-radius: 6px; color: var(--text); background: #0b131b; outline: 0; font-size: 11px; }
+.drawer-field input:focus { border-color: var(--mint); box-shadow: 0 0 0 2px rgba(43,214,165,.12); }
+.drawer-note { display: flex; gap: 8px; align-items: flex-start; margin-top: 24px; padding: 12px; border-radius: 6px; color: #93b5ac; background: rgba(43,214,165,.08); font-size: 10px; line-height: 1.55; }
+.drawer-note svg { color: var(--mint); flex: 0 0 auto; }
+.drawer-confirm { margin-top: 22px; width: 100%; justify-content: center; }
+.mover-list > button, .calendar-list > button { display: flex; align-items: center; gap: 9px; width: 100%; padding: 11px 0; border-top: 1px solid rgba(157,180,202,.08); background: transparent; text-align: left; font-size: 10px; }
+.mover-list > button:hover, .calendar-list > button:hover { background: rgba(255,255,255,.025); }
+.mover-list > button > span:nth-child(2) { flex: 1; color: #a0aeb8; }
+.mover-list > button b { font: 10px 'DM Mono', monospace; }
+.calendar-list > button > span:nth-child(2) { flex: 1; }
+.holdings-row:not(.holdings-header) { background: transparent; border-left: 0; border-right: 0; text-align: left; cursor: pointer; }
+.holdings-row:not(.holdings-header):hover { background: rgba(255,255,255,.035); }
+.order-row:not(.order-header) { width: 100%; background: transparent; text-align: left; cursor: pointer; }
+.order-row:not(.order-header):hover { background: rgba(255,255,255,.035); }
+@media (max-width: 700px) { .action-drawer { width: 100%; padding: 28px 19px; } }
+
+/* Admin pages share the public font baseline but retain their light control-plane surfaces. */
+.admin-control-surface { color: #0f172a; background: #f8fafc; }
