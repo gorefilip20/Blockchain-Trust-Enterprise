@@ -39,7 +39,7 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #0A1628 0%, #0F2341 50%, #0A1628 100%)' }}>
+    <div className="admin-login-page min-h-screen flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #0A1628 0%, #0F2341 50%, #0A1628 100%)' }}>
       <div className="w-full max-w-md px-4">
         <div className="bg-white rounded-2xl shadow-2xl p-8">
           {/* Logo */}
