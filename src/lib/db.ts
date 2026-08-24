@@ -196,6 +196,17 @@ function initializeDatabase(db: Database.Database) {
       updated_at TEXT DEFAULT (datetime('now'))
     );
 
+    -- Admin-managed frontend configuration and feature flags
+    CREATE TABLE IF NOT EXISTS platform_config (
+      key TEXT PRIMARY KEY,
+      value TEXT NOT NULL,
+      value_type TEXT NOT NULL DEFAULT 'text' CHECK(value_type IN ('text', 'boolean', 'number', 'json')),
+      label TEXT NOT NULL,
+      description TEXT,
+      updated_at TEXT DEFAULT (datetime('now')),
+      updated_by TEXT
+    );
+
     -- Platform administrators (bcrypt hashed credentials)
     CREATE TABLE IF NOT EXISTS platform_administrators (
       id TEXT PRIMARY KEY,
@@ -286,6 +297,17 @@ function initializeDatabase(db: Database.Database) {
     -- Seed baseline $499 registration pricing
     INSERT OR IGNORE INTO billing_rules (id, package_name, price_usd)
     VALUES ('billing-default', 'Dual-Entity Formation Package', 499.00);
+
+    INSERT OR IGNORE INTO platform_config (key, value, value_type, label, description)
+    VALUES
+      ('hero_headline', 'Institutional clarity. Human control.', 'text', 'Hero headline', 'Primary headline shown on the BTE markets workspace'),
+      ('hero_subtitle', 'A transparent command center for global markets, intelligent risk, and responsible execution.', 'text', 'Hero subtitle', 'Supporting copy shown beneath the main headline'),
+      ('workspace_mode', 'demo', 'text', 'Workspace mode', 'Use demo until authorized live providers are connected'),
+      ('show_bte_copilot', 'true', 'boolean', 'BTE Copilot', 'Show the AI-assisted research surface'),
+      ('show_recurring_investments', 'true', 'boolean', 'Recurring investments', 'Show recurring investment controls'),
+      ('show_market_alerts', 'true', 'boolean', 'Market alerts', 'Show alert and notification entry points'),
+      ('trust_message', 'Protected by BTE TrustLayer · Demo data mode', 'text', 'Trust message', 'Footer trust and environment message'),
+      ('max_order_notional_demo', '100000', 'number', 'Demo notional limit', 'Maximum simulated order notional for demo mode');
 
     -- Seed default admin user (password: admin123456, bcrypt hash)
     INSERT OR IGNORE INTO platform_administrators (id, username, password_hash, role)
