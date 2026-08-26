@@ -31,6 +31,7 @@ import {
   Sparkles,
   Star,
   TrendingUp,
+  UsersRound,
   Wallet,
   X,
   Zap,
@@ -63,6 +64,7 @@ const navItems = [
   { label: 'Markets', icon: BarChart3 },
   { label: 'Trade', icon: Zap },
   { label: 'Research', icon: Newspaper },
+  { label: 'Copy Trading', icon: UsersRound },
 ];
 
 function Sparkline({ path, positive = true }: { path: string; positive?: boolean }) {

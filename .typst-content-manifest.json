@@ -1,0 +1,14 @@
+{
+  "task_kind": "new-document",
+  "output": "pdf",
+  "signals": [],
+  "hard_constraints": ["downloadable user guidance PDF", "professional BTE branding"],
+  "content_features": {
+    "code_blocks": 0,
+    "defined_terms": 8,
+    "portrait_images": 0,
+    "tables": 4,
+    "callout_boxes": 5,
+    "chapters": 8
+  }
+}
