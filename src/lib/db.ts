@@ -216,6 +216,45 @@ function initializeDatabase(db: Database.Database) {
       created_at TEXT DEFAULT (datetime('now'))
     );
 
+    -- Demo brokerage users and copy-trading operations
+    CREATE TABLE IF NOT EXISTS app_users (
+      id TEXT PRIMARY KEY,
+      full_name TEXT NOT NULL,
+      email TEXT UNIQUE NOT NULL,
+      password_hash TEXT NOT NULL,
+      status TEXT NOT NULL DEFAULT 'active' CHECK(status IN ('active', 'pending', 'suspended')),
+      created_at TEXT DEFAULT (datetime('now')),
+      last_login_at TEXT
+    );
+
+    CREATE TABLE IF NOT EXISTS copy_strategies (
+      id TEXT PRIMARY KEY,
+      name TEXT NOT NULL,
+      manager TEXT NOT NULL,
+      risk_level TEXT NOT NULL,
+      return_30d TEXT NOT NULL,
+      max_drawdown TEXT NOT NULL,
+      followers INTEGER DEFAULT 0,
+      status TEXT NOT NULL DEFAULT 'published' CHECK(status IN ('draft', 'published', 'paused', 'archived')),
+      description TEXT,
+      created_at TEXT DEFAULT (datetime('now')),
+      updated_at TEXT DEFAULT (datetime('now'))
+    );
+
+    CREATE TABLE IF NOT EXISTS admin_messages (
+      id TEXT PRIMARY KEY,
+      user_id TEXT,
+      user_name TEXT NOT NULL,
+      user_email TEXT NOT NULL,
+      category TEXT NOT NULL,
+      subject TEXT NOT NULL,
+      body TEXT NOT NULL,
+      status TEXT NOT NULL DEFAULT 'open' CHECK(status IN ('open', 'in_progress', 'resolved', 'archived')),
+      assigned_to TEXT,
+      created_at TEXT DEFAULT (datetime('now')),
+      updated_at TEXT DEFAULT (datetime('now'))
+    );
+
     -- Accounting entries
     CREATE TABLE IF NOT EXISTS accounting_entries (
       id TEXT PRIMARY KEY,
@@ -308,6 +347,12 @@ function initializeDatabase(db: Database.Database) {
       ('show_market_alerts', 'true', 'boolean', 'Market alerts', 'Show alert and notification entry points'),
       ('trust_message', 'Protected by BTE TrustLayer · Demo data mode', 'text', 'Trust message', 'Footer trust and environment message'),
       ('max_order_notional_demo', '100000', 'number', 'Demo notional limit', 'Maximum simulated order notional for demo mode');
+
+    INSERT OR IGNORE INTO copy_strategies (id, name, manager, risk_level, return_30d, max_drawdown, followers, status, description)
+    VALUES
+      ('strategy-atlas', 'Atlas Balanced', 'BTE Research Desk', 'Moderate', '+18.4%', '-8.2%', 2184, 'published', 'Diversified global allocation with measured risk.'),
+      ('strategy-northstar', 'Northstar Growth', 'Maya Chen', 'Growth', '+31.7%', '-16.9%', 1472, 'published', 'Concentrated growth strategy with active risk review.'),
+      ('strategy-signal', 'Signal & Carry', 'BTE Systematic', 'Conservative', '+12.1%', '-4.6%', 894, 'published', 'Systematic carry and quality-factor allocation.');
 
     -- Seed default admin user (password: admin123456, bcrypt hash)
     INSERT OR IGNORE INTO platform_administrators (id, username, password_hash, role)

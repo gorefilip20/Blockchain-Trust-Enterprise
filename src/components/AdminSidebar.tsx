@@ -119,6 +119,15 @@ const nav = [
     ),
   },
   {
+    href: '/admin/copy-trading',
+    label: 'Copy Operations',
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="9" cy="8" r="3" /><circle cx="17" cy="10" r="3" /><path d="M2 20c0-3.3 3-6 7-6s7 2.7 7 6" /><path d="M15 15c3.8.2 6 2.2 6 5" />
+      </svg>
+    ),
+  },
+  {
     href: '/admin/settings',
     label: 'Settings',
     icon: (
