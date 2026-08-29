@@ -403,6 +403,30 @@ function initializeDatabase(db: Database.Database) {
       UNIQUE(user_id, symbol)
     );
 
+    -- RBAC: Admin roles
+    CREATE TABLE IF NOT EXISTS admin_roles (
+      id TEXT PRIMARY KEY,
+      name TEXT UNIQUE NOT NULL,
+      description TEXT,
+      permissions TEXT NOT NULL DEFAULT '[]',
+      created_at TEXT DEFAULT (datetime('now'))
+    );
+
+    CREATE TABLE IF NOT EXISTS admin_role_assignments (
+      id TEXT PRIMARY KEY,
+      admin_id TEXT NOT NULL REFERENCES platform_administrators(id),
+      role_id TEXT NOT NULL REFERENCES admin_roles(id),
+      assigned_at TEXT DEFAULT (datetime('now')),
+      UNIQUE(admin_id, role_id)
+    );
+
+    -- Seed default roles
+    INSERT OR IGNORE INTO admin_roles (id, name, description, permissions)
+    VALUES
+      ('role-supervisor', 'Supervisor', 'Full platform access with all permissions', '["all"]'),
+      ('role-analyst', 'Analyst', 'Read-only access to client data, entities, payments, and analytics', '["view_clients","view_entities","view_payments","view_analytics"]'),
+      ('role-support', 'Support', 'Client-facing support with message management and document viewing', '["view_clients","manage_messages","view_documents"]');
+
     -- Seed default admin user (password: admin123456, bcrypt hash)
     INSERT OR IGNORE INTO platform_administrators (id, username, password_hash, role)
     VALUES ('admin-default', 'platform_supervisor', '$2b$10$.CICvqJziE2bjoJlNVMfKuX5PY.uJqtS8T7zJJBVnWlgimoQGdITe', 'supervisor');
@@ -424,6 +448,50 @@ function initializeDatabase(db: Database.Database) {
       ('pt-3', 'demo-user', 'NVDA', 'buy', 'limit', 25, 155.00, 3875.00, 'filled'),
       ('pt-4', 'demo-user', 'BTC', 'sell', 'market', 0.1, 102340.00, 10234.00, 'filled'),
       ('pt-5', 'demo-user', 'ETH', 'buy', 'market', 1.2, 3450.00, 4140.00, 'filled');
+
+    -- Blog posts
+    CREATE TABLE IF NOT EXISTS blog_posts (
+      id TEXT PRIMARY KEY,
+      title TEXT NOT NULL,
+      slug TEXT UNIQUE NOT NULL,
+      excerpt TEXT,
+      content TEXT NOT NULL,
+      author TEXT NOT NULL DEFAULT 'BTE Research',
+      category TEXT NOT NULL DEFAULT 'Insights',
+      status TEXT NOT NULL DEFAULT 'draft' CHECK(status IN ('draft','published','archived')),
+      featured_image_url TEXT,
+      created_at TEXT DEFAULT (datetime('now')),
+      updated_at TEXT DEFAULT (datetime('now'))
+    );
+
+    -- Email campaigns
+    CREATE TABLE IF NOT EXISTS email_campaigns (
+      id TEXT PRIMARY KEY,
+      name TEXT NOT NULL,
+      subject TEXT NOT NULL,
+      body_preview TEXT,
+      target_audience TEXT NOT NULL DEFAULT 'all_users',
+      status TEXT NOT NULL DEFAULT 'draft' CHECK(status IN ('draft','scheduled','sent','paused')),
+      scheduled_at TEXT,
+      sent_count INTEGER DEFAULT 0,
+      open_rate REAL DEFAULT 0,
+      click_rate REAL DEFAULT 0,
+      created_at TEXT DEFAULT (datetime('now')),
+      updated_at TEXT DEFAULT (datetime('now'))
+    );
+
+    -- Seed blog posts
+    INSERT OR IGNORE INTO blog_posts (id, title, slug, excerpt, content, author, category, status, created_at)
+    VALUES
+      ('post-wyoming-llc', 'Why Wyoming LLCs Are the Gold Standard for Crypto Businesses', 'wyoming-llcs-gold-standard', 'Wyoming offers unmatched privacy protections, favorable tax treatment, and a forward-thinking regulatory framework that makes it the jurisdiction of choice for digital asset enterprises.', 'Wyoming has emerged as the premier jurisdiction for cryptocurrency and blockchain businesses seeking corporate formation. The state''s progressive approach to digital asset regulation, combined with its long-standing tradition of business privacy, creates an unparalleled environment for crypto enterprises. Key advantages include no state income tax, strong charging order protection, and the nation''s first DAO LLC legislation. For institutional players and individual founders alike, Wyoming represents the intersection of regulatory clarity and operational freedom.', 'BTE Research', 'Legal', 'published', datetime('now', '-5 days')),
+      ('post-institutional-custody', 'Institutional Custody in 2026: What Every Fund Manager Needs to Know', 'institutional-custody-2026', 'The institutional custody landscape has matured dramatically. Multi-signature wallets, MPC technology, and regulatory-compliant storage solutions are now table stakes for serious fund managers.', 'The digital asset custody landscape in 2026 looks fundamentally different from even two years ago. Institutional-grade solutions now offer military-grade security combined with the flexibility that fund managers demand. Multi-party computation (MPC) technology has replaced traditional hot/cold wallet paradigms, while regulatory frameworks in Wyoming and other forward-thinking jurisdictions have provided the legal certainty needed for fiduciary compliance. This guide covers the essential custody considerations for fund managers navigating the current landscape.', 'BTE Research', 'Insights', 'published', datetime('now', '-3 days')),
+      ('post-dao-governance', 'DAO Governance Meets Traditional Corporate Structure', 'dao-governance-corporate-structure', 'How decentralized autonomous organizations are finding common ground with traditional corporate governance through Wyoming''s pioneering DAO LLC framework.', 'The tension between decentralized governance and traditional corporate structure has been one of the defining challenges of the Web3 era. Wyoming''s DAO LLC legislation provides a bridge between these two worlds, offering blockchain-native organizations the legal protections of a limited liability company while preserving the democratic governance principles that define DAOs. This analysis explores how leading organizations are leveraging this hybrid structure.', 'BTE Research', 'Web3', 'draft', datetime('now', '-1 day'));
+
+    -- Seed email campaigns
+    INSERT OR IGNORE INTO email_campaigns (id, name, subject, body_preview, target_audience, status, sent_count, open_rate, click_rate, scheduled_at, created_at)
+    VALUES
+      ('campaign-welcome', 'Welcome Series', 'Welcome to BTE Markets', 'Thank you for joining BTE Markets. Your institutional-grade workspace is ready to explore.', 'all_users', 'sent', 847, 62.4, 18.7, NULL, datetime('now', '-14 days')),
+      ('campaign-strategy', 'New Strategy Alert', 'Atlas Balanced hits +18%', 'The Atlas Balanced copy-trading strategy has achieved +18.4% returns this month.', 'active_traders', 'scheduled', 0, 0, 0, datetime('now', '+2 days'), datetime('now', '-1 day'));
 
     -- Seed demo notifications (tied to any user that registers)
     INSERT OR IGNORE INTO notifications (id, user_id, type, title, message, is_read, created_at)

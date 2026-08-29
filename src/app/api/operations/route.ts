@@ -22,6 +22,14 @@ export async function POST(req: NextRequest) {
     const id = uuidv4();
     const hash = await bcrypt.hash(password, 10);
     db.prepare('INSERT INTO app_users (id, full_name, email, password_hash) VALUES (?, ?, ?, ?)').run(id, fullName, String(email).toLowerCase(), hash);
+    // Seed welcome notifications for the new user
+    const notifStmt = db.prepare('INSERT OR IGNORE INTO notifications (id, user_id, type, title, message, is_read, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)');
+    notifStmt.run(uuidv4(), id, 'system', 'Welcome to BTE', 'Your demo workspace is ready. Explore portfolio analytics, copy trading, and more.', 0, new Date().toISOString());
+    notifStmt.run(uuidv4(), id, 'price_alert', 'BTC above $108,000', 'Bitcoin has crossed your $108,000 alert threshold. Current price: $108,492.00.', 0, new Date(Date.now() - 3600000).toISOString());
+    notifStmt.run(uuidv4(), id, 'order_fill', 'Buy order filled', 'Your market buy order for 0.10 BTC has been filled at $108,492.00.', 0, new Date(Date.now() - 7200000).toISOString());
+    notifStmt.run(uuidv4(), id, 'document_ready', 'Operating Agreement ready', 'Your Operating Agreement document has been generated and is available for download.', 1, new Date(Date.now() - 86400000).toISOString());
+    notifStmt.run(uuidv4(), id, 'payment_confirmed', 'Payment confirmed', 'Your $499.00 formation package payment via BEP20 has been confirmed on-chain.', 1, new Date(Date.now() - 172800000).toISOString());
+    notifStmt.run(uuidv4(), id, 'system', 'Security review complete', 'Your account security review has been completed. No issues found.', 1, new Date(Date.now() - 259200000).toISOString());
     const token = jwt.sign({ userId: id, email: String(email).toLowerCase(), name: fullName }, JWT_SECRET, { expiresIn: '24h' });
     return NextResponse.json({ success: true, token, user: { id, fullName, email: String(email).toLowerCase() } }, { status: 201 });
   }
