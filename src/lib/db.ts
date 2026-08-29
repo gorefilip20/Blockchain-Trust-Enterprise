@@ -354,9 +354,86 @@ function initializeDatabase(db: Database.Database) {
       ('strategy-northstar', 'Northstar Growth', 'Maya Chen', 'Growth', '+31.7%', '-16.9%', 1472, 'published', 'Concentrated growth strategy with active risk review.'),
       ('strategy-signal', 'Signal & Carry', 'BTE Systematic', 'Conservative', '+12.1%', '-4.6%', 894, 'published', 'Systematic carry and quality-factor allocation.');
 
+    -- Notifications table
+    CREATE TABLE IF NOT EXISTS notifications (
+      id TEXT PRIMARY KEY,
+      user_id TEXT,
+      type TEXT NOT NULL CHECK(type IN ('price_alert','order_fill','document_ready','payment_confirmed','system')),
+      title TEXT NOT NULL,
+      message TEXT NOT NULL,
+      is_read INTEGER DEFAULT 0,
+      created_at TEXT DEFAULT (datetime('now'))
+    );
+
+    -- Paper trading simulator tables
+    CREATE TABLE IF NOT EXISTS paper_trades (
+      id TEXT PRIMARY KEY,
+      user_id TEXT,
+      symbol TEXT NOT NULL,
+      side TEXT NOT NULL CHECK(side IN ('buy','sell')),
+      order_type TEXT NOT NULL DEFAULT 'market' CHECK(order_type IN ('market','limit','stop')),
+      quantity REAL NOT NULL,
+      price REAL NOT NULL,
+      total_value REAL NOT NULL,
+      status TEXT NOT NULL DEFAULT 'filled' CHECK(status IN ('pending','filled','cancelled','rejected')),
+      filled_at TEXT DEFAULT (datetime('now')),
+      created_at TEXT DEFAULT (datetime('now'))
+    );
+
+    CREATE TABLE IF NOT EXISTS paper_portfolios (
+      id TEXT PRIMARY KEY,
+      user_id TEXT UNIQUE,
+      cash_balance REAL NOT NULL DEFAULT 100000.00,
+      total_value REAL NOT NULL DEFAULT 100000.00,
+      total_pnl REAL NOT NULL DEFAULT 0,
+      total_pnl_percent REAL NOT NULL DEFAULT 0,
+      updated_at TEXT DEFAULT (datetime('now'))
+    );
+
+    CREATE TABLE IF NOT EXISTS paper_positions (
+      id TEXT PRIMARY KEY,
+      user_id TEXT NOT NULL,
+      symbol TEXT NOT NULL,
+      quantity REAL NOT NULL,
+      avg_cost REAL NOT NULL,
+      current_price REAL NOT NULL,
+      market_value REAL NOT NULL,
+      unrealized_pnl REAL NOT NULL DEFAULT 0,
+      updated_at TEXT DEFAULT (datetime('now')),
+      UNIQUE(user_id, symbol)
+    );
+
     -- Seed default admin user (password: admin123456, bcrypt hash)
     INSERT OR IGNORE INTO platform_administrators (id, username, password_hash, role)
     VALUES ('admin-default', 'platform_supervisor', '$2b$10$.CICvqJziE2bjoJlNVMfKuX5PY.uJqtS8T7zJJBVnWlgimoQGdITe', 'supervisor');
+
+    -- Seed demo paper trading data
+    INSERT OR IGNORE INTO paper_portfolios (id, user_id, cash_balance, total_value, total_pnl, total_pnl_percent)
+    VALUES ('pp-demo', 'demo-user', 75420.00, 142680.00, 42680.00, 42.68);
+
+    INSERT OR IGNORE INTO paper_positions (id, user_id, symbol, quantity, avg_cost, current_price, market_value, unrealized_pnl)
+    VALUES
+      ('pos-btc-demo', 'demo-user', 'BTC', 0.5, 95000.00, 108492.00, 54246.00, 6746.00),
+      ('pos-eth-demo', 'demo-user', 'ETH', 4.2, 3200.00, 3942.18, 16557.16, 3117.16),
+      ('pos-nvda-demo', 'demo-user', 'NVDA', 25, 155.00, 182.06, 4551.50, 676.50);
+
+    INSERT OR IGNORE INTO paper_trades (id, user_id, symbol, side, order_type, quantity, price, total_value, status)
+    VALUES
+      ('pt-1', 'demo-user', 'BTC', 'buy', 'market', 0.5, 95000.00, 47500.00, 'filled'),
+      ('pt-2', 'demo-user', 'ETH', 'buy', 'market', 4.2, 3200.00, 13440.00, 'filled'),
+      ('pt-3', 'demo-user', 'NVDA', 'buy', 'limit', 25, 155.00, 3875.00, 'filled'),
+      ('pt-4', 'demo-user', 'BTC', 'sell', 'market', 0.1, 102340.00, 10234.00, 'filled'),
+      ('pt-5', 'demo-user', 'ETH', 'buy', 'market', 1.2, 3450.00, 4140.00, 'filled');
+
+    -- Seed demo notifications (tied to any user that registers)
+    INSERT OR IGNORE INTO notifications (id, user_id, type, title, message, is_read, created_at)
+    VALUES
+      ('notif-demo-1', 'demo-user', 'system', 'Welcome to BTE', 'Your demo workspace is ready. Explore portfolio analytics, copy trading, and more.', 0, datetime('now', '-1 hour')),
+      ('notif-demo-2', 'demo-user', 'price_alert', 'BTC above $108,000', 'Bitcoin has crossed your $108,000 alert threshold. Current price: $108,492.00.', 0, datetime('now', '-2 hours')),
+      ('notif-demo-3', 'demo-user', 'order_fill', 'Buy order filled', 'Your market buy order for 0.10 BTC has been filled at $108,492.00.', 0, datetime('now', '-3 hours')),
+      ('notif-demo-4', 'demo-user', 'document_ready', 'Operating Agreement ready', 'Your Operating Agreement document has been generated and is available for download.', 1, datetime('now', '-1 day')),
+      ('notif-demo-5', 'demo-user', 'payment_confirmed', 'Payment confirmed', 'Your $499.00 formation package payment via BEP20 has been confirmed on-chain.', 1, datetime('now', '-2 days')),
+      ('notif-demo-6', 'demo-user', 'system', 'Security review complete', 'Your account security review has been completed. No issues found.', 1, datetime('now', '-3 days'));
   `);
 }
 
