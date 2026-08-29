@@ -493,6 +493,59 @@ function initializeDatabase(db: Database.Database) {
       ('campaign-welcome', 'Welcome Series', 'Welcome to BTE Markets', 'Thank you for joining BTE Markets. Your institutional-grade workspace is ready to explore.', 'all_users', 'sent', 847, 62.4, 18.7, NULL, datetime('now', '-14 days')),
       ('campaign-strategy', 'New Strategy Alert', 'Atlas Balanced hits +18%', 'The Atlas Balanced copy-trading strategy has achieved +18.4% returns this month.', 'active_traders', 'scheduled', 0, 0, 0, datetime('now', '+2 days'), datetime('now', '-1 day'));
 
+    -- Investment plans
+    CREATE TABLE IF NOT EXISTS investment_plans (
+      id TEXT PRIMARY KEY,
+      name TEXT NOT NULL,
+      tier TEXT NOT NULL UNIQUE CHECK(tier IN ('starter','growth','premium')),
+      amount_usd REAL NOT NULL,
+      min_return_pct REAL NOT NULL,
+      max_return_pct REAL NOT NULL,
+      duration_months INTEGER NOT NULL DEFAULT 12,
+      features TEXT NOT NULL DEFAULT '[]',
+      risk_level TEXT NOT NULL DEFAULT 'Moderate',
+      status TEXT NOT NULL DEFAULT 'active' CHECK(status IN ('active','paused','archived')),
+      created_at TEXT DEFAULT (datetime('now')),
+      updated_at TEXT DEFAULT (datetime('now'))
+    );
+
+    CREATE TABLE IF NOT EXISTS user_investments (
+      id TEXT PRIMARY KEY,
+      user_id TEXT NOT NULL,
+      user_name TEXT NOT NULL,
+      user_email TEXT NOT NULL,
+      plan_id TEXT NOT NULL REFERENCES investment_plans(id),
+      amount_usd REAL NOT NULL,
+      projected_return_pct REAL NOT NULL,
+      actual_return_pct REAL DEFAULT 0,
+      current_value REAL NOT NULL,
+      status TEXT NOT NULL DEFAULT 'pending' CHECK(status IN ('pending','active','matured','withdrawn','cancelled')),
+      started_at TEXT,
+      matures_at TEXT,
+      created_at TEXT DEFAULT (datetime('now')),
+      updated_at TEXT DEFAULT (datetime('now'))
+    );
+
+    -- Seed investment plans
+    INSERT OR IGNORE INTO investment_plans (id, name, tier, amount_usd, min_return_pct, max_return_pct, duration_months, features, risk_level, status)
+    VALUES
+      ('plan-starter', 'Starter Portfolio', 'starter', 2000.00, 8.0, 15.0, 12,
+       '["Diversified stock portfolio","Monthly performance reports","Basic risk management","Email support","Quarterly rebalancing","Access to market insights"]',
+       'Conservative', 'active'),
+      ('plan-growth', 'Growth Accelerator', 'growth', 5000.00, 12.0, 25.0, 12,
+       '["Aggressive growth allocation","Weekly performance reports","Advanced risk management","Priority support","Monthly rebalancing","AI-powered stock picks","Sector rotation strategy","Dedicated account manager"]',
+       'Moderate', 'active'),
+      ('plan-premium', 'Premium Institutional', 'premium', 20000.00, 18.0, 40.0, 12,
+       '["Institutional-grade portfolio","Daily performance reports","Full risk management suite","24/7 dedicated support","Weekly rebalancing","AI & quant strategy blend","Options & derivatives access","Dedicated portfolio manager","Tax-loss harvesting","Private market allocations"]',
+       'Growth', 'active');
+
+    -- Seed demo user investments
+    INSERT OR IGNORE INTO user_investments (id, user_id, user_name, user_email, plan_id, amount_usd, projected_return_pct, actual_return_pct, current_value, status, started_at, matures_at)
+    VALUES
+      ('inv-demo-1', 'demo-user', 'Jordan Morgan', 'jordan@example.com', 'plan-growth', 5000.00, 18.5, 14.2, 5710.00, 'active', datetime('now', '-4 months'), datetime('now', '+8 months')),
+      ('inv-demo-2', 'demo-user-2', 'Sarah Chen', 'sarah@example.com', 'plan-premium', 20000.00, 28.0, 22.6, 24520.00, 'active', datetime('now', '-6 months'), datetime('now', '+6 months')),
+      ('inv-demo-3', 'demo-user-3', 'Alex Rivera', 'alex@example.com', 'plan-starter', 2000.00, 12.0, 9.8, 2196.00, 'active', datetime('now', '-3 months'), datetime('now', '+9 months'));
+
     -- Seed demo notifications (tied to any user that registers)
     INSERT OR IGNORE INTO notifications (id, user_id, type, title, message, is_read, created_at)
     VALUES
