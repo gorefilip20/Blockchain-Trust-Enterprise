@@ -363,3 +363,84 @@ html:not([data-theme="dark"]) .terminal-shell .metric-card, html:not([data-theme
 .invest-disclaimer { text-align:center; max-width:680px; margin:0 auto; }
 .invest-disclaimer p { font-size:10px; color:#a3b4be; line-height:1.7; }
 @media (max-width:700px) { .invest-page { padding:32px 16px 48px; } .invest-grid { grid-template-columns:1fr; } .invest-stats-row { gap:10px; } .invest-stat { padding:10px 14px; flex:1; min-width:140px; } }
+
+/* Mentorship & Strategies page */
+.mentorship-page { max-width:1100px; margin:0 auto; padding:48px 24px 64px; }
+.mentorship-hero { text-align:center; margin-bottom:36px; }
+.mentorship-hero h1 { font-size:clamp(26px,4vw,40px); line-height:1.1; letter-spacing:-.04em; color:#173247; margin-top:14px; max-width:700px; margin-left:auto; margin-right:auto; }
+.mentorship-hero-sub { color:#66808e; font-size:14px; max-width:560px; margin:14px auto 0; line-height:1.6; }
+.mentorship-hero-stats { display:flex; justify-content:center; gap:24px; flex-wrap:wrap; margin-top:28px; }
+.mh-stat { display:flex; align-items:center; gap:8px; }
+.mh-stat svg { color:#0fa987; }
+.mh-stat strong { font-size:16px; color:#173247; }
+.mh-stat span { font-size:10px; color:#8aa0ac; margin-left:2px; }
+.mentorship-tabs { display:flex; gap:4px; background:#edf5f6; border-radius:10px; padding:4px; margin-bottom:28px; }
+.mentorship-tabs button { flex:1; padding:10px 16px; border:0; border-radius:8px; background:transparent; color:#66808e; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px; transition:all .15s; }
+.mentorship-tabs .mt-active { background:#fff; color:#173247; box-shadow:0 1px 4px rgba(0,0,0,.08); }
+.mentorship-section { animation:fadeIn .25s ease; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:none} }
+.strategy-filters { display:flex; gap:6px; margin-bottom:20px; flex-wrap:wrap; }
+.strategy-filters button { padding:6px 14px; border-radius:20px; border:1px solid #d3e1e8; background:transparent; color:#66808e; font-size:11px; font-weight:600; cursor:pointer; transition:all .12s; }
+.strategy-filters .sf-active { background:#0fa987; color:#fff; border-color:#0fa987; }
+.strategy-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:20px; margin-bottom:28px; }
+.strategy-card { background:#fff; border:1px solid #e5edf1; border-radius:14px; padding:24px; transition:transform .15s,box-shadow .15s; }
+.strategy-card:hover { transform:translateY(-3px); box-shadow:0 8px 24px rgba(15,169,135,.08); }
+.strategy-card-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+.strategy-card-cat { display:flex; align-items:center; gap:6px; color:#0fa987; font-size:11px; font-weight:600; }
+.strategy-difficulty { font-size:10px; font-weight:700; padding:3px 10px; border-radius:20px; border:1px solid; }
+.strategy-card h3 { font-size:17px; font-weight:700; color:#173247; margin-bottom:4px; letter-spacing:-.02em; }
+.strategy-trader { font-size:12px; color:#8aa0ac; margin-bottom:4px; }
+.strategy-trader strong { color:#456271; }
+.strategy-markets { font-size:11px; color:#66808e; display:flex; align-items:center; gap:5px; margin-bottom:10px; }
+.strategy-desc { font-size:12px; color:#456271; line-height:1.65; margin-bottom:12px; }
+.strategy-expand { background:none; border:0; color:#0fa987; font-size:11px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:4px; padding:0; margin-bottom:10px; }
+.strategy-expand:hover { color:#078d73; }
+.strategy-concepts { list-style:none; padding:0; margin:0 0 12px; background:#f4f8fb; border-radius:8px; padding:12px 16px; }
+.strategy-concepts li { display:flex; align-items:center; gap:7px; font-size:11px; color:#456271; padding:4px 0; }
+.strategy-concepts li svg { color:#0fa987; flex-shrink:0; }
+.strategy-footer { display:flex; justify-content:space-between; align-items:center; padding-top:10px; border-top:1px solid #edf3f6; }
+.strategy-source { font-size:10px; color:#a3b4be; }
+.strategy-free-badge { font-size:9px; font-weight:700; color:#0fa987; background:#e6f9f4; padding:3px 10px; border-radius:20px; letter-spacing:.04em; }
+.strategy-credit { text-align:center; margin-top:8px; }
+.strategy-credit p { font-size:11px; color:#a3b4be; }
+.strategy-credit strong { color:#66808e; }
+.mentor-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:20px; margin-bottom:28px; }
+.mentor-card { background:#fff; border:1px solid #e5edf1; border-radius:14px; padding:24px; text-align:center; transition:transform .15s,box-shadow .15s; }
+.mentor-card:hover { transform:translateY(-3px); box-shadow:0 8px 24px rgba(15,169,135,.08); }
+.mentor-avatar { width:56px; height:56px; border-radius:50%; background:linear-gradient(135deg,#0fa987,#078d73); color:#fff; font-size:18px; font-weight:700; display:flex; align-items:center; justify-content:center; margin:0 auto 14px; }
+.mentor-card h3 { font-size:18px; font-weight:700; color:#173247; margin-bottom:4px; }
+.mentor-specialty { font-size:12px; color:#0fa987; font-weight:600; margin-bottom:10px; }
+.mentor-bio { font-size:12px; color:#456271; line-height:1.6; margin-bottom:14px; }
+.mentor-meta { display:flex; justify-content:center; gap:14px; font-size:11px; color:#66808e; margin-bottom:8px; }
+.mentor-meta span { display:flex; align-items:center; gap:4px; }
+.mentor-markets { font-size:11px; color:#8aa0ac; display:flex; align-items:center; justify-content:center; gap:5px; margin-bottom:10px; }
+.mentor-contact { display:flex; align-items:center; justify-content:center; gap:6px; font-size:12px; color:#0fa987; font-weight:600; padding-top:10px; border-top:1px solid #edf3f6; }
+.mentor-cta-box { background:linear-gradient(135deg,#f0faf7,#edf5f6); border:1px solid #c8e6df; border-radius:14px; padding:32px; text-align:center; }
+.mentor-cta-box h3 { font-size:20px; font-weight:700; color:#173247; margin-bottom:8px; }
+.mentor-cta-box p { font-size:13px; color:#456271; margin-bottom:18px; }
+.mentor-cta-btn { background:#0fa987; color:#fff; border:0; border-radius:10px; padding:12px 28px; font-size:13px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:8px; transition:background .15s; }
+.mentor-cta-btn:hover { background:#078d73; }
+.mentor-apply-wrap { display:grid; grid-template-columns:1fr 1fr; gap:32px; }
+.mentor-apply-info h2 { font-size:24px; font-weight:700; color:#173247; margin-bottom:8px; }
+.mentor-apply-info > p { font-size:13px; color:#66808e; margin-bottom:22px; }
+.apply-benefits { display:grid; gap:14px; margin-bottom:22px; }
+.apply-benefit { display:flex; gap:12px; align-items:flex-start; }
+.apply-benefit svg { color:#0fa987; flex-shrink:0; margin-top:2px; }
+.apply-benefit strong { display:block; font-size:13px; color:#173247; }
+.apply-benefit span { font-size:11px; color:#8aa0ac; }
+.apply-fee-box { background:#f4f8fb; border:1px solid #e5edf1; border-radius:12px; padding:20px; }
+.apply-fee-box h4 { font-size:13px; color:#66808e; margin-bottom:6px; font-weight:600; }
+.apply-fee-amount { font-size:32px; font-weight:800; color:#173247; letter-spacing:-.03em; }
+.apply-fee-amount span { font-size:13px; font-weight:500; color:#8aa0ac; margin-left:6px; }
+.apply-fee-box > p { font-size:11px; color:#8aa0ac; margin-top:8px; }
+.apply-telegram { display:flex; align-items:center; gap:8px; margin-top:12px; font-size:12px; color:#0fa987; font-weight:600; }
+.mentor-apply-form { background:#fff; border:1px solid #e5edf1; border-radius:14px; padding:28px; }
+.mentor-apply-form h3 { font-size:18px; font-weight:700; color:#173247; margin-bottom:18px; }
+.mentor-apply-form label { display:block; font-size:11px; font-weight:600; color:#456271; margin-bottom:14px; }
+.mentor-apply-form input, .mentor-apply-form select, .mentor-apply-form textarea { display:block; width:100%; margin-top:5px; padding:10px 12px; border:1px solid #d3e1e8; border-radius:8px; font-size:12px; color:#173247; background:#fff; }
+.mentor-apply-form input:focus, .mentor-apply-form select:focus, .mentor-apply-form textarea:focus { outline:none; border-color:#0fa987; box-shadow:0 0 0 3px rgba(15,169,135,.1); }
+.mentor-apply-form textarea { resize:vertical; font-family:inherit; }
+.mentor-apply-form button[type="submit"] { width:100%; padding:12px; border:0; border-radius:10px; background:#0fa987; color:#fff; font-size:13px; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; margin-top:4px; transition:background .15s; }
+.mentor-apply-form button[type="submit"]:hover { background:#078d73; }
+.mentor-apply-form button[type="submit"]:disabled { opacity:.6; cursor:not-allowed; }
+@media (max-width:700px) { .mentorship-page { padding:32px 16px 48px; } .strategy-grid, .mentor-grid { grid-template-columns:1fr; } .mentor-apply-wrap { grid-template-columns:1fr; } .mentorship-hero-stats { gap:12px; } .mentorship-tabs button { font-size:10px; padding:8px 10px; } }

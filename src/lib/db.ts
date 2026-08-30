@@ -546,6 +546,100 @@ function initializeDatabase(db: Database.Database) {
       ('inv-demo-2', 'demo-user-2', 'Sarah Chen', 'sarah@example.com', 'plan-premium', 20000.00, 28.0, 22.6, 24520.00, 'active', datetime('now', '-6 months'), datetime('now', '+6 months')),
       ('inv-demo-3', 'demo-user-3', 'Alex Rivera', 'alex@example.com', 'plan-starter', 2000.00, 12.0, 9.8, 2196.00, 'active', datetime('now', '-3 months'), datetime('now', '+9 months'));
 
+    -- Trading strategies table
+    CREATE TABLE IF NOT EXISTS trading_strategies (
+      id TEXT PRIMARY KEY,
+      title TEXT NOT NULL,
+      trader_name TEXT NOT NULL,
+      category TEXT NOT NULL DEFAULT 'Swing Trading',
+      markets TEXT NOT NULL DEFAULT 'Stocks',
+      description TEXT NOT NULL,
+      key_concepts TEXT NOT NULL DEFAULT '[]',
+      difficulty TEXT NOT NULL DEFAULT 'Intermediate' CHECK(difficulty IN ('Beginner','Intermediate','Advanced')),
+      source TEXT DEFAULT 'Chart Fanatics',
+      source_url TEXT,
+      is_free INTEGER NOT NULL DEFAULT 1,
+      status TEXT NOT NULL DEFAULT 'active',
+      created_at TEXT DEFAULT (datetime('now'))
+    );
+
+    -- Mentors table
+    CREATE TABLE IF NOT EXISTS mentors (
+      id TEXT PRIMARY KEY,
+      name TEXT NOT NULL,
+      email TEXT NOT NULL UNIQUE,
+      specialty TEXT NOT NULL,
+      bio TEXT NOT NULL,
+      experience_years INTEGER NOT NULL DEFAULT 1,
+      markets TEXT NOT NULL DEFAULT 'Stocks',
+      fee_paid INTEGER NOT NULL DEFAULT 0,
+      fee_amount REAL NOT NULL DEFAULT 150.00,
+      telegram_handle TEXT,
+      status TEXT NOT NULL DEFAULT 'pending' CHECK(status IN ('pending','approved','active','suspended','rejected')),
+      total_students INTEGER DEFAULT 0,
+      rating REAL DEFAULT 0,
+      created_at TEXT DEFAULT (datetime('now')),
+      updated_at TEXT DEFAULT (datetime('now'))
+    );
+
+    -- Mentor applications / payments
+    CREATE TABLE IF NOT EXISTS mentor_applications (
+      id TEXT PRIMARY KEY,
+      mentor_id TEXT REFERENCES mentors(id),
+      user_id TEXT,
+      user_name TEXT NOT NULL,
+      user_email TEXT NOT NULL,
+      payment_status TEXT NOT NULL DEFAULT 'unpaid' CHECK(payment_status IN ('unpaid','pending','paid','refunded')),
+      payment_reference TEXT,
+      applied_at TEXT DEFAULT (datetime('now')),
+      approved_at TEXT
+    );
+
+    -- Seed Chart Fanatics strategies
+    INSERT OR IGNORE INTO trading_strategies (id, title, trader_name, category, markets, description, key_concepts, difficulty, source_url)
+    VALUES
+      ('strat-structure-ote', 'Structure + OTE Playbook', 'Trader Mayne', 'Swing Trading', 'Futures, Forex, Crypto',
+       'This framework combines structure, liquidity, and timing into one process. When a break of structure occurs on the higher timeframe, the market pulls back into the Point of Interest (POI) where the next expansion begins. Step in at the pullback and catch the next leg of the trend.',
+       '["Break of Structure (BOS)","Point of Interest (POI)","Optimal Trade Entry (OTE)","Higher timeframe alignment","Pullback into expansion zone","Fibonacci retracement confluence"]',
+       'Intermediate', 'https://www.chartfanatics.com/strategies/structure-ote'),
+
+      ('strat-real-simple', 'Real Simple Strategy', 'Ariel', 'Swing Trading', 'Stocks',
+       'A repeatable swing trading system designed to eliminate FOMO and scale with confidence. After a liquidity grab and structure break, price pulls back to a Fair Value Gap for entry. Same setups, entries, and execution rules used in real trades every time.',
+       '["Liquidity grab identification","Structure break confirmation","Fair Value Gap (FVG) entry","FOMO elimination framework","Consistent position sizing","Swing trade management"]',
+       'Beginner', 'https://www.chartfanatics.com/strategies/real-simple-strategy'),
+
+      ('strat-liquidity-grab', 'Liquidity Grab Strategy', 'Chart Fanatics', 'Day Trading', 'Futures, Forex, Crypto',
+       'Built around the concept that price seeks liquidity. Retail traders get trapped around key highs and lows. This strategy waits for the market to run stops, then trades the reversal after the trap is formed. High-quality, repeatable setups across multiple markets.',
+       '["Stop hunt identification","Liquidity pool mapping","Reversal confirmation","Session high/low analysis","Retail trap recognition","Risk-defined entries"]',
+       'Intermediate', 'https://www.chartfanatics.com/strategies/liquidity-strategy'),
+
+      ('strat-universal', 'Universal Trading Strategy', 'The Traveling Trader', 'Day Trading', 'Futures, Forex',
+       'The market sweeps highs and lows, manipulates levels, and displaces aggressively within a single session. This framework captures that behavior. Ideal for traders who want one strategy that works across all liquid markets and sessions.',
+       '["Session sweep identification","Manipulation detection","Aggressive displacement entries","Multi-market applicability","Single-session execution","Clean risk management"]',
+       'Advanced', 'https://www.chartfanatics.com/strategies/universal-strategy'),
+
+      ('strat-po3-ote-adr', 'PO3, OTE + ADR Forex Playbook', 'NBB Trader', 'Day Trading', 'Forex',
+       'A market maker model strategy combining Power of Three (PO3) accumulation-manipulation-distribution phases with Optimal Trade Entry zones and Average Daily Range calculations for precise forex entries and targets.',
+       '["Power of Three (PO3) phases","Optimal Trade Entry zones","Average Daily Range (ADR)","Market maker model","Accumulation/Manipulation/Distribution","Institutional order flow"]',
+       'Advanced', 'https://www.chartfanatics.com/strategies/po3-ote-adr'),
+
+      ('strat-support-resistance', 'Support & Resistance Playbook', 'Brando', 'Swing Trading', 'Options, Stocks',
+       'Brando turned $6K into over $10,000,000 trading options using this playbook. The Size for Zero method involves risking what you are comfortable losing completely rather than using a tight stop, allowing you to hold through volatility and target massive R multiples.',
+       '["Support & resistance zones","Size for Zero method","Options swing trading","Volatility management","Massive R-multiple targets","Emotional control framework"]',
+       'Advanced', 'https://www.chartfanatics.com/playbook/support-and-resistance'),
+
+      ('strat-intraday-liquidity', 'Intraday Liquidity Volatility Model', 'JadeCap', 'Day Trading', 'Futures, Forex',
+       'A precision-based intraday strategy teaching how to trade liquidity grabs, fair value gaps, and session raids. JadeCap shares a 7-figure playbook focused on institutional liquidity concepts applied to intraday timeframes for futures and forex.',
+       '["Intraday liquidity grabs","Fair value gap entries","Session raid setups","Institutional flow analysis","Volatility-based position sizing","Precision entry timing"]',
+       'Advanced', 'https://www.chartfanatics.com/playbook/intraday-liquidity-volatility-model');
+
+    -- Seed demo mentors
+    INSERT OR IGNORE INTO mentors (id, name, email, specialty, bio, experience_years, markets, fee_paid, telegram_handle, status, total_students, rating)
+    VALUES
+      ('mentor-1', 'Kane', 'kane@chartfanatics.com', 'Prop Firm Trading', 'Prop firm trader with $2.3M+ payouts. Held the record for largest single payout and made $1.4M in one month trading a focused, repeatable strategy emphasizing patience and consistent gains.', 8, 'Futures, Forex', 1, '@kane_trades', 'active', 342, 4.9),
+      ('mentor-2', 'Brando', 'brando@chartfanatics.com', 'Options Swing Trading', 'Turned $6K into over $10,000,000 trading. Made $1M+ in a single month using the Size for Zero method. Only takes trades using a strict playbook that anyone can learn.', 10, 'Options, Stocks', 1, '@brando_options', 'active', 567, 4.8),
+      ('mentor-3', 'Ariel', 'ariel@chartfanatics.com', 'Stock Swing Trading', 'Teaches a repeatable swing trading system designed to eliminate FOMO and scale with confidence. Uses the same setups, entries, and execution rules in every real trade.', 6, 'Stocks', 1, '@ariel_swings', 'active', 218, 4.7);
+
     -- Seed demo notifications (tied to any user that registers)
     INSERT OR IGNORE INTO notifications (id, user_id, type, title, message, is_read, created_at)
     VALUES
