@@ -22,7 +22,7 @@ export default function MentorshipPage() {
   const [mentors, setMentors] = useState<Mentor[]>([]);
   const [expanded, setExpanded] = useState<string | null>(null);
   const [tab, setTab] = useState<'strategies' | 'mentors' | 'apply'>('strategies');
-  const [form, setForm] = useState({ name: '', email: '', specialty: '', bio: '', experienceYears: '', markets: 'Stocks', telegramHandle: '' });
+  const [form, setForm] = useState({ name: '', email: '', specialty: '', bio: '', experienceYears: '', markets: 'Stocks' });
   const [result, setResult] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [filter, setFilter] = useState('All');
@@ -50,7 +50,7 @@ export default function MentorshipPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
       setResult({ type: 'success', message: data.message });
-      setForm({ name: '', email: '', specialty: '', bio: '', experienceYears: '', markets: 'Stocks', telegramHandle: '' });
+      setForm({ name: '', email: '', specialty: '', bio: '', experienceYears: '', markets: 'Stocks' });
     } catch (err) {
       setResult({ type: 'error', message: err instanceof Error ? err.message : 'Application failed.' });
     } finally { setSubmitting(false); }
@@ -147,12 +147,10 @@ export default function MentorshipPage() {
                     <span><Star size={12} /> {m.rating}/5</span>
                   </div>
                   <div className="mentor-markets"><Target size={12} /> {m.markets}</div>
-                  {m.telegram_handle && (
-                    <div className="mentor-contact">
-                      <MessageCircle size={14} />
-                      <span>Telegram: {m.telegram_handle}</span>
-                    </div>
-                  )}
+                  <div className="mentor-contact">
+                    <MessageCircle size={14} />
+                    <span>Contact via Live Chat</span>
+                  </div>
                 </div>
               ))}
             </div>
@@ -179,11 +177,11 @@ export default function MentorshipPage() {
                 <div className="apply-fee-box">
                   <h4>Registration Fee</h4>
                   <div className="apply-fee-amount">$150 <span>one-time payment</span></div>
-                  <p>Paid to admin upon approval. Contact via Telegram for payment instructions.</p>
-                  <div className="apply-telegram">
-                    <MessageCircle size={16} />
-                    <span>Telegram link will be provided after application review</span>
-                  </div>
+                  <p>Paid via cryptocurrency upon approval. Visit the Payments page for wallet addresses.</p>
+                  <a href="/payments" className="apply-payment-link">
+                    <Shield size={16} />
+                    <span>View Payment Methods &amp; Wallet Addresses</span>
+                  </a>
                 </div>
               </div>
               <form className="mentor-apply-form" onSubmit={handleApply}>
@@ -200,7 +198,6 @@ export default function MentorshipPage() {
                   </select>
                 </label>
                 <label>Years of Experience<input type="number" min="1" max="50" value={form.experienceYears} onChange={e => setForm(p => ({ ...p, experienceYears: e.target.value }))} /></label>
-                <label>Telegram Handle<input value={form.telegramHandle} onChange={e => setForm(p => ({ ...p, telegramHandle: e.target.value }))} placeholder="@your_handle" /></label>
                 <label>Bio / Trading Background *<textarea rows={4} value={form.bio} onChange={e => setForm(p => ({ ...p, bio: e.target.value }))} placeholder="Describe your trading experience, track record, and teaching approach..." required /></label>
                 <button type="submit" disabled={submitting}>{submitting ? 'Submitting...' : 'Submit Application'} {!submitting && <Send size={14} />}</button>
               </form>
