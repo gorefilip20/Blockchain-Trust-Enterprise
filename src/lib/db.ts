@@ -227,6 +227,22 @@ function initializeDatabase(db: Database.Database) {
       last_login_at TEXT
     );
 
+    -- Student mentorship registrations and gated learning access
+    CREATE TABLE IF NOT EXISTS mentorship_subscriptions (
+      id TEXT PRIMARY KEY,
+      user_id TEXT REFERENCES app_users(id) ON DELETE SET NULL,
+      full_name TEXT NOT NULL,
+      email TEXT NOT NULL,
+      plan_name TEXT NOT NULL DEFAULT 'Mentorship Access',
+      payment_status TEXT NOT NULL DEFAULT 'pending' CHECK(payment_status IN ('pending','paid','refunded')),
+      approval_status TEXT NOT NULL DEFAULT 'pending' CHECK(approval_status IN ('pending','approved','rejected','suspended')),
+      payment_reference TEXT,
+      notion_access_enabled INTEGER NOT NULL DEFAULT 0,
+      created_at TEXT DEFAULT (datetime('now')),
+      approved_at TEXT,
+      updated_at TEXT DEFAULT (datetime('now'))
+    );
+
     CREATE TABLE IF NOT EXISTS copy_strategies (
       id TEXT PRIMARY KEY,
       name TEXT NOT NULL,

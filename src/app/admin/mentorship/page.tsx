@@ -8,6 +8,11 @@ interface Mentor {
   experience_years: number; markets: string; fee_paid: number; fee_amount: number;
   telegram_handle: string; status: string; total_students: number; rating: number; created_at: string;
 }
+interface Subscription {
+  id: string; full_name: string; email: string; plan_name: string;
+  payment_status: string; approval_status: string; payment_reference: string | null;
+  notion_access_enabled: number; created_at: string; approved_at: string | null;
+}
 interface Strategy {
   id: string; title: string; trader_name: string; category: string; markets: string;
   difficulty: string; status: string;
@@ -24,8 +29,9 @@ const statusColors: Record<string, string> = {
 export default function AdminMentorshipPage() {
   const [mentors, setMentors] = useState<Mentor[]>([]);
   const [strategies, setStrategies] = useState<Strategy[]>([]);
+  const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
   const [stats, setStats] = useState<Stats | null>(null);
-  const [tab, setTab] = useState<'mentors' | 'strategies'>('mentors');
+  const [tab, setTab] = useState<'mentors' | 'strategies' | 'subscriptions'>('mentors');
   const [filter, setFilter] = useState('all');
 
   useEffect(() => { load(); }, []);
@@ -36,6 +42,7 @@ export default function AdminMentorshipPage() {
       .then(r => r.json()).then(d => {
         setMentors(d.mentors || []);
         setStrategies(d.strategies || []);
+        setSubscriptions(d.subscriptions || []);
         setStats(d.stats || null);
       });
   }
@@ -46,6 +53,16 @@ export default function AdminMentorshipPage() {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
       body: JSON.stringify({ type: 'mentor', id, status, ...(feePaid !== undefined ? { fee_paid: feePaid } : {}) }),
+    });
+    load();
+  }
+
+  async function updateSubscription(id: string, paymentStatus: string, approvalStatus: string) {
+    const token = localStorage.getItem('bte-admin-token');
+    await fetch('/api/mentorship', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ type: 'subscription', id, payment_status: paymentStatus, approval_status: approvalStatus }),
     });
     load();
   }
@@ -80,6 +97,7 @@ export default function AdminMentorshipPage() {
       <div style={{ display: 'flex', gap: 8, marginBottom: 18 }}>
         <button onClick={() => setTab('mentors')} style={{ padding: '8px 18px', borderRadius: 6, border: '1px solid', fontSize: 12, fontWeight: 600, cursor: 'pointer', background: tab === 'mentors' ? '#0fa987' : 'transparent', color: tab === 'mentors' ? '#fff' : '#66808e', borderColor: tab === 'mentors' ? '#0fa987' : '#d3e1e8' }}>Mentors</button>
         <button onClick={() => setTab('strategies')} style={{ padding: '8px 18px', borderRadius: 6, border: '1px solid', fontSize: 12, fontWeight: 600, cursor: 'pointer', background: tab === 'strategies' ? '#0fa987' : 'transparent', color: tab === 'strategies' ? '#fff' : '#66808e', borderColor: tab === 'strategies' ? '#0fa987' : '#d3e1e8' }}>Strategies</button>
+        <button onClick={() => setTab('subscriptions')} style={{ padding: '8px 18px', borderRadius: 6, border: '1px solid', fontSize: 12, fontWeight: 600, cursor: 'pointer', background: tab === 'subscriptions' ? '#0fa987' : 'transparent', color: tab === 'subscriptions' ? '#fff' : '#66808e', borderColor: tab === 'subscriptions' ? '#0fa987' : '#d3e1e8' }}>Student Access</button>
       </div>
 
       {tab === 'mentors' && (
@@ -158,6 +176,31 @@ export default function AdminMentorshipPage() {
             </table>
           </div>
         </>
+      )}
+
+      {tab === 'subscriptions' && (
+        <div style={{ overflowX: 'auto' }}>
+          <p style={{ color: '#66808e', fontSize: 12, marginBottom: 14 }}>Mark both payment and approval as complete to automatically unlock the private mentorship guide for that student.</p>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12 }}>
+            <thead><tr style={{ borderBottom: '2px solid #e5edf1', textAlign: 'left' }}>
+              <th style={{ padding: '8px 10px', color: '#66808e' }}>Student</th><th style={{ padding: '8px 10px', color: '#66808e' }}>Payment reference</th><th style={{ padding: '8px 10px', color: '#66808e' }}>Payment</th><th style={{ padding: '8px 10px', color: '#66808e' }}>Approval</th><th style={{ padding: '8px 10px', color: '#66808e' }}>Access</th><th style={{ padding: '8px 10px', color: '#66808e' }}>Actions</th>
+            </tr></thead>
+            <tbody>{subscriptions.map(s => (
+              <tr key={s.id} style={{ borderBottom: '1px solid #edf3f6' }}>
+                <td style={{ padding: '10px' }}><div style={{ fontWeight: 600, color: '#173247' }}>{s.full_name}</div><div style={{ fontSize: 10, color: '#8aa0ac' }}>{s.email}</div></td>
+                <td style={{ padding: '10px', fontSize: 10, color: '#456271', maxWidth: 180, wordBreak: 'break-all' }}>{s.payment_reference || '—'}</td>
+                <td style={{ padding: '10px' }}><span style={{ color: s.payment_status === 'paid' ? '#0fa987' : '#e0a800', fontWeight: 600 }}>{s.payment_status}</span></td>
+                <td style={{ padding: '10px' }}><span style={{ color: s.approval_status === 'approved' ? '#0fa987' : s.approval_status === 'rejected' ? '#ef4444' : '#e0a800', fontWeight: 600 }}>{s.approval_status}</span></td>
+                <td style={{ padding: '10px' }}><span style={{ color: s.notion_access_enabled ? '#0fa987' : '#8aa0ac', fontWeight: 600 }}>{s.notion_access_enabled ? 'Unlocked' : 'Locked'}</span></td>
+                <td style={{ padding: '10px' }}><div style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
+                  <Btn color="#0fa987" onClick={() => updateSubscription(s.id, 'paid', 'approved')}>Paid & Approve</Btn>
+                  <Btn color="#ef4444" onClick={() => updateSubscription(s.id, s.payment_status, 'rejected')}>Reject</Btn>
+                  {s.approval_status === 'approved' && <Btn color="#e0a800" onClick={() => updateSubscription(s.id, s.payment_status, 'suspended')}>Suspend</Btn>}
+                </div></td>
+              </tr>
+            ))}{subscriptions.length === 0 && <tr><td colSpan={6} style={{ padding: 40, textAlign: 'center', color: '#8aa0ac' }}>No student registrations yet.</td></tr>}</tbody>
+          </table>
+        </div>
       )}
 
       {tab === 'strategies' && (

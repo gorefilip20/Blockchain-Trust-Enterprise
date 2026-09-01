@@ -1,0 +1,10 @@
+{
+  "entry": "main.typ",
+  "metadata": {
+    "author": "Blockchain Trust Enterprise",
+    "subtitle": "Educational resources for digital-asset participants",
+    "title": "Blockchain Trust Enterprise Learning Guides"
+  },
+  "mode": "report",
+  "theme": "report-theme.typ"
+}

@@ -1,14 +1,15 @@
 {
   "task_kind": "new-document",
   "output": "pdf",
-  "signals": [],
-  "hard_constraints": ["downloadable user guidance PDF", "professional BTE branding"],
+  "signals": ["native-report", "three-guides", "11-pages-each"],
+  "hard_constraints": ["exactly 11 pages per guide", "educational risk disclosures", "professional frontend-ready PDFs"],
   "content_features": {
     "code_blocks": 0,
-    "defined_terms": 8,
+    "defined_terms": 30,
     "portrait_images": 0,
-    "tables": 4,
-    "callout_boxes": 5,
-    "chapters": 8
+    "tables": 8,
+    "callout_boxes": 18,
+    "chapters": 30,
+    "references": 12
   }
 }

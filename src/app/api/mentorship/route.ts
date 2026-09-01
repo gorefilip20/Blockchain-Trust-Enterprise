@@ -23,10 +23,18 @@ export async function GET(req: NextRequest) {
   const db = getDb();
   const section = req.nextUrl.searchParams.get('section');
 
+  if (section === 'student') {
+    const user = getUser(req);
+    if (!user) return NextResponse.json({ error: 'Sign in required.' }, { status: 401 });
+    const subscription = db.prepare('SELECT id, plan_name, payment_status, approval_status, notion_access_enabled, payment_reference, approved_at FROM mentorship_subscriptions WHERE user_id = ? ORDER BY created_at DESC LIMIT 1').get(user.userId);
+    return NextResponse.json({ subscription: subscription || null, notionUrl: process.env.MENTORSHIP_NOTION_URL || null });
+  }
+
   if (section === 'admin') {
     if (!admin(req)) return NextResponse.json({ error: 'Admin authentication required.' }, { status: 401 });
     const mentors = db.prepare('SELECT * FROM mentors ORDER BY created_at DESC').all();
     const applications = db.prepare('SELECT * FROM mentor_applications ORDER BY applied_at DESC').all();
+    const subscriptions = db.prepare('SELECT * FROM mentorship_subscriptions ORDER BY created_at DESC').all();
     const strategies = db.prepare('SELECT * FROM trading_strategies ORDER BY created_at DESC').all();
     const stats = db.prepare(`
       SELECT
@@ -36,7 +44,7 @@ export async function GET(req: NextRequest) {
         (SELECT SUM(fee_amount) FROM mentors WHERE fee_paid = 1) as total_fees_collected,
         (SELECT COUNT(*) FROM trading_strategies) as total_strategies
     `).get();
-    return NextResponse.json({ mentors, applications, strategies, stats });
+    return NextResponse.json({ mentors, applications, subscriptions, strategies, stats });
   }
 
   const strategies = db.prepare("SELECT * FROM trading_strategies WHERE status = 'active' ORDER BY created_at DESC").all();
@@ -47,6 +55,18 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   const body = await req.json();
   const db = getDb();
+
+  if (body.action === 'register-student') {
+    const user = getUser(req);
+    if (!user) return NextResponse.json({ error: 'Sign in required before registering for mentorship.' }, { status: 401 });
+    const { fullName, email, paymentReference } = body;
+    if (!fullName || !email || !paymentReference) return NextResponse.json({ error: 'Name, email, and payment reference are required.' }, { status: 400 });
+    const existing = db.prepare("SELECT id FROM mentorship_subscriptions WHERE email = ? AND approval_status NOT IN ('rejected','suspended')").get(String(email).toLowerCase());
+    if (existing) return NextResponse.json({ error: 'A mentorship registration already exists for this email.' }, { status: 409 });
+    const id = uuidv4();
+    db.prepare('INSERT INTO mentorship_subscriptions (id, user_id, full_name, email, payment_reference) VALUES (?, ?, ?, ?, ?)').run(id, user.userId, fullName, String(email).toLowerCase(), paymentReference);
+    return NextResponse.json({ success: true, subscriptionId: id, message: 'Registration received. An administrator will review your payment and approve access.' }, { status: 201 });
+  }
 
   if (body.action === 'apply-mentor') {
     const { name, email, specialty, bio, experienceYears, markets, telegramHandle } = body;
@@ -80,6 +100,21 @@ export async function PATCH(req: NextRequest) {
   if (!admin(req)) return NextResponse.json({ error: 'Admin authentication required.' }, { status: 401 });
   const body = await req.json();
   const db = getDb();
+
+  if (body.type === 'subscription') {
+    const updates: string[] = [];
+    const params: (string | number | null)[] = [];
+    if (body.payment_status) { updates.push('payment_status = ?'); params.push(body.payment_status); }
+    if (body.approval_status) { updates.push('approval_status = ?'); params.push(body.approval_status); }
+    if (body.payment_reference !== undefined) { updates.push('payment_reference = ?'); params.push(body.payment_reference || null); }
+    const approved = body.payment_status === 'paid' && body.approval_status === 'approved';
+    if (body.payment_status || body.approval_status) updates.push('notion_access_enabled = ?'), params.push(approved ? 1 : 0);
+    if (approved) updates.push("approved_at = datetime('now')");
+    updates.push("updated_at = datetime('now')");
+    params.push(body.id);
+    db.prepare(`UPDATE mentorship_subscriptions SET ${updates.join(', ')} WHERE id = ?`).run(...params);
+    return NextResponse.json({ success: true, notionAccessEnabled: approved });
+  }
 
   if (body.type === 'mentor') {
     const updates: string[] = [];
