@@ -1,159 +1,47 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
-import FeatureWorkspace, { type WorkspaceArea } from '../components/FeatureWorkspace';
-import ChatWidget from '../components/ChatWidget';
-import Testimonials from '../components/Testimonials';
-import ThemeToggle from '../components/ThemeToggle';
-import NotificationPanel from '../components/NotificationPanel';
-import { LanguageSwitcher, useTranslation } from '../lib/i18n';
-import {
-  ArrowDownRight,
-  ArrowUpRight,
-  BarChart3,
-  BookOpen,
-  ChevronDown,
-  ChevronRight,
-  CircleHelp,
-  Command,
-  Download,
-  Eye,
-  Globe2,
-  LayoutDashboard,
-  LineChart,
-  Lock,
-  Menu,
-  MoreHorizontal,
-  Newspaper,
-  PanelLeft,
-  PieChart,
-  Plus,
-  Search,
-  Settings2,
-  ShieldCheck,
-  SlidersHorizontal,
-  Sparkles,
-  Star,
-  TrendingUp,
-  UsersRound,
-  Wallet,
-  X,
-  Zap,
-} from 'lucide-react';
+import { ArrowRight, BarChart3, CheckCircle2, ChevronRight, CircleHelp, Eye, FileText, LockKeyhole, Menu, Play, ShieldCheck, Sparkles, Users, Wallet, X } from 'lucide-react';
+import { useState } from 'react';
 
-type Asset = {
-  symbol: string;
-  name: string;
-  type: string;
-  price: string;
-  change: string;
-  percent: string;
-  positive?: boolean;
-  spark: string;
-  sector: string;
-};
-
-const assets: Asset[] = [
-  { symbol: 'BTC', name: 'Bitcoin', type: 'Crypto', price: '$108,492.00', change: '+$2,184.50', percent: '+2.05%', positive: true, spark: 'M2 27 C 12 24, 14 18, 23 20 S 32 13, 42 16 S 53 7, 65 11 S 79 5, 94 2', sector: 'Digital assets' },
-  { symbol: 'ETH', name: 'Ethereum', type: 'Crypto', price: '$3,942.18', change: '+$96.22', percent: '+2.50%', positive: true, spark: 'M2 25 C 12 27, 18 18, 27 20 S 41 15, 49 17 S 63 8, 74 10 S 84 4, 94 3', sector: 'Digital assets' },
-  { symbol: 'NVDA', name: 'NVIDIA Corporation', type: 'Equity', price: '$182.06', change: '-$1.42', percent: '-0.77%', spark: 'M2 8 C 12 13, 14 9, 25 15 S 38 11, 47 18 S 62 14, 71 18 S 84 21, 94 26', sector: 'Technology' },
-  { symbol: 'TSLA', name: 'Tesla, Inc.', type: 'Equity', price: '$342.78', change: '+$4.66', percent: '+1.38%', positive: true, spark: 'M2 25 C 12 21, 19 24, 28 18 S 37 20, 47 13 S 60 16, 69 10 S 84 7, 94 3', sector: 'Automotive' },
-  { symbol: 'AAPL', name: 'Apple Inc.', type: 'Equity', price: '$227.16', change: '+$0.88', percent: '+0.39%', positive: true, spark: 'M2 18 C 14 19, 17 13, 27 16 S 41 10, 51 13 S 65 8, 76 11 S 86 6, 94 7', sector: 'Technology' },
-  { symbol: 'SPY', name: 'SPDR S&P 500 ETF', type: 'ETF', price: '$634.21', change: '+$1.94', percent: '+0.31%', positive: true, spark: 'M2 20 C 15 17, 22 19, 31 15 S 42 17, 52 12 S 65 15, 74 9 S 86 10, 94 5', sector: 'Index' },
+const strategies = [
+  { name: 'Atlas Balanced', type: 'Multi-asset allocation', returnValue: '+18.42%', risk: 'Moderate', followers: '2,841', accent: '#72e6c1', bars: [28, 42, 35, 58, 51, 73, 66, 88] },
+  { name: 'Digital Conviction', type: 'Crypto trend rotation', returnValue: '+31.76%', risk: 'Growth', followers: '1,926', accent: '#8ea4ff', bars: [32, 24, 48, 40, 61, 56, 74, 92] },
+  { name: 'Core Momentum', type: 'Rules-based equities', returnValue: '+12.08%', risk: 'Balanced', followers: '4,108', accent: '#f3c875', bars: [44, 38, 52, 49, 64, 57, 71, 78] },
 ];
 
-const navItems = [
-  { label: 'Overview', icon: LayoutDashboard },
-  { label: 'Portfolio', icon: PieChart },
-  { label: 'Markets', icon: BarChart3 },
-  { label: 'Trade', icon: Zap },
-  { label: 'Research', icon: Newspaper },
-  { label: 'Copy Trading', icon: UsersRound },
+const steps = [
+  ['01', 'Explore', 'Compare transparent strategy profiles, risk posture, drawdown history, and the logic behind each approach.'],
+  ['02', 'Start in paper mode', 'Build conviction with a simulated workspace before connecting any production account or committing capital.'],
+  ['03', 'Set your guardrails', 'Choose allocation limits, review cadence, and stop-copy conditions before automation is ever considered.'],
 ];
 
-function Sparkline({ path, positive = true }: { path: string; positive?: boolean }) {
+export default function HomePage() {
+  const [menuOpen, setMenuOpen] = useState(false);
   return (
-    <svg className="sparkline" viewBox="0 0 96 32" preserveAspectRatio="none" aria-hidden="true">
-      <path d={path} fill="none" stroke={positive ? '#2bd6a5' : '#ff7185'} strokeWidth="2.2" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function ValueChange({ value, positive = true }: { value: string; positive?: boolean }) {
-  return <span className={positive ? 'positive' : 'negative'}>{positive ? <ArrowUpRight size={14} /> : <ArrowDownRight size={14} />}{value}</span>;
-}
-
-export default function BrokerageWorkspace() {
-  const [activeNav, setActiveNav] = useState('Overview');
-  const [watchlist, setWatchlist] = useState('Global watchlist');
-  const [selectedAsset, setSelectedAsset] = useState(assets[0]);
-  const [search, setSearch] = useState('');
-  const [tradeOpen, setTradeOpen] = useState(false);
-  const [sideOpen, setSideOpen] = useState(false);
-  const [tradeSide, setTradeSide] = useState<'Buy' | 'Sell'>('Buy');
-  const [orderType, setOrderType] = useState('Market');
-  const [quantity, setQuantity] = useState('0.10');
-  const { t, locale, setLocale } = useTranslation();
-  const [notice, setNotice] = useState('');
-  const [platformConfig, setPlatformConfig] = useState<Record<string, string | boolean | number>>({});
-
-  useEffect(() => {
-    fetch('/api/platform-config').then((response) => response.ok ? response.json() : {}).then(setPlatformConfig).catch(() => undefined);
-  }, []);
-
-  const filteredAssets = useMemo(() => assets.filter((asset) => `${asset.symbol} ${asset.name}`.toLowerCase().includes(search.toLowerCase())), [search]);
-
-  const submitPaperOrder = () => {
-    setNotice(`${tradeSide} order staged for ${quantity} ${selectedAsset.symbol} · ${orderType} order`);
-    setTradeOpen(false);
-    window.setTimeout(() => setNotice(''), 4500);
-  };
-
-  return (
-    <main className="terminal-shell">
-      <aside className={`sidebar ${sideOpen ? 'sidebar-open' : ''}`}>
-        <div className="brand-lockup"><div className="brand-mark"><span /></div><div><strong>Blockchain Trust</strong><small>Enterprise Markets</small></div></div>
-        <button className="account-switcher"><span className="account-avatar">BT</span><span><b>BT Enterprise</b><small>Paper account · USD</small></span><ChevronDown size={15} /></button>
-        <nav className="main-nav" aria-label="Main navigation">
-          <div className="nav-caption">Workspace</div>
-          {navItems.map(({ label, icon: Icon }) => <button key={label} className={`nav-item ${activeNav === label ? 'active' : ''}`} onClick={() => { setActiveNav(label); setSideOpen(false); }}><Icon size={17} /><span>{label}</span>{label === 'Trade' && <em>New</em>}</button>)}
-          <div className="nav-caption nav-caption-spaced">Account</div>
-          <button className={`nav-item ${activeNav === 'Balances' ? 'active' : ''}`} onClick={() => { setActiveNav('Balances'); setSideOpen(false); }}><Wallet size={17} /><span>Balances</span></button>
-          <button className={`nav-item ${activeNav === 'Reports' ? 'active' : ''}`} onClick={() => { setActiveNav('Reports'); setSideOpen(false); }}><Download size={17} /><span>Reports</span></button>
-          <button className={`nav-item ${activeNav === 'Security center' ? 'active' : ''}`} onClick={() => { setActiveNav('Security center'); setSideOpen(false); }}><ShieldCheck size={17} /><span>Security center</span></button>
+    <main className="bte-landing">
+      <header className="landing-nav">
+        <a className="landing-brand" href="/"><span className="landing-mark"><i /><i /><i /></span><span><b>Blockchain Trust</b><small>Enterprise Markets</small></span></a>
+        <nav className={menuOpen ? 'landing-links open' : 'landing-links'}>
+          <a href="#strategies" onClick={() => setMenuOpen(false)}>Strategies</a><a href="#process" onClick={() => setMenuOpen(false)}>How it works</a><a href="/mentorship" onClick={() => setMenuOpen(false)}>Mentorship</a><a href="#security" onClick={() => setMenuOpen(false)}>Security</a>
         </nav>
-        <div className="sidebar-bottom"><div className="live-status"><span className="status-dot" />{t('common.all_systems_operational')}</div><button className={`nav-item ${activeNav === 'Settings' ? 'active' : ''}`} onClick={() => { setActiveNav('Settings'); setSideOpen(false); }}><Settings2 size={17} /><span>{t('nav.settings')}</span></button><button className={`nav-item ${activeNav === 'Help center' ? 'active' : ''}`} onClick={() => { setActiveNav('Help center'); setSideOpen(false); }}><CircleHelp size={17} /><span>{t('nav.help_center')}</span></button><div className="sidebar-controls"><ThemeToggle /><LanguageSwitcher locale={locale} setLocale={setLocale} /></div><a className="profile-row" href="/account"><div className="profile-avatar">JM</div><div><b>Jordan Morgan</b><small>Account access</small></div><MoreHorizontal size={17} /></a></div>
-      </aside>
+        <div className="landing-actions"><a className="landing-signin" href="/account">Sign in</a><a className="landing-cta" href="/account">Open workspace <ArrowRight size={15} /></a><button className="landing-menu" onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle navigation">{menuOpen ? <X size={20} /> : <Menu size={20} />}</button></div>
+      </header>
 
-      <section className="workspace">
-        <header className="topbar"><button className="mobile-menu" onClick={() => setSideOpen((value) => !value)} aria-label="Toggle navigation"><Menu size={21} /></button><div className="breadcrumb"><span>Workspace</span><ChevronRight size={14} /><b>{activeNav}</b></div><div className="topbar-actions"><div className="global-search"><Search size={16} /><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search markets, symbols..." /><kbd><Command size={12} />K</kbd></div><NotificationPanel /><button className="icon-button" aria-label="Display settings"><SlidersHorizontal size={18} /></button></div></header>
-
-        {activeNav !== 'Overview' && <FeatureWorkspace area={activeNav as WorkspaceArea} config={platformConfig} onNotify={setNotice} onOpenOrder={() => setTradeOpen(true)} />}{activeNav === 'Overview' && <div className="content-wrap overview-content">
-          <div className="welcome-row"><div><p className="eyebrow"><span className="eyebrow-line" />MONDAY, AUGUST 24, 2026 · MARKET OPEN</p><h1>{String(platformConfig.hero_headline || 'Good morning, Jordan.')}</h1><p className="subtitle">{String(platformConfig.hero_subtitle || 'A clear view across your global portfolio, powered by institutional-grade intelligence.')}</p></div><div className="welcome-actions"><button className="secondary-button" onClick={() => setNotice('Export prepared. Download links will appear in the Reports center.')}><Download size={16} /> Export view</button><button className="primary-button" onClick={() => setTradeOpen(true)}><Plus size={17} /> Create order</button></div></div>
-
-          <section className="metric-grid"><div className="metric-card metric-card-featured"><div className="metric-label">Total account value <Eye size={15} /></div><div className="metric-value">$284,619.42</div><div className="metric-foot"><ValueChange value="$6,842.18 (2.46%)" /><span>Today</span></div><div className="metric-orbit orbit-one" /><div className="metric-orbit orbit-two" /></div><div className="metric-card"><div className="metric-label">Available to invest <Wallet size={15} /></div><div className="metric-value">$68,420.00</div><div className="metric-foot"><span className="muted">Buying power</span><span className="positive">100%</span></div></div><div className="metric-card"><div className="metric-label">Unrealized P&amp;L <TrendingUp size={15} /></div><div className="metric-value positive-text">+$24,882.64</div><div className="metric-foot"><ValueChange value="8.74%" /><span>Since inception</span></div></div><div className="metric-card"><div className="metric-label">Risk posture <ShieldCheck size={15} /></div><div className="metric-value">Balanced</div><div className="risk-bar"><span /><span /><span /><span /><span /></div><div className="metric-foot"><span className="muted">Moderate allocation</span><span className="accent-text">Review</span></div></div></section>
-
-          <div className="dashboard-grid"><section className="panel chart-panel"><div className="panel-heading"><div><div className="panel-kicker"><LineChart size={15} />Net liquidation value</div><div className="chart-value">$284,619.42 <span className="positive">+2.46%</span></div></div><div className="range-tabs"><button className="active">1D</button><button>1W</button><button>1M</button><button>1Y</button><button>Max</button></div></div><div className="main-chart"><div className="chart-y-axis"><span>$290k</span><span>$280k</span><span>$270k</span><span>$260k</span><span>$250k</span></div><svg viewBox="0 0 720 238" preserveAspectRatio="none" role="img" aria-label="Portfolio value chart"><defs><linearGradient id="chartFill" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stopColor="#2bd6a5" stopOpacity=".26" /><stop offset="100%" stopColor="#2bd6a5" stopOpacity="0" /></linearGradient></defs><g className="chart-grid"><line x1="0" y1="20" x2="720" y2="20" /><line x1="0" y1="68" x2="720" y2="68" /><line x1="0" y1="116" x2="720" y2="116" /><line x1="0" y1="164" x2="720" y2="164" /><line x1="0" y1="212" x2="720" y2="212" /></g><path d="M0 190 C 25 182, 34 189, 58 169 S 89 175, 110 151 S 146 158, 169 139 S 199 152, 227 126 S 260 136, 282 111 S 322 120, 343 96 S 374 112, 400 86 S 429 94, 458 74 S 497 88, 517 58 S 550 71, 572 50 S 602 61, 631 37 S 666 49, 690 27 S 708 34, 720 17 L720 238 L0 238Z" fill="url(#chartFill)" /><path d="M0 190 C 25 182, 34 189, 58 169 S 89 175, 110 151 S 146 158, 169 139 S 199 152, 227 126 S 260 136, 282 111 S 322 120, 343 96 S 374 112, 400 86 S 429 94, 458 74 S 497 88, 517 58 S 550 71, 572 50 S 602 61, 631 37 S 666 49, 690 27 S 708 34, 720 17" fill="none" stroke="#2bd6a5" strokeWidth="2.5" strokeLinecap="round" /></svg><div className="chart-tooltip"><span>Aug 24, 2026 · 09:42</span><b>$284,619.42</b><small>+$6,842.18 today</small></div><div className="chart-x-axis"><span>09:00</span><span>10:00</span><span>11:00</span><span>12:00</span><span>13:00</span><span>14:00</span><span>15:00</span><span>16:00</span></div></div></section>
-
-            <section className="panel allocation-panel"><div className="panel-heading"><div><div className="panel-kicker"><PieChart size={15} />Portfolio allocation</div><div className="panel-title">By asset class</div></div><button className="more-button"><MoreHorizontal size={18} /></button></div><div className="donut-wrap"><div className="donut"><div className="donut-center"><b>$284.6k</b><span>Portfolio</span></div></div><div className="allocation-legend"><div><span className="legend-color color-equities" /><span>Equities</span><b>48.2%</b></div><div><span className="legend-color color-digital" /><span>Digital assets</span><b>31.7%</b></div><div><span className="legend-color color-fixed" /><span>Fixed income</span><b>14.6%</b></div><div><span className="legend-color color-cash" /><span>Cash</span><b>5.5%</b></div></div></div><button className="full-link" onClick={() => setActiveNav('Portfolio')}>View portfolio analytics <ArrowUpRight size={15} /></button></section></div>
-
-          <section className="panel watchlist-panel"><div className="panel-heading watchlist-heading"><div><div className="panel-kicker"><Star size={15} />Market intelligence</div><div className="panel-title">Your watchlist</div></div><div className="watchlist-tools"><button className="watchlist-select">{watchlist}<ChevronDown size={14} /></button><button className="more-button"><Plus size={17} /></button><button className="more-button"><MoreHorizontal size={18} /></button></div></div><div className="asset-table"><div className="asset-row asset-header"><span>Instrument</span><span>Last price</span><span>Change</span><span>Chart · 1D</span><span> </span></div>{filteredAssets.map((asset) => <button className={`asset-row ${selectedAsset.symbol === asset.symbol ? 'selected' : ''}`} key={asset.symbol} onClick={() => setSelectedAsset(asset)}><span className="instrument"><span className="asset-icon">{asset.symbol.slice(0, 1)}</span><span><b>{asset.symbol}</b><small>{asset.name} · {asset.type}</small></span></span><span className="last-price">{asset.price}</span><span><ValueChange value={`${asset.change}  ${asset.percent}`} positive={asset.positive} /></span><span className="mini-chart"><Sparkline path={asset.spark} positive={asset.positive} /></span><span className="row-action"><ChevronRight size={17} /></span></button>)}</div>{filteredAssets.length === 0 && <div className="empty-state">No instruments match “{search}”. Try a symbol such as BTC or NVDA.</div>}<div className="table-footer"><span>Quotes delayed for demo purposes · Last updated 09:42:18 ET</span><button onClick={() => setNotice('Market data connection settings opened.')}>Data settings <ChevronRight size={14} /></button></div></section>
-
-          <div className="lower-grid"><section className="panel activity-panel"><div className="panel-heading"><div><div className="panel-kicker"><BookOpen size={15} />Account activity</div><div className="panel-title">Recent orders</div></div><button className="full-link" onClick={() => setActiveNav('Trade')}>View all <ChevronRight size={14} /></button></div><div className="activity-list"><div className="activity-row"><span className="activity-icon buy-icon"><ArrowUpRight size={15} /></span><span><b>Buy · BTC</b><small>0.10 BTC · Market order</small></span><span><b>$10,849.20</b><small>Today, 09:32</small></span><em className="filled">Filled</em></div><div className="activity-row"><span className="activity-icon sell-icon"><ArrowDownRight size={15} /></span><span><b>Sell · NVDA</b><small>12 shares · Limit order</small></span><span><b>$2,184.72</b><small>Yesterday, 15:48</small></span><em className="filled">Filled</em></div><div className="activity-row"><span className="activity-icon deposit-icon"><Download size={15} /></span><span><b>Cash deposit</b><small>Business checking · ACH</small></span><span><b>$25,000.00</b><small>Aug 21, 2026</small></span><em className="pending">Pending</em></div></div></section><section className="panel insights-panel"><div className="insights-glow" /><div className="panel-kicker"><Sparkles size={15} />BTE signal</div><h3>Portfolio resilience is strengthening.</h3><p>Your diversification score moved into the top quartile of balanced portfolios after the latest rebalance.</p><div className="signal-score"><div><b>82</b><span>/ 100</span></div><div className="score-track"><span /></div><span className="positive">+6 pts</span></div><button className="insight-link" onClick={() => setNotice('Opening your personalized portfolio review.')}>Review signal <ArrowRightIcon /></button></section></div>
-          <section className="advantage-grid"><div className="advantage-heading"><div className="panel-kicker"><Sparkles size={15} />BTE advantage layer</div><h2>Built for confidence, not just clicks.</h2><p>Four product principles that make every decision more observable, reversible, and aligned with your mandate.</p></div><button className="advantage-card" onClick={() => setNotice('Execution receipt preview opened.')}><span className="advantage-icon"><Zap size={16} /></span><span><b>Explainable execution</b><small>Every simulated order gets a human-readable receipt with price, timing, controls, and fees.</small></span><ArrowUpRight size={15} /></button><button className="advantage-card" onClick={() => setNotice('TrustLayer transparency report opened.')}><span className="advantage-icon"><ShieldCheck size={16} /></span><span><b>TrustLayer transparency</b><small>Surface custody, provider status, data freshness, and operational incidents in one place.</small></span><ArrowUpRight size={15} /></button><button className="advantage-card" onClick={() => setNotice('Guardrail builder opened.')}><span className="advantage-icon"><SlidersHorizontal size={16} /></span><span><b>Personal guardrails</b><small>Set concentration, drawdown, and approval rules before an order is staged.</small></span><ArrowUpRight size={15} /></button><button className="advantage-card" onClick={() => setNotice('Privacy-first tax intelligence opened.')}><span className="advantage-icon"><Lock size={16} /></span><span><b>Private tax intelligence</b><small>Explore tax-lot and scenario insights without turning your financial life into an ad profile.</small></span><ArrowUpRight size={15} /></button></section>
-          <Testimonials />
-          <footer className="workspace-footer"><span><ShieldCheck size={14} />Secure session · Protected by BTE TrustLayer</span><span>{String(platformConfig.trust_message || 'Paper account · Data is simulated')} · © 2026 Blockchain Trust Enterprise</span></footer>
-        </div>}
+      <section className="landing-hero">
+        <div className="hero-copy"><div className="hero-pill"><span />A calmer way to follow the markets</div><h1>Copy conviction.<br /><em>Keep control.</em></h1><p className="hero-lede">A transparent copy-trading workspace for investors who want disciplined strategies, explainable decisions, and risk controls before the first move.</p><div className="hero-actions"><a className="hero-primary" href="/account">Explore the paper workspace <ArrowRight size={17} /></a><a className="hero-secondary" href="#strategies"><Play size={14} fill="currentColor" /> See how it works</a></div><div className="hero-proof"><span><CheckCircle2 size={15} /> Paper mode first</span><span><CheckCircle2 size={15} /> Risk controls built in</span><span><CheckCircle2 size={15} /> No return guarantees</span></div></div>
+        <div className="hero-console"><div className="console-glow" /><div className="console-top"><span><i className="live-dot" /> Live strategy desk</span><span>Demo environment · USD</span></div><div className="console-title"><div><small>PORTFOLIO SIGNAL</small><h3>Atlas Balanced</h3><p>Multi-asset · Moderate risk</p></div><span className="console-badge">+18.42%</span></div><div className="console-chart"><div className="console-y"><span>120</span><span>100</span><span>80</span><span>60</span></div><svg viewBox="0 0 500 150" preserveAspectRatio="none" aria-label="Illustrative strategy performance chart"><defs><linearGradient id="heroArea" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stopColor="#72e6c1" stopOpacity=".34" /><stop offset="100%" stopColor="#72e6c1" stopOpacity="0" /></linearGradient></defs><path d="M0 123 C 24 115 32 119 49 108 S 81 111 96 93 S 126 102 144 82 S 176 89 194 76 S 222 86 240 66 S 271 72 288 55 S 317 67 337 50 S 366 52 383 38 S 417 45 437 28 S 468 30 500 12 L500 150 L0 150Z" fill="url(#heroArea)" /><path d="M0 123 C 24 115 32 119 49 108 S 81 111 96 93 S 126 102 144 82 S 176 89 194 76 S 222 86 240 66 S 271 72 288 55 S 317 67 337 50 S 366 52 383 38 S 417 45 437 28 S 468 30 500 12" fill="none" stroke="#72e6c1" strokeWidth="3" strokeLinecap="round" /></svg></div><div className="console-stats"><span><small>30D return</small><b>+6.84%</b></span><span><small>Max drawdown</small><b className="gold">-4.21%</b></span><span><small>Followers</small><b>2,841</b></span></div><div className="console-footer"><span><ShieldCheck size={14} /> Guardrails active</span><button onClick={() => window.location.href = '/account'}>View strategy <ChevronRight size={14} /></button></div></div>
       </section>
 
-      <ChatWidget />
+      <section className="trust-strip"><span>Designed for thoughtful participation</span><div><span><ShieldCheck size={16} /> Explainable by design</span><span><LockKeyhole size={16} /> Your keys, your control</span><span><Eye size={16} /> Clear risk visibility</span></div></section>
 
-      {notice && <div className="toast"><ShieldCheck size={17} /><span>{notice}</span><button onClick={() => setNotice('')}><X size={15} /></button></div>}
-      {tradeOpen && <div className="modal-backdrop" onClick={() => setTradeOpen(false)}><section className="trade-modal" onClick={(event) => event.stopPropagation()}><div className="modal-header"><div><div className="panel-kicker"><Zap size={15} />Order ticket</div><h2>Place a paper trade</h2><p>Fast, transparent execution preview for your BTE workspace.</p></div><button className="close-button" onClick={() => setTradeOpen(false)}><X size={19} /></button></div><div className="trade-symbol"><span className="asset-icon large">{selectedAsset.symbol.slice(0, 1)}</span><div><b>{selectedAsset.symbol}</b><span>{selectedAsset.name}</span></div><strong>{selectedAsset.price}</strong></div><div className="side-toggle"><button className={tradeSide === 'Buy' ? 'active buy-active' : ''} onClick={() => setTradeSide('Buy')}>Buy</button><button className={tradeSide === 'Sell' ? 'active sell-active' : ''} onClick={() => setTradeSide('Sell')}>Sell</button></div><div className="form-grid"><label>Order type<select value={orderType} onChange={(event) => setOrderType(event.target.value)}><option>Market</option><option>Limit</option><option>Stop</option></select></label><label>Time in force<select><option>Day</option><option>Good till canceled</option></select></label><label>Quantity<input value={quantity} onChange={(event) => setQuantity(event.target.value)} inputMode="decimal" /></label><label>Estimated value<div className="input-readonly">${(Number(quantity || 0) * Number(selectedAsset.price.replace(/[$,]/g, ''))).toLocaleString(undefined, { maximumFractionDigits: 2 })}</div></label></div><div className="order-note"><ShieldCheck size={16} /><span>Paper trading only. No live order will be routed.</span></div><button className={`submit-order ${tradeSide === 'Sell' ? 'sell-submit' : ''}`} onClick={submitPaperOrder}>{tradeSide} {selectedAsset.symbol} <ArrowUpRight size={17} /></button></section></div>}
+      <section className="landing-section strategy-section" id="strategies"><div className="section-heading"><div><div className="section-kicker"><Sparkles size={14} /> Curated strategy desk</div><h2>Find a framework<br /><span>you can explain.</span></h2></div><p>Explore example strategies in a paper environment. Performance figures are illustrative and do not predict future results.</p></div><div className="strategy-cards">{strategies.map((strategy) => <article className="strategy-preview" key={strategy.name}><div className="strategy-preview-head"><span className="strategy-icon" style={{ background: `${strategy.accent}18`, color: strategy.accent }}><BarChart3 size={18} /></span><span className="strategy-status"><i /> Active research</span></div><h3>{strategy.name}</h3><p>{strategy.type}</p><div className="preview-chart">{strategy.bars.map((height, index) => <i key={index} style={{ height: `${height}%`, background: strategy.accent }} />)}</div><div className="strategy-preview-data"><span><small>Illustrative return</small><b style={{ color: strategy.accent }}>{strategy.returnValue}</b></span><span><small>Risk posture</small><b>{strategy.risk}</b></span></div><div className="strategy-preview-foot"><span><Users size={13} /> {strategy.followers} following</span><a href="/account">View details <ArrowRight size={13} /></a></div></article>)}</div><a className="section-link" href="/account/dashboard">Open full strategy workspace <ArrowRight size={15} /></a></section>
+
+      <section className="landing-section process-section" id="process"><div className="section-heading process-heading"><div><div className="section-kicker"><CircleHelp size={14} /> A measured path</div><h2>Automation is optional.<br /><span>Understanding is not.</span></h2></div><p>BTE is designed to help you learn the logic, define the boundaries, and stay informed at every stage.</p></div><div className="process-grid">{steps.map(([number, title, body]) => <div className="process-step" key={number}><span>{number}</span><h3>{title}</h3><p>{body}</p><ArrowRight size={17} /></div>)}</div></section>
+
+      <section className="landing-section split-section" id="security"><div className="split-card security-card"><div className="section-kicker"><ShieldCheck size={14} /> Control layer</div><h2>Clear signals.<br /><span>Defined limits.</span></h2><p>Every workspace is built around visibility: paper accounts, allocation boundaries, strategy notes, and a clear stop-copy path.</p><a href="/account">See the control layer <ArrowRight size={15} /></a></div><div className="split-card learn-card"><div className="section-kicker"><FileText size={14} /> BTE learning desk</div><h2>Learn before<br /><span>you allocate.</span></h2><p>Download free guides on copy trading, digital assets, and memecoin safety. Join mentorship when you are ready for structured support.</p><a href="/mentorship">Visit mentorship <ArrowRight size={15} /></a></div></section>
+
+      <section className="landing-bottom-cta"><div><div className="section-kicker"><Wallet size={14} /> Start with clarity</div><h2>Your next decision<br /><span>deserves context.</span></h2></div><div><p>Create a paper workspace and explore the platform before making any live-market decision.</p><a className="hero-primary" href="/account">Create your workspace <ArrowRight size={17} /></a></div></section>
+      <footer className="landing-footer"><a className="landing-brand" href="/"><span className="landing-mark"><i /><i /><i /></span><span><b>Blockchain Trust</b><small>Enterprise Markets</small></span></a><span>Educational platform · Demo mode · No guaranteed returns</span><span>© 2026 BTE</span></footer>
     </main>
   );
-}
-
-function ArrowRightIcon({ size = 18 }: { size?: number }) {
-  return <ArrowUpRight size={size} />;
 }
