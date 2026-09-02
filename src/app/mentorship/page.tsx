@@ -78,10 +78,10 @@ export default function MentorshipPage() {
       <div className="mentorship-page">
         <div className="mentorship-hero">
           <p className="eyebrow"><span className="eyebrow-line" />TRADING EDUCATION</p>
-          <h1>Master the markets with proven strategies and expert mentors.</h1>
+          <h1>Master the markets with battle-tested strategies.</h1>
           <p className="mentorship-hero-sub">
-            Access institutional-grade trading playbooks from verified, consistently profitable traders.
-            Learn the exact frameworks used by professionals who have generated millions in returns.
+            Access trading playbooks from consistently profitable traders, verified by track record.
+            Learn the frameworks behind millions in real returns — completely free.
           </p>
           <div className="mentorship-hero-stats">
             <div className="mh-stat"><BookOpen size={18} /><strong>{strategies.length}</strong><span>Strategies</span></div>

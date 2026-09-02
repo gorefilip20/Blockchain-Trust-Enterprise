@@ -3,12 +3,12 @@
 import { ArrowUpRight, Star } from 'lucide-react';
 
 const testimonials = [
-  { quote: 'BTE streamlined our dual-entity formation in under a week. The privacy protections and compliance guardrails gave our board the confidence to move forward.', name: 'Marcus Chen', title: 'CFO, Digital Frontier Capital', initials: 'MC', rating: 5 },
-  { quote: 'The multi-signature custody setup was seamless. We went from concept to fully operational treasury management in record time.', name: 'Sarah Okafor', title: 'Head of Operations, NexGen DAO', initials: 'SO', rating: 5 },
-  { quote: 'As a crypto miner, I needed a corporate structure that understood both the technical and regulatory landscape. BTE delivered exactly that.', name: 'James Whitfield', title: 'Founder, Cascade Mining Co.', initials: 'JW', rating: 5 },
-  { quote: 'The copy-trading platform combines institutional-grade execution with a transparency layer I have not seen anywhere else. Truly best in class.', name: 'Anika Patel', title: 'Portfolio Manager, Horizon Fund', initials: 'AP', rating: 5 },
-  { quote: 'Wyoming DAO LLC formation through BTE gave us the legal clarity we needed while preserving our decentralized governance model.', name: 'David Kim', title: 'Co-founder, MetaVault Protocol', initials: 'DK', rating: 4 },
-  { quote: 'Our family office manages significant digital asset holdings. BTE provided the corporate structuring and custody framework that meets our fiduciary standards.', name: 'Elizabeth Harmon', title: 'Managing Director, Harmon Family Office', initials: 'EH', rating: 5 },
+  { quote: 'BTE streamlined our dual-entity formation in under a week. The privacy protections and compliance guardrails gave our board the confidence to move forward with a seven-figure allocation.', name: 'Marcus Chen', title: 'CFO, Digital Frontier Capital', initials: 'MC', rating: 5 },
+  { quote: 'The multi-signature custody setup was seamless. We went from concept to fully operational treasury management in record time — something that took our previous provider months.', name: 'Sarah Okafor', title: 'Head of Operations, NexGen DAO', initials: 'SO', rating: 5 },
+  { quote: 'I needed a platform that understood both the technical and regulatory landscape of crypto mining. BTE was the only one that delivered end to end without compromises.', name: 'James Whitfield', title: 'Founder, Cascade Mining Co.', initials: 'JW', rating: 5 },
+  { quote: 'The copy-trading platform combines institutional-grade execution with a transparency layer I have not seen anywhere else. Our LPs love the real-time reporting.', name: 'Anika Patel', title: 'Portfolio Manager, Horizon Fund', initials: 'AP', rating: 5 },
+  { quote: 'Wyoming DAO LLC formation through BTE gave us the legal clarity we needed while preserving our decentralized governance. A game changer for on-chain organizations.', name: 'David Kim', title: 'Co-founder, MetaVault Protocol', initials: 'DK', rating: 5 },
+  { quote: 'Our family office manages significant digital asset holdings across multiple chains. BTE is the only platform that meets our fiduciary standards without sacrificing flexibility.', name: 'Elizabeth Harmon', title: 'Managing Director, Harmon Family Office', initials: 'EH', rating: 5 },
 ];
 
 const caseStudies = [

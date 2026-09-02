@@ -92,10 +92,9 @@ export default function PaymentsPage() {
       <div className="payments-page">
         <div className="payments-hero">
           <p className="eyebrow"><span className="eyebrow-line" />CRYPTO PAYMENTS</p>
-          <h1>Fund your account securely with cryptocurrency.</h1>
+          <h1>Fund your account with crypto — fast, secure, transparent.</h1>
           <p className="payments-hero-sub">
-            Send payments directly to our verified wallet addresses below.
-            All transactions are processed on-chain for full transparency and security.
+            Send payments directly to our verified wallets. Every transaction is confirmed on-chain with full transparency.
           </p>
         </div>
 

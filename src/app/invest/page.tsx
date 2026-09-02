@@ -57,10 +57,9 @@ export default function InvestPage() {
       <div className="invest-page">
         <div className="invest-hero">
           <p className="eyebrow"><span className="eyebrow-line" />INVESTMENT PLANS</p>
-          <h1>Grow your wealth with expert-managed stock portfolios.</h1>
+          <h1>Put your money to work with proven portfolios.</h1>
           <p className="invest-hero-sub">
-            Our investment team combines quantitative strategies with institutional-grade execution
-            to deliver consistent returns across market conditions.
+            Quantitative strategies. Institutional execution. Consistent returns across bull and bear markets — managed by professionals with decades of track record.
           </p>
         </div>
 
