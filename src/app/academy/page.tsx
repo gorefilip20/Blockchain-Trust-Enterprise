@@ -1,0 +1,75 @@
+'use client';
+
+import { useMemo, useState } from 'react';
+import { AlertTriangle, BarChart3, Bell, BookOpen, Calculator, CheckCircle2, ChevronRight, CircleHelp, ClipboardCheck, Gauge, GraduationCap, LineChart, LockKeyhole, PauseCircle, Search, ShieldCheck, SlidersHorizontal, Sparkles, Target, TrendingDown, TrendingUp, WalletCards } from 'lucide-react';
+
+type Tab = 'copy' | 'forex' | 'memecoin' | 'journal';
+
+const strategies = [
+  { name: 'Atlas Balanced', type: 'Multi-asset allocation', return30: 18.42, drawdown: 4.21, volatility: 'Moderate', trades: 42, followers: 2841, accent: '#72e6c1', description: 'A diversified framework that balances digital assets, equities, and cash through defined allocation bands.' },
+  { name: 'Digital Conviction', type: 'Crypto trend rotation', return30: 31.76, drawdown: 12.84, volatility: 'High', trades: 78, followers: 1926, accent: '#aab9ff', description: 'A higher-volatility approach that rotates among liquid digital assets when momentum and liquidity align.' },
+  { name: 'Core Momentum', type: 'Rules-based equities', return30: 12.08, drawdown: 3.67, volatility: 'Balanced', trades: 27, followers: 4108, accent: '#f3c875', description: 'A systematic equity framework focused on liquid names, trend confirmation, and disciplined exits.' },
+];
+
+const sessions = [
+  ['Sydney', '22:00–07:00 UTC', 'Quiet open', '#8ea4ff'],
+  ['Tokyo', '00:00–09:00 UTC', 'Asia liquidity', '#f3c875'],
+  ['London', '08:00–17:00 UTC', 'High activity', '#72e6c1'],
+  ['New York', '13:00–22:00 UTC', 'High activity', '#ff9d8f'],
+];
+
+const comparisonRows: Array<[string, (strategy: typeof strategies[number]) => string]> = [
+  ['Illustrative 30D return', strategy => `+${strategy.return30.toFixed(2)}%`],
+  ['Maximum drawdown', strategy => `-${strategy.drawdown.toFixed(2)}%`],
+  ['Volatility posture', strategy => strategy.volatility],
+  ['Trades reviewed', strategy => String(strategy.trades)],
+  ['Followers', strategy => strategy.followers.toLocaleString()],
+];
+
+const redFlags = ['Liquidity is unlocked or cannot be verified', 'Top holders control an unusually large share', 'The contract can mint, freeze, blacklist, or change taxes', 'The project relies on urgency, influencers, or guaranteed returns', 'The token is too new or has too little trading history'];
+
+export default function AcademyPage() {
+  const [tab, setTab] = useState<Tab>('copy');
+  const [selected, setSelected] = useState<string[]>(['Atlas Balanced']);
+  const [capital, setCapital] = useState('10000');
+  const [allocation, setAllocation] = useState('10');
+  const [maxLoss, setMaxLoss] = useState('2');
+  const [pipRisk, setPipRisk] = useState('25');
+  const [accountSize, setAccountSize] = useState('10000');
+  const [forexRisk, setForexRisk] = useState('1');
+  const [checklist, setChecklist] = useState<boolean[]>(redFlags.map(() => false));
+  const [journalText, setJournalText] = useState('');
+  const [journalSaved, setJournalSaved] = useState(false);
+  const [alerts, setAlerts] = useState({ drawdown: true, changes: true, volatility: false });
+
+  const selectedStrategies = strategies.filter(strategy => selected.includes(strategy.name));
+  const allocationValue = Math.max(0, Number(capital) || 0) * Math.max(0, Number(allocation) || 0) / 100;
+  const maxLossValue = allocationValue * Math.max(0, Number(maxLoss) || 0) / 100;
+  const forexRiskValue = Math.max(0, Number(accountSize) || 0) * Math.max(0, Number(forexRisk) || 0) / 100;
+  const positionUnits = Math.floor(forexRiskValue / Math.max(1, Number(pipRisk) || 1));
+  const riskLabel = Number(allocation) > 25 || Number(maxLoss) > 5 ? 'Review allocation' : Number(allocation) > 15 ? 'Elevated' : 'Measured';
+  const safetyScore = useMemo(() => Math.max(0, 100 - checklist.filter(Boolean).length * 18), [checklist]);
+
+  function toggleStrategy(name: string) {
+    setSelected(current => current.includes(name) ? current.filter(item => item !== name) : current.length < 3 ? [...current, name] : current);
+  }
+
+  return <main className="academy-shell">
+    <header className="academy-header"><a className="academy-brand" href="/"><span className="academy-mark">BT</span><span><b>BTE Learning Desk</b><small>Research · Practice · Control</small></span></a><div className="academy-header-actions"><a href="/mentorship">Mentorship</a><a href="/account">My account</a></div></header>
+    <section className="academy-hero"><div><div className="academy-kicker"><GraduationCap size={15} /> Learn before you allocate</div><h1>A clearer way to<br /><span>practice the markets.</span></h1><p>Explore strategies, simulate risk, learn forex mechanics, investigate memecoin warning signs, and keep a record of your decisions in one calm workspace.</p></div><div className="academy-hero-note"><ShieldCheck size={20} /><div><b>Risk-first by design</b><span>All calculations are educational estimates. Paper mode only; no live order is routed from this page.</span></div></div></section>
+    <nav className="academy-tabs" aria-label="Learning desk sections">{([['copy', 'Copy lab', BarChart3], ['forex', 'Forex toolkit', Calculator], ['memecoin', 'Memecoin safety', ShieldCheck], ['journal', 'Journal & alerts', ClipboardCheck]] as const).map(([key, label, Icon]) => <button key={key} className={tab === key ? 'active' : ''} onClick={() => setTab(key)}><Icon size={16} />{label}</button>)}</nav>
+
+    {tab === 'copy' && <section className="academy-content"><div className="academy-section-title"><div><div className="academy-kicker"><Sparkles size={14} /> Copy-trading lab</div><h2>Compare the framework, not just the return.</h2></div><p>Historical and illustrative figures are shown for education. A high return can come with a high drawdown.</p></div><div className="copy-lab-grid"><div className="lab-main"><div className="strategy-selector">{strategies.map(strategy => <button key={strategy.name} className={selected.includes(strategy.name) ? 'selected' : ''} onClick={() => toggleStrategy(strategy.name)}><span className="selector-check">{selected.includes(strategy.name) && <CheckCircle2 size={14} />}</span><span><b>{strategy.name}</b><small>{strategy.type}</small></span><ChevronRight size={15} /></button>)}</div><div className="comparison-table"><div className="comparison-head"><span>Metric</span>{selectedStrategies.map(strategy => <b key={strategy.name} style={{ color: strategy.accent }}>{strategy.name}</b>)}</div>{comparisonRows.map(([label, value]) => <div className="comparison-row" key={label}><span>{label}</span>{selectedStrategies.map(strategy => <b key={strategy.name}>{value(strategy)}</b>)}</div>)}</div></div><aside className="guardrail-card"><div className="academy-kicker"><SlidersHorizontal size={14} /> Guardrail simulator</div><h3>Define the boundary before the button.</h3><label>Paper capital<input type="number" value={capital} onChange={e => setCapital(e.target.value)} /></label><label>Strategy allocation<input type="number" min="0" max="100" value={allocation} onChange={e => setAllocation(e.target.value)} /><span className="range-value">{allocation}%</span></label><input className="academy-range" type="range" min="0" max="50" value={allocation} onChange={e => setAllocation(e.target.value)} /><label>Pause after drawdown<input type="number" min="0" max="100" value={maxLoss} onChange={e => setMaxLoss(e.target.value)} /><span className="range-value">{maxLoss}%</span></label><div className={`risk-result ${riskLabel === 'Measured' ? 'good' : riskLabel === 'Elevated' ? 'warn' : 'danger'}`}><Gauge size={18} /><div><b>{riskLabel}</b><span>Paper allocation: ${allocationValue.toLocaleString()} · Max planned loss: ${maxLossValue.toLocaleString()}</span></div></div><button className="academy-outline" onClick={() => setAlerts(current => ({ ...current, drawdown: true }))}><PauseCircle size={15} /> Save guardrail preference</button></aside></div><div className="learning-callout"><BookOpen size={19} /><div><b>Next lesson: how to read drawdown</b><span>Returns tell you what happened. Drawdown helps you understand what the journey felt like.</span></div><button onClick={() => setTab('journal')}>Add a reflection <ArrowRightIcon /></button></div></section>}
+
+    {tab === 'forex' && <section className="academy-content"><div className="academy-section-title"><div><div className="academy-kicker"><Calculator size={14} /> Forex toolkit</div><h2>Make position size part of the plan.</h2></div><p>Leverage can amplify both gains and losses. Use the paper calculator to understand your maximum planned risk before reviewing a setup.</p></div><div className="forex-grid"><div className="calculator-card"><div className="academy-kicker"><Target size={14} /> Paper position calculator</div><h3>What is the planned loss?</h3><label>Paper account size<input type="number" value={accountSize} onChange={e => setAccountSize(e.target.value)} /></label><label>Risk per idea<input type="number" min="0" max="10" value={forexRisk} onChange={e => setForexRisk(e.target.value)} /><span className="range-value">{forexRisk}%</span></label><input className="academy-range" type="range" min="0" max="5" step="0.25" value={forexRisk} onChange={e => setForexRisk(e.target.value)} /><label>Stop distance in pips<input type="number" value={pipRisk} onChange={e => setPipRisk(e.target.value)} /></label><div className="forex-result"><span>Planned maximum loss</span><b>${forexRiskValue.toLocaleString()}</b><small>Illustrative paper sizing · {positionUnits.toLocaleString()} risk units at the selected stop distance</small></div><div className="calculator-note"><AlertTriangle size={15} /> Spread, slippage, financing, volatility, and contract specifications can change the result.</div></div><div className="sessions-card"><div className="academy-kicker"><LineChart size={14} /> Global session map</div><h3>Know when liquidity changes.</h3><div className="session-list">{sessions.map(([name, time, note, color]) => <div key={name}><i style={{ background: color }} /><span><b>{name}</b><small>{time}</small></span><em>{note}</em></div>)}</div><div className="calendar-preview"><Bell size={15} /><div><b>Event-aware practice</b><span>Before paper trading a setup, check whether a high-impact release is nearby.</span></div></div></div></div><div className="lesson-grid"><div><TrendingDown size={18} /><b>Understand leverage</b><span>See how a small price move can affect the entire planned risk amount.</span></div><div><Search size={18} /><b>Review the setup</b><span>Record the pair, session, invalidation, spread, and reason for the paper trade.</span></div><div><LockKeyhole size={18} /><b>Protect the downside</b><span>Never let a tool hide the maximum loss behind a percentage.</span></div></div></section>}
+
+    {tab === 'memecoin' && <section className="academy-content"><div className="academy-section-title"><div><div className="academy-kicker"><ShieldCheck size={14} /> Memecoin safety center</div><h2>Investigate the risk before the hype.</h2></div><p>This checklist is an investigation aid, not a token endorsement or a guarantee that a token is safe.</p></div><div className="meme-grid"><div className="scanner-card"><div className="scanner-top"><div className="scanner-icon"><Search size={18} /></div><div><b>Contract research checklist</b><span>Mark every warning sign you find</span></div></div><div className="meme-checks">{redFlags.map((flag, index) => <label key={flag} className={checklist[index] ? 'checked' : ''}><input type="checkbox" checked={checklist[index]} onChange={() => setChecklist(current => current.map((value, item) => item === index ? !value : value))} /><span>{flag}</span></label>)}</div></div><aside className={`safety-score ${safetyScore < 65 ? 'danger' : safetyScore < 100 ? 'warn' : 'good'}`}><div className="score-ring"><b>{safetyScore}</b><span>signal score</span></div><h3>{safetyScore === 100 ? 'No flags selected' : safetyScore >= 65 ? 'Pause and investigate' : 'High-risk indicators'}</h3><p>{safetyScore === 100 ? 'A blank checklist does not mean the token is safe. It means you have not recorded a warning sign yet.' : 'One or more warning indicators are present. Do not let urgency replace verification.'}</p><button className="academy-outline" onClick={() => setChecklist(redFlags.map(() => false))}>Reset checklist</button></aside></div><div className="meme-principles"><div><TrendingUp size={18} /><b>Liquidity is not trust</b><span>Liquidity can disappear. Check whether it is locked and whether the lock can be verified.</span></div><div><UsersIcon /><b>Distribution matters</b><span>Concentrated ownership can make a market fragile even when the chart looks strong.</span></div><div><AlertTriangle size={18} /><b>Never rush a meme</b><span>High-pressure promotion is a reason to slow down, not a reason to increase size.</span></div></div></section>}
+
+    {tab === 'journal' && <section className="academy-content"><div className="academy-section-title"><div><div className="academy-kicker"><ClipboardCheck size={14} /> Journal & alerts</div><h2>Turn activity into learning.</h2></div><p>Use reflections and alerts to stay informed without turning the platform into a pressure loop.</p></div><div className="journal-grid"><div className="journal-card"><div className="academy-kicker"><BookOpen size={14} /> Reflection note</div><h3>What did you understand today?</h3><textarea value={journalText} onChange={e => { setJournalText(e.target.value); setJournalSaved(false); }} placeholder="Write what you learned about a strategy, a forex setup, or a memecoin warning sign…" /><button className="academy-primary" onClick={() => setJournalSaved(true)}>{journalSaved ? <><CheckCircle2 size={15} /> Saved locally</> : <>Save reflection <ChevronRight size={15} /></>}</button><small className="privacy-note"><LockKeyhole size={12} /> This note stays in this browser until you connect a personal account journal.</small></div><div className="alerts-card"><div className="academy-kicker"><Bell size={14} /> Notification preferences</div><h3>Choose useful signals.</h3>{[['drawdown', 'Drawdown guardrail reached', 'Know when a paper allocation crosses its limit.'], ['changes', 'Strategy methodology changed', 'Review a strategy when its stated framework changes.'], ['volatility', 'Volatility regime shift', 'Get a learning prompt when market conditions change.']].map(([key, title, body]) => <label className="alert-toggle" key={key}><span><b>{title}</b><small>{body}</small></span><input type="checkbox" checked={alerts[key as keyof typeof alerts]} onChange={() => setAlerts(current => ({ ...current, [key]: !current[key as keyof typeof alerts] }))} /><i /></label>)}<div className="alerts-note"><ShieldCheck size={15} /><span>Alerts inform you; they do not place orders or recommend a position.</span></div></div></div></section>}
+
+    <footer className="academy-footer"><span><ShieldCheck size={14} /> Educational tools · Paper mode · No guaranteed returns</span><a href="/">Back to BTE home <ChevronRight size={14} /></a></footer>
+  </main>;
+}
+
+function ArrowRightIcon() { return <ChevronRight size={16} />; }
+function UsersIcon() { return <span className="tiny-users">●●●</span>; }
