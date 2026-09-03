@@ -724,6 +724,56 @@ html:not([data-theme="dark"]) .terminal-shell ::-webkit-scrollbar-thumb { backgr
 .blog-card h2 { font-size: 19px; letter-spacing: -.03em; }
 .blog-card p { font-size: 13px; line-height: 1.7; }
 
+/* Dashboard alerts & registration fee UI */
+.dashboard-alert { display: flex; align-items: flex-start; gap: 12px; padding: 16px 18px; margin-bottom: 14px; background: linear-gradient(135deg, rgba(239,189,103,.08), rgba(239,189,103,.03)); border: 1px solid rgba(239,189,103,.25); border-radius: 9px; color: var(--gold); font-size: 12px; }
+.dashboard-alert strong { display: block; font-size: 13px; margin-bottom: 4px; color: var(--gold); }
+.dashboard-alert p { color: #b0a080; font-size: 11px; margin: 0; line-height: 1.5; }
+.dashboard-loading { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; padding: 80px 20px; color: var(--muted); font-size: 13px; }
+.loading-spinner { width: 32px; height: 32px; border: 3px solid var(--line); border-top-color: var(--mint); border-radius: 50%; animation: spin .7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.registration-fee-banner { display: flex; align-items: center; gap: 10px; padding: 12px 14px; margin-bottom: 16px; background: rgba(43,214,165,.06); border: 1px solid rgba(43,214,165,.18); border-radius: 8px; color: var(--muted); font-size: 12px; }
+.registration-fee-banner svg { color: var(--mint); flex-shrink: 0; }
+.optional-tag { color: var(--dim); font-size: 10px; font-weight: 400; }
+.account-success-block { text-align: center; padding: 20px 0; }
+.success-icon { color: var(--mint); margin-bottom: 16px; }
+.account-success-block h2 { font-size: 22px; margin-bottom: 12px; }
+.registration-fee-notice { margin-top: 20px; padding: 18px; background: rgba(239,189,103,.06); border: 1px solid rgba(239,189,103,.2); border-radius: 10px; text-align: left; }
+.fee-header { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 14px; color: var(--gold); margin-bottom: 8px; }
+.registration-fee-notice p { color: var(--muted); font-size: 12px; line-height: 1.6; margin: 0; }
+.fee-ref { margin-top: 8px !important; }
+.fee-ref code { background: rgba(255,255,255,.06); padding: 2px 8px; border-radius: 4px; font-family: 'DM Mono', monospace; font-size: 11px; }
+
+/* Admin user management */
+.admin-user-card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 18px; margin-bottom: 10px; transition: .18s ease; }
+.admin-user-card:hover { border-color: rgba(43,214,165,.3); }
+.admin-user-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+.admin-user-name { font-size: 14px; font-weight: 700; }
+.admin-user-email { font-size: 11px; color: var(--muted); }
+.admin-user-meta { display: flex; gap: 16px; flex-wrap: wrap; }
+.admin-user-meta span { font-size: 11px; color: var(--dim); }
+.admin-user-meta b { color: var(--text); }
+.admin-user-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+.admin-btn { padding: 7px 14px; border-radius: 6px; font-size: 11px; font-weight: 600; border: 1px solid var(--line); background: var(--surface-2); color: var(--text); transition: .18s ease; }
+.admin-btn:hover { border-color: var(--mint); color: var(--mint); }
+.admin-btn-primary { background: var(--mint); color: #061a17; border-color: var(--mint); }
+.admin-btn-primary:hover { background: #6aefc6; }
+.admin-btn-danger { border-color: rgba(255,113,133,.3); color: var(--red); }
+.admin-btn-danger:hover { background: rgba(255,113,133,.1); }
+.admin-modal { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; background: rgba(3,6,9,.74); backdrop-filter: blur(5px); padding: 18px; }
+.admin-modal-content { width: min(480px, 100%); background: #111a23; border: 1px solid #2e4652; border-radius: 12px; padding: 24px; box-shadow: 0 28px 80px rgba(0,0,0,.5); }
+.admin-modal-content h3 { font-size: 18px; margin-bottom: 16px; }
+.admin-modal-content label { display: block; margin-bottom: 14px; color: var(--muted); font-size: 11px; }
+.admin-modal-content input, .admin-modal-content select, .admin-modal-content textarea { display: block; width: 100%; height: 40px; margin-top: 6px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--text); padding: 0 12px; font-size: 12px; }
+.admin-modal-content textarea { height: 80px; padding: 10px 12px; resize: vertical; }
+.admin-modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 18px; }
+.admin-stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 20px; }
+.admin-stat-card { padding: 14px; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; text-align: center; }
+.admin-stat-card span { display: block; color: var(--dim); font-size: 10px; margin-bottom: 6px; }
+.admin-stat-card b { font-size: 22px; letter-spacing: -.03em; }
+.badge-paid { display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; border-radius: 4px; font-size: 10px; font-weight: 600; background: rgba(43,214,165,.12); color: var(--mint); }
+.badge-pending { display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; border-radius: 4px; font-size: 10px; font-weight: 600; background: rgba(239,189,103,.12); color: var(--gold); }
+.badge-rejected { display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; border-radius: 4px; font-size: 10px; font-weight: 600; background: rgba(255,113,133,.12); color: var(--red); }
+
 .eyebrow { font-weight: 700; letter-spacing: .15em; }
 
 @media (max-width: 700px) {

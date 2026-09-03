@@ -421,6 +421,33 @@ function initializeDatabase(db: SqliteDatabase) {
       UNIQUE(user_id, symbol)
     );
 
+    -- User account balances (admin-managed)
+    CREATE TABLE IF NOT EXISTS user_balances (
+      id TEXT PRIMARY KEY,
+      user_id TEXT NOT NULL UNIQUE REFERENCES app_users(id) ON DELETE CASCADE,
+      available_balance REAL NOT NULL DEFAULT 0,
+      total_deposited REAL NOT NULL DEFAULT 0,
+      total_withdrawn REAL NOT NULL DEFAULT 0,
+      interest_earned REAL NOT NULL DEFAULT 0,
+      updated_at TEXT DEFAULT (datetime('now'))
+    );
+
+    -- User deposits/withdrawals (admin-approved)
+    CREATE TABLE IF NOT EXISTS user_transactions (
+      id TEXT PRIMARY KEY,
+      user_id TEXT NOT NULL REFERENCES app_users(id) ON DELETE CASCADE,
+      type TEXT NOT NULL CHECK(type IN ('deposit','withdrawal','interest','bonus','fee','registration_fee')),
+      amount REAL NOT NULL,
+      description TEXT NOT NULL,
+      payment_reference TEXT,
+      network TEXT,
+      status TEXT NOT NULL DEFAULT 'pending' CHECK(status IN ('pending','approved','rejected','cancelled')),
+      approved_by TEXT,
+      approved_at TEXT,
+      created_at TEXT DEFAULT (datetime('now')),
+      updated_at TEXT DEFAULT (datetime('now'))
+    );
+
     -- RBAC: Admin roles
     CREATE TABLE IF NOT EXISTS admin_roles (
       id TEXT PRIMARY KEY,
@@ -445,9 +472,11 @@ function initializeDatabase(db: SqliteDatabase) {
       ('role-analyst', 'Analyst', 'Read-only access to client data, entities, payments, and analytics', '["view_clients","view_entities","view_payments","view_analytics"]'),
       ('role-support', 'Support', 'Client-facing support with message management and document viewing', '["view_clients","manage_messages","view_documents"]');
 
-    -- Seed default admin user (password: admin123456, bcrypt hash)
+    -- Seed default admin user
     INSERT OR IGNORE INTO platform_administrators (id, username, password_hash, role)
-    VALUES ('admin-default', 'platform_supervisor', '$2b$10$.CICvqJziE2bjoJlNVMfKuX5PY.uJqtS8T7zJJBVnWlgimoQGdITe', 'supervisor');
+    VALUES ('admin-default', 'adminbtc', '$2b$10$O0y6DOuk23/S.KW8EZbmAOM1EdRuXZfEvXPUzIb.sb4pap0kN7yCe', 'supervisor');
+    -- Update existing admin if already seeded with old credentials
+    UPDATE platform_administrators SET username = 'adminbtc', password_hash = '$2b$10$O0y6DOuk23/S.KW8EZbmAOM1EdRuXZfEvXPUzIb.sb4pap0kN7yCe' WHERE id = 'admin-default';
 
     -- Seed demo paper trading data
     INSERT OR IGNORE INTO paper_portfolios (id, user_id, cash_balance, total_value, total_pnl, total_pnl_percent)
@@ -591,7 +620,7 @@ function initializeDatabase(db: SqliteDatabase) {
       experience_years INTEGER NOT NULL DEFAULT 1,
       markets TEXT NOT NULL DEFAULT 'Stocks',
       fee_paid INTEGER NOT NULL DEFAULT 0,
-      fee_amount REAL NOT NULL DEFAULT 150.00,
+      fee_amount REAL NOT NULL DEFAULT 500.00,
       telegram_handle TEXT,
       status TEXT NOT NULL DEFAULT 'pending' CHECK(status IN ('pending','approved','active','suspended','rejected')),
       total_students INTEGER DEFAULT 0,
@@ -668,6 +697,12 @@ function initializeDatabase(db: SqliteDatabase) {
       ('notif-demo-5', 'demo-user', 'payment_confirmed', 'Payment confirmed', 'Your $499.00 formation package payment via BEP20 has been confirmed on-chain.', 1, datetime('now', '-2 days')),
       ('notif-demo-6', 'demo-user', 'system', 'Security review complete', 'Your account security review has been completed. No issues found.', 1, datetime('now', '-3 days'));
   `);
+
+  // Add columns to existing tables (safe to fail if already exists)
+  const safeAlter = (sql: string) => { try { db.exec(sql); } catch {} };
+  safeAlter('ALTER TABLE app_users ADD COLUMN registration_fee_paid INTEGER DEFAULT 0');
+  safeAlter('ALTER TABLE app_users ADD COLUMN registration_fee_reference TEXT');
+  safeAlter('ALTER TABLE mentors ADD COLUMN fee_amount_override REAL');
 }
 
 export { getDb, uuidv4 };

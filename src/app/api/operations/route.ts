@@ -15,17 +15,21 @@ export async function POST(req: NextRequest) {
   const body = await req.json();
   const db = getDb();
   if (body.action === 'register') {
-    const { fullName, email, password } = body;
+    const { fullName, email, password, paymentReference } = body;
     if (!fullName || !email || !password || password.length < 8) return NextResponse.json({ error: 'Full name, email, and an 8-character password are required.' }, { status: 400 });
     const existing = db.prepare('SELECT id FROM app_users WHERE email = ?').get(String(email).toLowerCase());
     if (existing) return NextResponse.json({ error: 'An account with this email already exists.' }, { status: 409 });
     const id = uuidv4();
     const hash = await bcrypt.hash(password, 10);
-    db.prepare('INSERT INTO app_users (id, full_name, email, password_hash) VALUES (?, ?, ?, ?)').run(id, fullName, String(email).toLowerCase(), hash);
+    db.prepare('INSERT INTO app_users (id, full_name, email, password_hash, registration_fee_reference) VALUES (?, ?, ?, ?, ?)').run(id, fullName, String(email).toLowerCase(), hash, paymentReference || null);
     const notifStmt = db.prepare('INSERT OR IGNORE INTO notifications (id, user_id, type, title, message, is_read, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)');
-    notifStmt.run(uuidv4(), id, 'system', 'Account created', 'Your BTE account has been created. Explore the workspace and educational resources to get started.', 0, new Date().toISOString());
+    notifStmt.run(uuidv4(), id, 'system', 'Welcome to BTE', 'Your BTE account has been created successfully! A $150 registration fee is required to fully activate your account. Submit your payment reference and an administrator will verify and activate your account.', 0, new Date().toISOString());
+    if (paymentReference) {
+      const txId = uuidv4();
+      db.prepare('INSERT INTO user_transactions (id, user_id, type, amount, description, payment_reference, status) VALUES (?, ?, ?, ?, ?, ?, ?)').run(txId, id, 'registration_fee', 150, 'Account registration fee', paymentReference, 'pending');
+    }
     const token = jwt.sign({ userId: id, email: String(email).toLowerCase(), name: fullName }, JWT_SECRET, { expiresIn: '24h' });
-    return NextResponse.json({ success: true, token, user: { id, fullName, email: String(email).toLowerCase() } }, { status: 201 });
+    return NextResponse.json({ success: true, token, user: { id, fullName, email: String(email).toLowerCase() }, registrationFee: { amount: 150, status: paymentReference ? 'pending_verification' : 'awaiting_payment' } }, { status: 201 });
   }
   if (body.action === 'login') {
     const { email, password } = body;

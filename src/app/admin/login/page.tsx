@@ -66,7 +66,7 @@ export default function AdminLoginPage() {
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                placeholder="platform_supervisor"
+                placeholder="Enter admin username"
                 required
                 className="w-full px-4 py-2.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-[#00D4AA] focus:border-[#00D4AA] outline-none transition-colors"
               />
@@ -107,7 +107,7 @@ export default function AdminLoginPage() {
 
           <div className="mt-5 p-3 rounded-lg bg-slate-50 border border-slate-200">
             <p className="text-xs text-slate-500 text-center">
-              Default: <span className="font-mono text-slate-700">platform_supervisor</span> / <span className="font-mono text-slate-700">admin123456</span>
+              Authorized personnel only. Contact your administrator for access credentials.
             </p>
           </div>
 

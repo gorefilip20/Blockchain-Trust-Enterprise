@@ -211,7 +211,7 @@ export default function MentorshipPage() {
             </div>
             <div className="mentor-cta-box">
               <h3>Want to share your expertise?</h3>
-              <p>Join our mentor network and educate the next generation of traders. Registration fee: <strong>$150</strong> (one-time, paid to admin).</p>
+              <p>Join our mentor network and educate the next generation of traders. Registration fee: <strong>$500</strong> (one-time, paid to admin).</p>
               <button className="mentor-cta-btn" onClick={() => setTab('apply')}>Apply to Become a Mentor <Send size={14} /></button>
             </div>
           </section>
@@ -231,7 +231,7 @@ export default function MentorshipPage() {
                 </div>
                 <div className="apply-fee-box">
                   <h4>Registration Fee</h4>
-                  <div className="apply-fee-amount">$150 <span>one-time payment</span></div>
+                  <div className="apply-fee-amount">$500 <span>one-time payment</span></div>
                   <p>Paid via cryptocurrency upon approval. Visit the Payments page for wallet addresses.</p>
                   <a href="/payments" className="apply-payment-link">
                     <Shield size={16} />

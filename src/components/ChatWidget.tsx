@@ -15,7 +15,7 @@ const quickReplies = [
 const autoResponses: Record<string, string> = {
   'How do I make a payment?': 'You can pay using Bitcoin, Ethereum, XRP, BNB, or Solana. Visit the Payments page to see our wallet addresses, copy the address for your preferred crypto, and send your payment. Your account is credited once the transaction confirms on-chain.',
   'I need help with my investment plan': 'We offer three investment tiers: Starter ($2,000), Growth ($5,000), and Premium ($20,000). Visit the Investment Plans page to learn more and subscribe. Our team will review and activate your portfolio within 24 hours.',
-  'How do I become a mentor?': 'Visit the Mentorship page and click "Become a Mentor." Fill out the application form and our team will review it. Once approved, complete the $150 registration fee via crypto payment, and your mentor profile goes live on the platform.',
+  'How do I become a mentor?': 'Visit the Mentorship page and click "Become a Mentor." Fill out the application form and our team will review it. Once approved, complete the $500 registration fee via crypto payment, and your mentor profile goes live on the platform.',
   'Talk to support': 'Our support team has been notified and will respond shortly. In the meantime, feel free to describe your issue and we will get back to you as soon as possible. You can also reach us through the guidance request form in your workspace.',
 };
 

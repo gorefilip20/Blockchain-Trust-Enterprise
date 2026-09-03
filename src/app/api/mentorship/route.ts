@@ -89,7 +89,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({
       success: true, mentorId, applicationId: appId,
-      message: 'Mentor application submitted. Please complete the $150 registration fee payment to activate your account. Contact admin via Telegram for payment instructions.',
+      message: 'Mentor application submitted. Please complete the $500 registration fee payment to activate your account. Contact admin via Telegram for payment instructions.',
     }, { status: 201 });
   }
 
