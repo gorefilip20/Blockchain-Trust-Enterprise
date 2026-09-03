@@ -47,10 +47,11 @@ export async function POST(req: NextRequest) {
 
   const table = tableMap[type];
 
-  const txn = db.transaction(() => {
+  db.exec('BEGIN TRANSACTION;');
+  try {
     for (const id of ids) {
       try {
-        const result = db.prepare(`UPDATE ${table} SET status = ?, updated_at = datetime('now') WHERE id = ?`).run(action, id);
+        const result = db.prepare(`UPDATE ${table} SET status = ?, updated_at = datetime('now') WHERE id = ?`).run(action, id) as { changes: number };
         if (result.changes > 0) {
           successCount++;
         } else {
@@ -60,9 +61,11 @@ export async function POST(req: NextRequest) {
         failCount++;
       }
     }
-  });
-
-  txn();
+    db.exec('COMMIT;');
+  } catch (error) {
+    db.exec('ROLLBACK;');
+    throw error;
+  }
 
   return NextResponse.json({
     success: true,

@@ -1,26 +1,28 @@
-import Database from 'better-sqlite3';
+import { DatabaseSync } from 'node:sqlite';
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
 
 const DB_PATH = path.join(process.cwd(), 'data', 'platform.db');
 
-let db: Database.Database | null = null;
+type SqliteDatabase = InstanceType<typeof DatabaseSync>;
 
-function getDb(): Database.Database {
+let db: SqliteDatabase | null = null;
+
+function getDb(): SqliteDatabase {
   if (!db) {
     const fs = require('fs');
     const dir = path.dirname(DB_PATH);
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 
-    db = new Database(DB_PATH);
-    db.pragma('journal_mode = WAL');
-    db.pragma('foreign_keys = ON');
+    db = new DatabaseSync(DB_PATH);
+    db.exec('PRAGMA journal_mode = WAL;');
+    db.exec('PRAGMA foreign_keys = ON;');
     initializeDatabase(db);
   }
   return db;
 }
 
-function initializeDatabase(db: Database.Database) {
+function initializeDatabase(db: SqliteDatabase) {
   db.exec(`
     -- Clients table
     CREATE TABLE IF NOT EXISTS clients (
