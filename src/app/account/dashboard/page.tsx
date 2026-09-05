@@ -22,7 +22,6 @@ import {
   Unlock,
   UsersRound,
   Wallet,
-  X,
   Zap,
   AlertCircle,
   CheckCircle2,
@@ -31,6 +30,7 @@ import {
 import NotificationPanel from '@/components/NotificationPanel';
 import ThemeToggle from '@/components/ThemeToggle';
 import { LanguageSwitcher, useTranslation } from '@/lib/i18n';
+import FeatureWorkspace, { WorkspaceArea } from '@/components/FeatureWorkspace';
 
 type User = { id: string; fullName: string; email: string };
 
@@ -120,11 +120,20 @@ function statusColor(status: string): string {
 }
 
 export default function DashboardPage() {
-  const [user, setUser] = useState<User | null>(null);
+  const [user] = useState<User | null>(() => {
+    if (typeof window === 'undefined') return null;
+    try {
+      const stored = localStorage.getItem('bte-user');
+      return stored ? JSON.parse(stored) as User : null;
+    } catch {
+      return null;
+    }
+  });
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
   const [sideOpen, setSideOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('overview');
+  const [workspaceNotice, setWorkspaceNotice] = useState('');
   const router = useRouter();
   const { t, locale, setLocale } = useTranslation();
 
@@ -149,8 +158,7 @@ export default function DashboardPage() {
         router.push('/account');
         return;
       }
-      setUser(JSON.parse(userData));
-      fetchDashboard(token);
+      window.setTimeout(() => { void fetchDashboard(token); }, 0);
     } catch {
       router.push('/account');
     }
@@ -174,6 +182,8 @@ export default function DashboardPage() {
   const balance = data?.balance || { available_balance: 0, total_deposited: 0, total_withdrawn: 0, interest_earned: 0 };
   const feeStatus = data?.profile?.registration_fee_paid ? 'paid' : 'pending';
   const totalPortfolio = balance.available_balance + (data?.investments?.reduce((sum, inv) => sum + (inv.status === 'active' ? inv.current_value : 0), 0) || 0);
+  const workspaceAreas: WorkspaceArea[] = ['Portfolio', 'Markets', 'Trade', 'Research', 'Copy Trading', 'Balances', 'Reports', 'Security center', 'Settings', 'Help center'];
+  const isWorkspaceArea = workspaceAreas.includes(activeSection as WorkspaceArea);
 
   return (
     <main className="terminal-shell">
@@ -191,9 +201,9 @@ export default function DashboardPage() {
         <nav className="main-nav" aria-label="Dashboard navigation">
           <div className="nav-caption">{t('section.workspace')}</div>
           {navItems.map(({ label, key, icon: Icon }) => (
-            <a key={label} className="nav-item" href="/" style={{ textDecoration: 'none' }}>
+            <button key={label} className={`nav-item ${activeSection === label ? 'active' : ''}`} onClick={() => { setActiveSection(label); setSideOpen(false); }}>
               <Icon size={17} /><span>{t(key)}</span>
-            </a>
+            </button>
           ))}
           <div className="nav-caption nav-caption-spaced">{t('section.account')}</div>
           <button className={`nav-item ${activeSection === 'overview' ? 'active' : ''}`} onClick={() => setActiveSection('overview')}>
@@ -205,7 +215,7 @@ export default function DashboardPage() {
           <button className={`nav-item ${activeSection === 'payments' ? 'active' : ''}`} onClick={() => setActiveSection('payments')}>
             <CreditCard size={17} /><span>{t('dashboard.payment_history')}</span>
           </button>
-          <button className="nav-item" onClick={() => setSideOpen(false)}>
+          <button className={`nav-item ${activeSection === 'Settings' ? 'active' : ''}`} onClick={() => { setActiveSection('Settings'); setSideOpen(false); }}>
             <Settings2 size={17} /><span>{t('nav.settings')}</span>
           </button>
         </nav>
@@ -253,7 +263,12 @@ export default function DashboardPage() {
             </div>
           )}
 
-          {loading ? (
+          {isWorkspaceArea ? (
+            <>
+              <FeatureWorkspace area={activeSection as WorkspaceArea} onNotify={setWorkspaceNotice} onOpenOrder={() => setActiveSection('Trade')} />
+              {workspaceNotice && <div className="workspace-toast" role="status" onClick={() => setWorkspaceNotice('')}>{workspaceNotice}</div>}
+            </>
+          ) : loading ? (
             <div className="dashboard-loading">
               <div className="loading-spinner" />
               <p>Loading your dashboard...</p>

@@ -74,14 +74,17 @@ export default function AdminDashboardPage() {
   const [stats, setStats] = useState<Stats | null>(null);
 
   useEffect(() => {
-    fetch('/api/stats').then((r) => r.json()).then(setStats);
+    const token = localStorage.getItem('bte-admin-token');
+    fetch('/api/stats', { headers: { Authorization: `Bearer ${token || ''}` } })
+      .then((response) => response.ok ? response.json() : null)
+      .then((payload) => { if (payload) setStats(payload); });
   }, []);
 
   if (!stats) {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="flex items-center gap-3">
-          <svg className="animate-spin h-5 w-5" style={{ color: '#00D4AA' }} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <svg className="animate-spin h-5 w-5" style={{ color: '#6A45E8' }} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
           </svg>
@@ -103,9 +106,9 @@ export default function AdminDashboardPage() {
       label: 'Total Clients',
       value: stats.totalClients,
       sub: `${stats.activeClients} active`,
-      borderColor: '#00D4AA',
-      iconBg: 'rgba(0,212,170,0.1)',
-      iconColor: '#00D4AA',
+      borderColor: '#6A45E8',
+      iconBg: 'rgba(106,69,232,0.1)',
+      iconColor: '#6A45E8',
       icon: (
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
@@ -119,9 +122,9 @@ export default function AdminDashboardPage() {
       label: 'Entities Formed',
       value: stats.totalEntities,
       sub: `${stats.parentEntities} parent · ${stats.subsidiaryEntities} subsidiary`,
-      borderColor: '#0052FF',
-      iconBg: 'rgba(0,82,255,0.1)',
-      iconColor: '#0052FF',
+      borderColor: '#8B6BEA',
+      iconBg: 'rgba(139,107,234,0.12)',
+      iconColor: '#7250D0',
       icon: (
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <rect x="4" y="2" width="16" height="20" rx="2" />
@@ -135,9 +138,9 @@ export default function AdminDashboardPage() {
       label: 'Legal Documents',
       value: stats.totalDocuments,
       sub: `${stats.documentsByStatus?.find((d) => d.status === 'generated')?.count || 0} generated`,
-      borderColor: '#8B5CF6',
-      iconBg: 'rgba(139,92,246,0.1)',
-      iconColor: '#8B5CF6',
+      borderColor: '#A15CF4',
+      iconBg: 'rgba(161,92,244,0.12)',
+      iconColor: '#8A45D8',
       icon: (
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
@@ -151,9 +154,9 @@ export default function AdminDashboardPage() {
       label: 'Treasury & Vaults',
       value: stats.totalTreasuryAccounts + stats.totalVaults,
       sub: `$${(stats.totalTreasuryValue || 0).toLocaleString()} · ${stats.totalVaults} vaults`,
-      borderColor: '#F59E0B',
-      iconBg: 'rgba(245,158,11,0.1)',
-      iconColor: '#F59E0B',
+      borderColor: '#D483E8',
+      iconBg: 'rgba(212,131,232,0.14)',
+      iconColor: '#B15EC8',
       icon: (
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <rect x="2" y="4" width="20" height="16" rx="2" />
@@ -165,7 +168,7 @@ export default function AdminDashboardPage() {
     },
   ];
 
-  const pipelineColors = ['#00D4AA', '#0052FF', '#8B5CF6', '#F59E0B', '#EF4444', '#06B6D4'];
+  const pipelineColors = ['#6A45E8', '#8B6BEA', '#A15CF4', '#D483E8', '#B795FF', '#7C63D7'];
 
   return (
     <div>
@@ -178,9 +181,9 @@ export default function AdminDashboardPage() {
         <Link
           href="/admin/onboarding"
           className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-white text-sm font-medium transition-colors"
-          style={{ backgroundColor: '#00D4AA' }}
-          onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#00BF99'; }}
-          onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = '#00D4AA'; }}
+          style={{ backgroundColor: '#6A45E8' }}
+          onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#4821B8'; }}
+          onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = '#6A45E8'; }}
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <circle cx="12" cy="12" r="10" />
@@ -218,7 +221,7 @@ export default function AdminDashboardPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
         <div className="bg-white rounded-xl border border-[#E2E8F0] p-5">
           <div className="flex items-center gap-3 mb-3">
-            <div className="w-9 h-9 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'rgba(0,82,255,0.1)', color: '#0052FF' }}>
+            <div className="w-9 h-9 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'rgba(139,107,234,0.12)', color: '#7250D0' }}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="2" width="16" height="20" rx="2" /><line x1="8" y1="6" x2="16" y2="6" /><line x1="8" y1="10" x2="16" y2="10" /></svg>
             </div>
             <div>
@@ -228,13 +231,13 @@ export default function AdminDashboardPage() {
           </div>
           <div className="text-3xl font-bold text-slate-900">{stats.parentEntities}</div>
           <div className="mt-2 flex items-center gap-2">
-            <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ backgroundColor: 'rgba(0,82,255,0.1)', color: '#0052FF' }}>Partnership (1065)</span>
+            <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ backgroundColor: 'rgba(139,107,234,0.12)', color: '#7250D0' }}>Partnership (1065)</span>
             <span className="text-xs text-slate-400">Tax classification</span>
           </div>
         </div>
         <div className="bg-white rounded-xl border border-[#E2E8F0] p-5">
           <div className="flex items-center gap-3 mb-3">
-            <div className="w-9 h-9 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'rgba(0,212,170,0.1)', color: '#00D4AA' }}>
+            <div className="w-9 h-9 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'rgba(106,69,232,0.1)', color: '#6A45E8' }}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
             </div>
             <div>
@@ -244,7 +247,7 @@ export default function AdminDashboardPage() {
           </div>
           <div className="text-3xl font-bold text-slate-900">{stats.subsidiaryEntities}</div>
           <div className="mt-2 flex items-center gap-2">
-            <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ backgroundColor: 'rgba(0,212,170,0.1)', color: '#00A080' }}>Disregarded Entity</span>
+            <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ backgroundColor: 'rgba(106,69,232,0.1)', color: '#5D3CC0' }}>Disregarded Entity</span>
             <span className="text-xs text-slate-400">Flow-through to parent</span>
           </div>
         </div>
@@ -292,7 +295,7 @@ export default function AdminDashboardPage() {
                 <span className="text-sm text-slate-700">{typeLabels[item.client_type] || item.client_type}</span>
                 <span
                   className="text-sm font-medium px-2.5 py-0.5 rounded-full"
-                  style={{ backgroundColor: 'rgba(0,212,170,0.1)', color: '#00A080' }}
+                  style={{ backgroundColor: 'rgba(106,69,232,0.1)', color: '#5D3CC0' }}
                 >
                   {item.count}
                 </span>
@@ -342,7 +345,7 @@ export default function AdminDashboardPage() {
         <div className="mt-6 bg-white rounded-xl border border-[#E2E8F0] p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="font-semibold text-slate-900">Payment Verification Engine</h2>
-            <Link href="/admin/payments" className="text-xs font-medium px-3 py-1.5 rounded-lg transition-colors" style={{ backgroundColor: 'rgba(0,82,255,0.1)', color: '#0052FF' }}>View All</Link>
+            <Link href="/admin/payments" className="text-xs font-medium px-3 py-1.5 rounded-lg transition-colors" style={{ backgroundColor: 'rgba(139,107,234,0.12)', color: '#7250D0' }}>View All</Link>
           </div>
           <div className="grid grid-cols-3 gap-4">
             <div className="p-3 rounded-lg bg-slate-50">
@@ -383,7 +386,7 @@ export default function AdminDashboardPage() {
                 <div className="flex items-center gap-3">
                   <span
                     className="w-8 h-8 rounded-lg flex items-center justify-center"
-                    style={{ backgroundColor: 'rgba(0,212,170,0.1)', color: '#00D4AA' }}
+                    style={{ backgroundColor: 'rgba(106,69,232,0.1)', color: '#6A45E8' }}
                   >
                     {activityIcons[item.type] || activityIcons.client}
                   </span>
@@ -404,10 +407,10 @@ export default function AdminDashboardPage() {
         <h2 className="font-semibold text-slate-900 mb-4">Quick Actions</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {[
-            { label: 'New Client', desc: 'Start 6-stage onboarding wizard', href: '/admin/onboarding', color: '#00D4AA' },
-            { label: 'Payments', desc: 'Multi-chain verification', href: '/admin/payments', color: '#0052FF' },
-            { label: 'Documents', desc: 'Agreements & filings', href: '/admin/documents', color: '#8B5CF6' },
-            { label: 'Treasury', desc: 'Accounts, vaults & wallets', href: '/admin/treasury', color: '#F59E0B' },
+            { label: 'New Client', desc: 'Start 6-stage onboarding wizard', href: '/admin/onboarding', color: '#6A45E8' },
+            { label: 'Payments', desc: 'Multi-chain verification', href: '/admin/payments', color: '#8B6BEA' },
+            { label: 'Documents', desc: 'Agreements & filings', href: '/admin/documents', color: '#A15CF4' },
+            { label: 'Treasury', desc: 'Accounts, vaults & wallets', href: '/admin/treasury', color: '#D483E8' },
           ].map((action) => (
             <Link
               key={action.label}
