@@ -32,7 +32,10 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   const authHeader = request.headers.get('authorization');
   if (!authHeader?.startsWith('Bearer ')) return NextResponse.json({ error: 'Admin authentication required' }, { status: 401 });
-  try { jwt.verify(authHeader.slice(7), JWT_SECRET); } catch { return NextResponse.json({ error: 'Invalid admin session' }, { status: 401 }); }
+  try {
+    const decoded = jwt.verify(authHeader.slice(7), JWT_SECRET) as Record<string, unknown>;
+    if (!decoded.adminId && !decoded.role) return NextResponse.json({ error: 'Admin authentication required' }, { status: 401 });
+  } catch { return NextResponse.json({ error: 'Invalid admin session' }, { status: 401 }); }
 
   const body = await request.json().catch(() => null) as { key?: string; value?: unknown } | null;
   if (!body?.key || !PUBLIC_KEYS.has(body.key)) return NextResponse.json({ error: 'Unsupported configuration key' }, { status: 400 });

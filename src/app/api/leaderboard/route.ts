@@ -7,7 +7,11 @@ const JWT_SECRET = process.env.JWT_SECRET || 'bte-platform-secret-key-2024';
 function admin(req: NextRequest) {
   const header = req.headers.get('authorization');
   if (!header?.startsWith('Bearer ')) return false;
-  try { jwt.verify(header.slice(7), JWT_SECRET); return true; } catch { return false; }
+  try {
+    const decoded = jwt.verify(header.slice(7), JWT_SECRET) as Record<string, unknown>;
+    if (!decoded.adminId && !decoded.role) return false;
+    return true;
+  } catch { return false; }
 }
 
 type StrategyRow = {

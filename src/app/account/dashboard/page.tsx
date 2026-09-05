@@ -4,7 +4,6 @@ import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   ArrowUpRight,
-  ArrowDownRight,
   BarChart3,
   ChevronDown,
   ChevronRight,

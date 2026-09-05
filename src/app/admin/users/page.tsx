@@ -235,7 +235,7 @@ export default function AdminUsersPage() {
 
         {/* Modal */}
         {modal && (
-          <div className="admin-modal" onClick={() => setModal(null)}>
+          <div className="admin-user-modal" onClick={() => setModal(null)}>
             <div className="admin-modal-content" onClick={(e) => e.stopPropagation()}>
               <h3>{modal === 'deposit' ? 'Add Deposit' : modal === 'interest' ? 'Add Interest' : 'Adjust Balance'}</h3>
               <label>

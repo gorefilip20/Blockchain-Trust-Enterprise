@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { MessageCircle, Send, X, Headphones, Paperclip } from 'lucide-react';
+import { Send, X, Headphones } from 'lucide-react';
 
 type Message = { id: number; text: string; sender: 'user' | 'support' | 'system'; time: string };
 

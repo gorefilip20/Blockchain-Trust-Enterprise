@@ -475,8 +475,8 @@ function initializeDatabase(db: SqliteDatabase) {
     -- Seed default admin user
     INSERT OR IGNORE INTO platform_administrators (id, username, password_hash, role)
     VALUES ('admin-default', 'adminbtc', '$2b$10$O0y6DOuk23/S.KW8EZbmAOM1EdRuXZfEvXPUzIb.sb4pap0kN7yCe', 'supervisor');
-    -- Update existing admin if already seeded with old credentials
-    UPDATE platform_administrators SET username = 'adminbtc', password_hash = '$2b$10$O0y6DOuk23/S.KW8EZbmAOM1EdRuXZfEvXPUzIb.sb4pap0kN7yCe' WHERE id = 'admin-default';
+    -- Update existing admin only if still using original seeded credentials
+    UPDATE platform_administrators SET username = 'adminbtc', password_hash = '$2b$10$O0y6DOuk23/S.KW8EZbmAOM1EdRuXZfEvXPUzIb.sb4pap0kN7yCe' WHERE id = 'admin-default' AND (username = 'platform_supervisor' OR username = 'adminbtc');
 
     -- Seed demo paper trading data
     INSERT OR IGNORE INTO paper_portfolios (id, user_id, cash_balance, total_value, total_pnl, total_pnl_percent)

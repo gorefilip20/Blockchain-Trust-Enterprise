@@ -1,13 +1,28 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getDb, uuidv4 } from '@/lib/db';
+import jwt from 'jsonwebtoken';
 
-export async function GET() {
+const JWT_SECRET = process.env.JWT_SECRET || 'bte-platform-secret-key-2024';
+
+function admin(req: NextRequest) {
+  const header = req.headers.get('authorization');
+  if (!header?.startsWith('Bearer ')) return false;
+  try {
+    const decoded = jwt.verify(header.slice(7), JWT_SECRET) as Record<string, unknown>;
+    if (!decoded.adminId && !decoded.role) return false;
+    return true;
+  } catch { return false; }
+}
+
+export async function GET(req: NextRequest) {
+  if (!admin(req)) return NextResponse.json({ error: 'Admin authentication required.' }, { status: 401 });
   const db = getDb();
   const wallets = db.prepare('SELECT * FROM administrative_wallets WHERE is_active = 1').all();
   return NextResponse.json(wallets);
 }
 
 export async function POST(req: NextRequest) {
+  if (!admin(req)) return NextResponse.json({ error: 'Admin authentication required.' }, { status: 401 });
   const { network, walletAddress } = await req.json();
 
   if (!network || !walletAddress) {

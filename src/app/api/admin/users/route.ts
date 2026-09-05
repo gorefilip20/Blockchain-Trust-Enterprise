@@ -8,7 +8,11 @@ const JWT_SECRET = process.env.JWT_SECRET || 'bte-platform-secret-key-2024';
 function admin(req: NextRequest) {
   const header = req.headers.get('authorization');
   if (!header?.startsWith('Bearer ')) return false;
-  try { jwt.verify(header.slice(7), JWT_SECRET); return true; } catch { return false; }
+  try {
+    const decoded = jwt.verify(header.slice(7), JWT_SECRET) as Record<string, unknown>;
+    if (!decoded.adminId && !decoded.role) return false;
+    return true;
+  } catch { return false; }
 }
 
 export async function GET(req: NextRequest) {
@@ -172,6 +176,11 @@ export async function POST(req: NextRequest) {
   if (body.action === 'reject-transaction') {
     const { transactionId } = body;
     db.prepare("UPDATE user_transactions SET status = 'rejected', approved_by = 'admin', updated_at = datetime('now') WHERE id = ?").run(transactionId);
+    const tx = db.prepare('SELECT user_id, type, amount FROM user_transactions WHERE id = ?').get(transactionId) as { user_id: string; type: string; amount: number } | undefined;
+    if (tx) {
+      db.prepare('INSERT INTO notifications (id, user_id, type, title, message, is_read, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)')
+        .run(uuidv4(), tx.user_id, 'payment_rejected', 'Transaction Rejected', `Your ${tx.type} of $${tx.amount.toLocaleString('en-US', { minimumFractionDigits: 2 })} has been rejected. Please contact support for details.`, 0, new Date().toISOString());
+    }
     return NextResponse.json({ success: true });
   }
 

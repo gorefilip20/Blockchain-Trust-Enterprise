@@ -301,8 +301,8 @@ export default function AdminSidebar() {
             A
           </div>
           <div>
-            <div className="text-sm font-medium text-white">Admin User</div>
-            <div className="text-[11px]" style={{ color: '#64748B' }}>admin@bte.com</div>
+            <div className="text-sm font-medium text-white">{typeof window !== 'undefined' && localStorage.getItem('bte-admin-user') ? JSON.parse(localStorage.getItem('bte-admin-user') || '{}').username || 'Admin' : 'Admin'}</div>
+            <div className="text-[11px]" style={{ color: '#64748B' }}>Administrator</div>
           </div>
         </div>
         <button
