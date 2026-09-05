@@ -6,36 +6,43 @@ import jwt from 'jsonwebtoken';
 const JWT_SECRET = process.env.JWT_SECRET || 'bte-platform-secret-key-2024';
 
 export async function POST(req: NextRequest) {
-  const { username, password } = await req.json();
+  try {
+    const body = await req.json().catch(() => null);
+    const username = body?.username;
+    const password = body?.password;
 
-  if (!username || !password) {
-    return NextResponse.json({ error: 'Username and password required' }, { status: 400 });
+    if (!username || !password) {
+      return NextResponse.json({ error: 'Username and password required' }, { status: 400 });
+    }
+
+    const db = getDb();
+    const admin = db.prepare('SELECT * FROM platform_administrators WHERE username = ?').get(username) as {
+      id: string;
+      username: string;
+      password_hash: string;
+      role: string;
+    } | undefined;
+
+    if (!admin) {
+      return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
+    }
+
+    const valid = bcrypt.compareSync(password, admin.password_hash);
+    if (!valid) {
+      return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
+    }
+
+    const token = jwt.sign(
+      { adminId: admin.id, username: admin.username, role: admin.role },
+      JWT_SECRET,
+      { expiresIn: '24h' }
+    );
+
+    return NextResponse.json({ token, username: admin.username, role: admin.role });
+  } catch (err) {
+    console.error('Admin auth error:', err);
+    return NextResponse.json({ error: 'Authentication service unavailable. Please try again.' }, { status: 500 });
   }
-
-  const db = getDb();
-  const admin = db.prepare('SELECT * FROM platform_administrators WHERE username = ?').get(username) as {
-    id: string;
-    username: string;
-    password_hash: string;
-    role: string;
-  } | undefined;
-
-  if (!admin) {
-    return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
-  }
-
-  const valid = await bcrypt.compare(password, admin.password_hash);
-  if (!valid) {
-    return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
-  }
-
-  const token = jwt.sign(
-    { adminId: admin.id, username: admin.username, role: admin.role },
-    JWT_SECRET,
-    { expiresIn: '24h' }
-  );
-
-  return NextResponse.json({ token, username: admin.username, role: admin.role });
 }
 
 export async function GET(req: NextRequest) {

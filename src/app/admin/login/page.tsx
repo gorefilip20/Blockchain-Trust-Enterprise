@@ -22,11 +22,13 @@ export default function AdminLoginPage() {
         body: JSON.stringify({ username, password }),
       });
 
-      const data = await res.json();
+      const text = await res.text();
+      let data: Record<string, string>;
+      try { data = JSON.parse(text); } catch { data = { error: 'Server returned an unexpected response.' }; }
 
       if (res.ok && data.token) {
         localStorage.setItem('bte-admin-token', data.token);
-        localStorage.setItem('bte-admin-user', data.username);
+        localStorage.setItem('bte-admin-user', JSON.stringify({ username: data.username, role: data.role }));
         router.push('/admin/dashboard');
       } else {
         setError(data.error || 'Access Denied: Invalid credentials.');

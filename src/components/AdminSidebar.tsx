@@ -301,7 +301,7 @@ export default function AdminSidebar() {
             A
           </div>
           <div>
-            <div className="text-sm font-medium text-white">{typeof window !== 'undefined' && localStorage.getItem('bte-admin-user') ? JSON.parse(localStorage.getItem('bte-admin-user') || '{}').username || 'Admin' : 'Admin'}</div>
+            <div className="text-sm font-medium text-white">{typeof window !== 'undefined' ? (() => { try { const v = localStorage.getItem('bte-admin-user'); if (!v) return 'Admin'; const p = JSON.parse(v); return (typeof p === 'object' && p?.username) || v || 'Admin'; } catch { return localStorage.getItem('bte-admin-user') || 'Admin'; } })() : 'Admin'}</div>
             <div className="text-[11px]" style={{ color: '#64748B' }}>Administrator</div>
           </div>
         </div>
