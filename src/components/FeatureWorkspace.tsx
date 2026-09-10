@@ -75,12 +75,57 @@ function ResearchArea({ onNotify, showCopilot = true, showAlerts = true }: { onN
 }
 
 type AccountAreaKey = 'Balances' | 'Reports' | 'Security center' | 'Settings' | 'Help center';
+
+function LanguageSettings() {
+  const [locale, setLocaleState] = useState('en');
+
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem('bte-lang');
+      if (stored) setLocaleState(stored);
+    } catch {}
+  }, []);
+
+  const changeLocale = (lang: string) => {
+    setLocaleState(lang);
+    try { localStorage.setItem('bte-lang', lang); } catch {}
+    window.location.reload();
+  };
+
+  const languages = [
+    { code: 'en', name: 'English', flag: 'EN' },
+    { code: 'es', name: 'Espanol', flag: 'ES' },
+    { code: 'zh', name: '中文', flag: 'ZH' },
+    { code: 'ar', name: 'العربية', flag: 'AR' },
+  ];
+
+  return (
+    <section className="panel feature-card">
+      <div className="panel-kicker"><Globe2 size={15} />Language / Idioma</div>
+      <div className="panel-title">Choose your display language</div>
+      <div className="language-grid">
+        {languages.map((lang) => (
+          <button
+            key={lang.code}
+            className={`language-option ${locale === lang.code ? 'language-option-active' : ''}`}
+            onClick={() => changeLocale(lang.code)}
+          >
+            <span className="language-flag">{lang.flag}</span>
+            <span className="language-name">{lang.name}</span>
+            {locale === lang.code && <Check size={14} className="language-check" />}
+          </button>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function AccountArea({ area, onNotify }: { area: AccountAreaKey; onNotify: (message: string) => void }) {
   const [action, setAction] = useState<ActionState>(null);
   const content = { Balances: { icon: WalletCards, eyebrow: 'Cash and funding', title: 'Balances', description: 'Review cash, buying power, margin, and multi-currency balances.', cards: [['Total cash', '$68,420.00'], ['Settled cash', '$52,114.00'], ['Margin used', '$18,260.00'], ['Available withdrawal', '$42,810.00']] }, Reports: { icon: FileText, eyebrow: 'Documents and statements', title: 'Reports', description: 'Access statements, confirms, tax lots, performance reports, and audit-ready exports.', cards: [['Monthly statement', 'Aug 2026'], ['Tax package', 'Not yet available'], ['Trade confirmations', '18 this month'], ['Portfolio report', 'Updated today']] }, 'Security center': { icon: LockKeyhole, eyebrow: 'TrustLayer security', title: 'Security center', description: 'Control authentication, devices, permissions, and activity across your BTE account.', cards: [['Account protection', 'Strong'], ['MFA status', 'Enabled'], ['Active sessions', '2 devices'], ['Last review', 'Today']] }, Settings: { icon: SlidersHorizontal, eyebrow: 'Workspace preferences', title: 'Settings', description: 'Personalize your workspace, notifications, quote behavior, and account preferences.', cards: [['Base currency', 'USD'], ['Quote refresh', 'Streaming preview'], ['Notifications', '12 enabled'], ['Theme', 'Midnight terminal']] }, 'Help center': { icon: CircleHelp, eyebrow: 'Support and guidance', title: 'Help center', description: 'Find platform guidance, secure support, and answers for your BTE workspace.', cards: [['Open cases', '0'], ['Knowledge base', '184 articles'], ['Response target', '< 4 hours'], ['System status', 'Operational']] } }[area];
   const Icon = content.icon;
   const open = (title: string, body: string, fields?: string[], confirm = 'Save changes') => setAction({ eyebrow: content.eyebrow, title, body, fields, confirm });
-  return <><AreaHeader icon={Icon} eyebrow={content.eyebrow} title={content.title} description={content.description} action={<button className="secondary-button" onClick={() => open(`Create ${area} request`, 'Complete this safe demo request and the BTE team workspace will record the next step.', ['Request subject', 'Details'], 'Submit request')}><Plus size={15} /> Create request</button>} /><div className="feature-stat-grid">{content.cards.map(([label, value]) => <FeatureStat key={label} label={label} value={value} />)}</div><div className="feature-columns"><section className="panel feature-card"><div className="panel-kicker"><Icon size={15} />Workspace controls</div><div className="panel-title">Manage your BTE experience</div><div className="settings-list">{['Account preferences', 'Permissions and entitlements', 'Notifications and alerts', 'Data and privacy controls', 'Download center'].map((item) => <button key={item} onClick={() => open(item, `Review and update ${item.toLowerCase()} in this workspace.`, ['Preference value'], 'Save preference')}><span><Icon size={15} />{item}</span><ChevronRight size={15} /></button>)}</div></section><section className="panel feature-card account-notice"><ShieldCheck size={22} /><h3>TrustLayer status</h3><p>Demo records are healthy. This panel is designed to show provider health, data freshness, custody reconciliation, and incident status before production actions.</p><button className="full-link" onClick={() => open('TrustLayer transparency report', 'Review provider status, data freshness, custody reconciliation, and active incidents in one client-readable report.', ['Report period'], 'Open transparency report')}>View transparency report <ChevronRight size={14} /></button></section></div><ActionDrawer action={action} onClose={() => setAction(null)} onConfirm={onNotify} /></>;
+  return <><AreaHeader icon={Icon} eyebrow={content.eyebrow} title={content.title} description={content.description} action={<button className="secondary-button" onClick={() => open(`Create ${area} request`, 'Complete this safe demo request and the BTE team workspace will record the next step.', ['Request subject', 'Details'], 'Submit request')}><Plus size={15} /> Create request</button>} /><div className="feature-stat-grid">{content.cards.map(([label, value]) => <FeatureStat key={label} label={label} value={value} />)}</div>{area === 'Settings' && <LanguageSettings />}<div className="feature-columns"><section className="panel feature-card"><div className="panel-kicker"><Icon size={15} />Workspace controls</div><div className="panel-title">Manage your BTE experience</div><div className="settings-list">{['Account preferences', 'Permissions and entitlements', 'Notifications and alerts', 'Data and privacy controls', 'Download center'].map((item) => <button key={item} onClick={() => open(item, `Review and update ${item.toLowerCase()} in this workspace.`, ['Preference value'], 'Save preference')}><span><Icon size={15} />{item}</span><ChevronRight size={15} /></button>)}</div></section><section className="panel feature-card account-notice"><ShieldCheck size={22} /><h3>TrustLayer status</h3><p>Demo records are healthy. This panel is designed to show provider health, data freshness, custody reconciliation, and incident status before production actions.</p><button className="full-link" onClick={() => open('TrustLayer transparency report', 'Review provider status, data freshness, custody reconciliation, and active incidents in one client-readable report.', ['Report period'], 'Open transparency report')}>View transparency report <ChevronRight size={14} /></button></section></div><ActionDrawer action={action} onClose={() => setAction(null)} onConfirm={onNotify} /></>;
 }
 
 function CopyTradingArea({ onNotify }: { onNotify: (message: string) => void }) {

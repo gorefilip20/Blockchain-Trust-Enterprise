@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getDb } from '@/lib/db';
 import jwt from 'jsonwebtoken';
+import { v4 as uuidv4 } from 'uuid';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'bte-platform-secret-key-2024';
 
@@ -46,4 +47,48 @@ export async function GET(req: NextRequest) {
   }
 
   return NextResponse.json({ error: 'Invalid section.' }, { status: 400 });
+}
+
+export async function POST(req: NextRequest) {
+  const user = getUser(req);
+  if (!user) return NextResponse.json({ error: 'Authentication required.' }, { status: 401 });
+
+  try {
+    const { action, transactionHash, network, notes } = await req.json();
+
+    if (action === 'submit-payment') {
+      if (!transactionHash || !transactionHash.trim()) {
+        return NextResponse.json({ error: 'Transaction hash is required.' }, { status: 400 });
+      }
+
+      const db = getDb();
+      const id = uuidv4();
+
+      db.prepare(
+        `INSERT INTO user_transactions (id, user_id, type, amount, description, payment_reference, network, status)
+         VALUES (?, ?, 'registration_fee', 150, 'Registration fee payment', ?, ?, 'pending')`
+      ).run(id, user.userId, transactionHash.trim(), network || 'Unknown');
+
+      db.prepare(
+        `UPDATE app_users SET registration_fee_reference = ? WHERE id = ?`
+      ).run(transactionHash.trim(), user.userId);
+
+      db.prepare(
+        `INSERT INTO admin_messages (id, user_id, user_name, user_email, category, subject, body)
+         VALUES (?, ?, ?, ?, 'Payment Verification', 'Registration Fee - Transaction Submitted', ?)`
+      ).run(
+        uuidv4(),
+        user.userId,
+        user.name || 'User',
+        user.email,
+        `User submitted registration fee payment.\n\nTransaction Hash: ${transactionHash.trim()}\nNetwork: ${network || 'Not specified'}\nNotes: ${notes || 'None'}`
+      );
+
+      return NextResponse.json({ success: true, transactionId: id }, { status: 201 });
+    }
+
+    return NextResponse.json({ error: 'Invalid action.' }, { status: 400 });
+  } catch {
+    return NextResponse.json({ error: 'Failed to process request.' }, { status: 500 });
+  }
 }

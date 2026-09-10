@@ -18,6 +18,7 @@ import {
   MoreHorizontal,
   Newspaper,
   PieChart,
+  Send,
   Settings2,
   ShieldCheck,
   TrendingUp,
@@ -146,6 +147,119 @@ function WalletCopyButton({ address }: { address: string }) {
     <button className="wallet-copy-inline" onClick={copy} title="Copy address">
       {copied ? <><CheckCircle2 size={12} /> Copied</> : <><Copy size={12} /> Copy</>}
     </button>
+  );
+}
+
+function PaymentSubmissionSection({ wallets }: { wallets: WalletInfo[] }) {
+  const [txHash, setTxHash] = useState('');
+  const [txNetwork, setTxNetwork] = useState('BEP20');
+  const [txNotes, setTxNotes] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState('');
+
+  async function handleSubmitPayment(e: React.FormEvent) {
+    e.preventDefault();
+    if (!txHash.trim()) return;
+    setSubmitting(true);
+    setSubmitError('');
+    try {
+      const token = localStorage.getItem('bte-user-token');
+      const res = await fetch('/api/user', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+        body: JSON.stringify({ action: 'submit-payment', transactionHash: txHash.trim(), network: txNetwork, notes: txNotes.trim() }),
+      });
+      if (res.ok) {
+        setSubmitted(true);
+        setTxHash('');
+        setTxNotes('');
+      } else {
+        const data = await res.json().catch(() => ({}));
+        setSubmitError(data.error || 'Failed to submit. Please try again.');
+      }
+    } catch {
+      setSubmitError('Network error. Please try again.');
+    }
+    setSubmitting(false);
+  }
+
+  return (
+    <>
+      <div className="dashboard-alert">
+        <AlertCircle size={18} />
+        <div style={{ flex: 1 }}>
+          <strong>Registration fee pending — $150</strong>
+          <p>Your registration fee has not been confirmed yet. Send $150 to one of the wallet addresses below and submit your transaction hash for admin verification.</p>
+          {wallets.length > 0 && (
+            <div className="deposit-wallets-inline">
+              {wallets.map((w) => {
+                const net = networkLabels[w.blockchain_network] || { label: w.blockchain_network, color: '#888' };
+                return (
+                  <div key={w.blockchain_network} className="deposit-wallet-row">
+                    <span className="deposit-network-badge" style={{ background: net.color }}>{w.blockchain_network}</span>
+                    <code className="deposit-wallet-addr">{w.receiving_address}</code>
+                    <WalletCopyButton address={w.receiving_address} />
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      </div>
+
+      <section className="panel payment-submit-panel" style={{ marginBottom: 14 }}>
+        <div className="panel-heading">
+          <div>
+            <div className="panel-kicker"><Send size={15} />Submit Payment Proof</div>
+            <div className="panel-title">Already paid? Submit your transaction details</div>
+          </div>
+        </div>
+        {submitted ? (
+          <div className="payment-submit-success">
+            <CheckCircle2 size={32} />
+            <h3>Payment submitted successfully</h3>
+            <p>Your transaction has been recorded and our admin team will verify it shortly. You will receive a notification once your payment is confirmed.</p>
+          </div>
+        ) : (
+          <form className="payment-submit-form" onSubmit={handleSubmitPayment}>
+            <div className="payment-form-row">
+              <label className="payment-form-field">
+                <span>Transaction Hash / ID *</span>
+                <input
+                  type="text"
+                  value={txHash}
+                  onChange={(e) => setTxHash(e.target.value)}
+                  placeholder="e.g. 0x1a2b3c... or paste your transaction ID"
+                  required
+                />
+              </label>
+              <label className="payment-form-field payment-form-field-sm">
+                <span>Network</span>
+                <select value={txNetwork} onChange={(e) => setTxNetwork(e.target.value)}>
+                  <option value="BEP20">BEP20 (BNB Smart Chain)</option>
+                  <option value="TRC20">TRC20 (Tron)</option>
+                  <option value="ERC20">ERC20 (Ethereum)</option>
+                </select>
+              </label>
+            </div>
+            <label className="payment-form-field">
+              <span>Notes (optional)</span>
+              <input
+                type="text"
+                value={txNotes}
+                onChange={(e) => setTxNotes(e.target.value)}
+                placeholder="Any additional details about your payment"
+              />
+            </label>
+            {submitError && <p className="payment-submit-error"><AlertCircle size={12} /> {submitError}</p>}
+            <button type="submit" className="primary-button payment-submit-btn" disabled={submitting || !txHash.trim()}>
+              {submitting ? 'Submitting...' : <><Send size={14} /> Submit for Verification</>}
+            </button>
+          </form>
+        )}
+      </section>
+    </>
   );
 }
 
@@ -287,29 +401,9 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          {/* Registration Fee Alert with Wallet Addresses */}
+          {/* Registration Fee Alert with Wallet Addresses + Transaction Submission */}
           {feeStatus === 'pending' && activeSection === 'overview' && (
-            <div className="dashboard-alert">
-              <AlertCircle size={18} />
-              <div style={{ flex: 1 }}>
-                <strong>Registration fee pending — $150</strong>
-                <p>Your registration fee has not been confirmed yet. Send $150 to one of the wallet addresses below and provide your transaction hash to the admin for verification.</p>
-                {wallets.length > 0 && (
-                  <div className="deposit-wallets-inline">
-                    {wallets.map((w) => {
-                      const net = networkLabels[w.blockchain_network] || { label: w.blockchain_network, color: '#888' };
-                      return (
-                        <div key={w.blockchain_network} className="deposit-wallet-row">
-                          <span className="deposit-network-badge" style={{ background: net.color }}>{w.blockchain_network}</span>
-                          <code className="deposit-wallet-addr">{w.receiving_address}</code>
-                          <WalletCopyButton address={w.receiving_address} />
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
-            </div>
+            <PaymentSubmissionSection wallets={wallets} />
           )}
 
           {isWorkspaceArea ? (
