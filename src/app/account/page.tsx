@@ -22,7 +22,9 @@ export default function AccountPage() {
         ? { action: 'register', fullName, email, password, paymentReference: paymentReference || undefined }
         : { action: 'login', email, password };
       const response = await fetch('/api/operations', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-      const data = await response.json();
+      const text = await response.text();
+      let data: Record<string, string>;
+      try { data = JSON.parse(text); } catch { data = { error: 'Server returned an unexpected response. Please try again.' }; }
       if (!response.ok) throw new Error(data.error || 'Unable to complete your request.');
       localStorage.setItem('bte-user-token', data.token);
       localStorage.setItem('bte-user', JSON.stringify(data.user));

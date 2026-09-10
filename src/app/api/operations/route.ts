@@ -16,41 +16,47 @@ function admin(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  const body = await req.json();
-  const db = getDb();
-  if (body.action === 'register') {
-    const { fullName, email, password, paymentReference } = body;
-    if (!fullName || !email || !password || password.length < 8) return NextResponse.json({ error: 'Full name, email, and an 8-character password are required.' }, { status: 400 });
-    const existing = db.prepare('SELECT id FROM app_users WHERE email = ?').get(String(email).toLowerCase());
-    if (existing) return NextResponse.json({ error: 'An account with this email already exists.' }, { status: 409 });
-    const id = uuidv4();
-    const hash = await bcrypt.hash(password, 10);
-    db.prepare('INSERT INTO app_users (id, full_name, email, password_hash, registration_fee_reference) VALUES (?, ?, ?, ?, ?)').run(id, fullName, String(email).toLowerCase(), hash, paymentReference || null);
-    const notifStmt = db.prepare('INSERT OR IGNORE INTO notifications (id, user_id, type, title, message, is_read, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)');
-    notifStmt.run(uuidv4(), id, 'system', 'Welcome to BTE', 'Your BTE account has been created successfully! A $150 registration fee is required to fully activate your account. Submit your payment reference and an administrator will verify and activate your account.', 0, new Date().toISOString());
-    if (paymentReference) {
-      const txId = uuidv4();
-      db.prepare('INSERT INTO user_transactions (id, user_id, type, amount, description, payment_reference, status) VALUES (?, ?, ?, ?, ?, ?, ?)').run(txId, id, 'registration_fee', 150, 'Account registration fee', paymentReference, 'pending');
+  try {
+    const body = await req.json().catch(() => null);
+    if (!body || !body.action) return NextResponse.json({ error: 'Invalid request.' }, { status: 400 });
+    const db = getDb();
+    if (body.action === 'register') {
+      const { fullName, email, password, paymentReference } = body;
+      if (!fullName || !email || !password || password.length < 8) return NextResponse.json({ error: 'Full name, email, and an 8-character password are required.' }, { status: 400 });
+      const existing = db.prepare('SELECT id FROM app_users WHERE email = ?').get(String(email).toLowerCase());
+      if (existing) return NextResponse.json({ error: 'An account with this email already exists.' }, { status: 409 });
+      const id = uuidv4();
+      const hash = bcrypt.hashSync(password, 10);
+      db.prepare('INSERT INTO app_users (id, full_name, email, password_hash, registration_fee_reference) VALUES (?, ?, ?, ?, ?)').run(id, fullName, String(email).toLowerCase(), hash, paymentReference || null);
+      const notifStmt = db.prepare('INSERT OR IGNORE INTO notifications (id, user_id, type, title, message, is_read, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)');
+      notifStmt.run(uuidv4(), id, 'system', 'Welcome to BTE', 'Your BTE account has been created successfully! A $150 registration fee is required to fully activate your account. Submit your payment reference and an administrator will verify and activate your account.', 0, new Date().toISOString());
+      if (paymentReference) {
+        const txId = uuidv4();
+        db.prepare('INSERT INTO user_transactions (id, user_id, type, amount, description, payment_reference, status) VALUES (?, ?, ?, ?, ?, ?, ?)').run(txId, id, 'registration_fee', 150, 'Account registration fee', paymentReference, 'pending');
+      }
+      const token = jwt.sign({ userId: id, email: String(email).toLowerCase(), name: fullName }, JWT_SECRET, { expiresIn: '24h' });
+      return NextResponse.json({ success: true, token, user: { id, fullName, email: String(email).toLowerCase() }, registrationFee: { amount: 150, status: paymentReference ? 'pending_verification' : 'awaiting_payment' } }, { status: 201 });
     }
-    const token = jwt.sign({ userId: id, email: String(email).toLowerCase(), name: fullName }, JWT_SECRET, { expiresIn: '24h' });
-    return NextResponse.json({ success: true, token, user: { id, fullName, email: String(email).toLowerCase() }, registrationFee: { amount: 150, status: paymentReference ? 'pending_verification' : 'awaiting_payment' } }, { status: 201 });
+    if (body.action === 'login') {
+      const { email, password } = body;
+      const user = db.prepare('SELECT * FROM app_users WHERE email = ?').get(String(email || '').toLowerCase()) as { id: string; full_name: string; email: string; password_hash: string; status: string } | undefined;
+      if (!user || !bcrypt.compareSync(password || '', user.password_hash)) return NextResponse.json({ error: 'Invalid email or password.' }, { status: 401 });
+      db.prepare("UPDATE app_users SET last_login_at = datetime('now') WHERE id = ?").run(user.id);
+      const token = jwt.sign({ userId: user.id, email: user.email, name: user.full_name }, JWT_SECRET, { expiresIn: '24h' });
+      return NextResponse.json({ success: true, token, user: { id: user.id, fullName: user.full_name, email: user.email } });
+    }
+    if (body.action === 'message') {
+      const { userId, userName, userEmail, category = 'Guidance', subject = 'BTE guidance request', message } = body;
+      if (!userName || !userEmail || !message) return NextResponse.json({ error: 'Name, email, and message are required.' }, { status: 400 });
+      const id = uuidv4();
+      db.prepare('INSERT INTO admin_messages (id, user_id, user_name, user_email, category, subject, body) VALUES (?, ?, ?, ?, ?, ?, ?)').run(id, userId || null, userName, userEmail, category, subject, message);
+      return NextResponse.json({ success: true, messageId: id }, { status: 201 });
+    }
+    return NextResponse.json({ error: 'Unsupported operation.' }, { status: 400 });
+  } catch (err) {
+    console.error('Operations API error:', err);
+    return NextResponse.json({ error: 'Service temporarily unavailable. Please try again.' }, { status: 500 });
   }
-  if (body.action === 'login') {
-    const { email, password } = body;
-    const user = db.prepare('SELECT * FROM app_users WHERE email = ?').get(String(email || '').toLowerCase()) as { id: string; full_name: string; email: string; password_hash: string; status: string } | undefined;
-    if (!user || !(await bcrypt.compare(password || '', user.password_hash))) return NextResponse.json({ error: 'Invalid email or password.' }, { status: 401 });
-    db.prepare("UPDATE app_users SET last_login_at = datetime('now') WHERE id = ?").run(user.id);
-    const token = jwt.sign({ userId: user.id, email: user.email, name: user.full_name }, JWT_SECRET, { expiresIn: '24h' });
-    return NextResponse.json({ success: true, token, user: { id: user.id, fullName: user.full_name, email: user.email } });
-  }
-  if (body.action === 'message') {
-    const { userId, userName, userEmail, category = 'Guidance', subject = 'BTE guidance request', message } = body;
-    if (!userName || !userEmail || !message) return NextResponse.json({ error: 'Name, email, and message are required.' }, { status: 400 });
-    const id = uuidv4();
-    db.prepare('INSERT INTO admin_messages (id, user_id, user_name, user_email, category, subject, body) VALUES (?, ?, ?, ?, ?, ?, ?)').run(id, userId || null, userName, userEmail, category, subject, message);
-    return NextResponse.json({ success: true, messageId: id }, { status: 201 });
-  }
-  return NextResponse.json({ error: 'Unsupported operation.' }, { status: 400 });
 }
 
 export async function GET(req: NextRequest) {
@@ -64,9 +70,16 @@ export async function GET(req: NextRequest) {
 }
 
 export async function PATCH(req: NextRequest) {
-  if (!admin(req)) return NextResponse.json({ error: 'Admin authentication required.' }, { status: 401 });
-  const body = await req.json(); const db = getDb();
-  if (body.type === 'message') db.prepare("UPDATE admin_messages SET status = ?, assigned_to = ?, updated_at = datetime('now') WHERE id = ?").run(body.status, body.assignedTo || null, body.id);
-  if (body.type === 'strategy') db.prepare("UPDATE copy_strategies SET name = ?, risk_level = ?, status = ?, description = ?, updated_at = datetime('now') WHERE id = ?").run(body.name, body.riskLevel, body.status, body.description, body.id);
-  return NextResponse.json({ success: true });
+  try {
+    if (!admin(req)) return NextResponse.json({ error: 'Admin authentication required.' }, { status: 401 });
+    const body = await req.json().catch(() => null);
+    if (!body) return NextResponse.json({ error: 'Invalid request.' }, { status: 400 });
+    const db = getDb();
+    if (body.type === 'message') db.prepare("UPDATE admin_messages SET status = ?, assigned_to = ?, updated_at = datetime('now') WHERE id = ?").run(body.status, body.assignedTo || null, body.id);
+    if (body.type === 'strategy') db.prepare("UPDATE copy_strategies SET name = ?, risk_level = ?, status = ?, description = ?, updated_at = datetime('now') WHERE id = ?").run(body.name, body.riskLevel, body.status, body.description, body.id);
+    return NextResponse.json({ success: true });
+  } catch (err) {
+    console.error('Operations PATCH error:', err);
+    return NextResponse.json({ error: 'Service temporarily unavailable.' }, { status: 500 });
+  }
 }
