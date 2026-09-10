@@ -1,9 +1,9 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
-import { Send, X, Headphones } from 'lucide-react';
+import { useState, useRef, useEffect, useCallback } from 'react';
+import { Send, X, Headphones, CheckCircle2 } from 'lucide-react';
 
-type Message = { id: number; text: string; sender: 'user' | 'support' | 'system'; time: string };
+type Message = { id: string; text: string; sender: 'user' | 'support' | 'system'; time: string };
 
 const quickReplies = [
   'How do I make a payment?',
@@ -13,36 +13,105 @@ const quickReplies = [
 ];
 
 const autoResponses: Record<string, string> = {
-  'How do I make a payment?': 'You can pay using Bitcoin, Ethereum, XRP, BNB, or Solana. Visit the Payments page to see our wallet addresses, copy the address for your preferred crypto, and send your payment. Your account is credited once the transaction confirms on-chain.',
+  'How do I make a payment?': 'You can pay using BEP20, TRC20, or ERC20 networks. Visit the Payments page or check your dashboard for our wallet addresses. Copy the address for your preferred network and send your payment. Your account is credited once confirmed on-chain.',
   'I need help with my investment plan': 'We offer three investment tiers: Starter ($2,000), Growth ($5,000), and Premium ($20,000). Visit the Investment Plans page to learn more and subscribe. Our team will review and activate your portfolio within 24 hours.',
   'How do I become a mentor?': 'Visit the Mentorship page and click "Become a Mentor." Fill out the application form and our team will review it. Once approved, complete the $500 registration fee via crypto payment, and your mentor profile goes live on the platform.',
-  'Talk to support': 'Our support team has been notified and will respond shortly. In the meantime, feel free to describe your issue and we will get back to you as soon as possible. You can also reach us through the guidance request form in your workspace.',
+  'Talk to support': 'Our support team has been notified and will respond shortly. In the meantime, feel free to describe your issue and we will get back to you as soon as possible.',
 };
 
-function getTime() {
-  return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+function formatTime(date: Date | string) {
+  const d = typeof date === 'string' ? new Date(date) : date;
+  return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 }
 
 export default function ChatWidget() {
   const [open, setOpen] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([
-    { id: 0, text: 'Welcome to BTE Live Support. How can we help you today?', sender: 'support', time: getTime() },
-  ]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [typing, setTyping] = useState(false);
   const [unread, setUnread] = useState(0);
+  const [historyLoaded, setHistoryLoaded] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
+  const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages, typing]);
 
+  const loadHistory = useCallback(async () => {
+    const token = typeof window !== 'undefined' ? localStorage.getItem('bte-user-token') : null;
+    if (!token) return;
+    try {
+      const res = await fetch('/api/support-chat', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!res.ok) return;
+      const data = await res.json();
+      if (!data.messages || data.messages.length === 0) return;
+
+      const loaded: Message[] = [];
+      for (const m of data.messages as Array<{ id: string; body: string; admin_reply: string | null; admin_reply_at: string | null; created_at: string }>) {
+        loaded.push({ id: m.id, text: m.body, sender: 'user', time: formatTime(m.created_at) });
+        if (m.admin_reply) {
+          loaded.push({ id: m.id + '-reply', text: m.admin_reply, sender: 'support', time: formatTime(m.admin_reply_at || m.created_at) });
+        }
+      }
+
+      setMessages(prev => {
+        if (prev.length <= 1) return [{ id: 'welcome', text: 'Welcome to BTE Live Support. How can we help you today?', sender: 'support' as const, time: formatTime(new Date()) }, ...loaded];
+        return prev;
+      });
+    } catch {}
+  }, []);
+
+  const pollForReplies = useCallback(async () => {
+    const token = typeof window !== 'undefined' ? localStorage.getItem('bte-user-token') : null;
+    if (!token) return;
+    try {
+      const res = await fetch('/api/support-chat', { headers: { Authorization: `Bearer ${token}` } });
+      if (!res.ok) return;
+      const data = await res.json();
+      if (!data.messages) return;
+
+      const adminReplies: Message[] = [];
+      for (const m of data.messages as Array<{ id: string; admin_reply: string | null; admin_reply_at: string | null; created_at: string }>) {
+        if (m.admin_reply) {
+          adminReplies.push({ id: m.id + '-reply', text: m.admin_reply, sender: 'support', time: formatTime(m.admin_reply_at || m.created_at) });
+        }
+      }
+
+      setMessages(prev => {
+        const existingIds = new Set(prev.map(p => p.id));
+        const newReplies = adminReplies.filter(r => !existingIds.has(r.id));
+        if (newReplies.length === 0) return prev;
+        if (!open) setUnread(u => u + newReplies.length);
+        return [...prev, ...newReplies];
+      });
+    } catch {}
+  }, [open]);
+
+  useEffect(() => {
+    if (open && !historyLoaded) {
+      setHistoryLoaded(true);
+      setMessages([{ id: 'welcome', text: 'Welcome to BTE Live Support. How can we help you today?', sender: 'support', time: formatTime(new Date()) }]);
+      loadHistory();
+    }
+  }, [open, historyLoaded, loadHistory]);
+
+  useEffect(() => {
+    if (open) {
+      pollRef.current = setInterval(pollForReplies, 15000);
+      return () => { if (pollRef.current) clearInterval(pollRef.current); };
+    } else {
+      if (pollRef.current) clearInterval(pollRef.current);
+    }
+  }, [open, pollForReplies]);
+
   function sendMessage(text: string) {
     if (!text.trim()) return;
-    const userMsg: Message = { id: Date.now(), text: text.trim(), sender: 'user', time: getTime() };
+    const userMsg: Message = { id: 'u-' + Date.now(), text: text.trim(), sender: 'user', time: formatTime(new Date()) };
     setMessages(prev => [...prev, userMsg]);
     setInput('');
     setTyping(true);
 
-    // Persist to backend
     const token = typeof window !== 'undefined' ? localStorage.getItem('bte-user-token') : null;
     fetch('/api/support-chat', {
       method: 'POST',
@@ -51,10 +120,10 @@ export default function ChatWidget() {
     }).catch(() => {});
 
     const autoReply = autoResponses[text.trim()];
-    const reply = autoReply || 'Thank you for your message. Our support team has been notified and will get back to you shortly. For urgent matters, please include your transaction hash or account email so we can assist you faster.';
+    const reply = autoReply || 'Thank you for your message. Our support team has been notified and will get back to you shortly. For urgent matters, please include your transaction hash or account email.';
 
     setTimeout(() => {
-      setMessages(prev => [...prev, { id: Date.now() + 1, text: reply, sender: 'support', time: getTime() }]);
+      setMessages(prev => [...prev, { id: 'auto-' + Date.now(), text: reply, sender: 'support', time: formatTime(new Date()) }]);
       setTyping(false);
       if (!open) setUnread(u => u + 1);
     }, 600 + Math.random() * 800);
@@ -89,6 +158,9 @@ export default function ChatWidget() {
             {messages.map(msg => (
               <div key={msg.id} className={`chat-msg chat-msg-${msg.sender}`}>
                 <div className="chat-msg-bubble">
+                  {msg.sender === 'support' && msg.id.endsWith('-reply') && (
+                    <span className="chat-admin-badge"><CheckCircle2 size={10} /> Admin</span>
+                  )}
                   {msg.text}
                   <span className="chat-msg-time">{msg.time}</span>
                 </div>

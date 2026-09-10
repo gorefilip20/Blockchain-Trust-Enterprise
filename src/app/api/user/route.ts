@@ -33,6 +33,7 @@ export async function GET(req: NextRequest) {
       ORDER BY ui.created_at DESC
     `).all(user.userId);
     const notifications = db.prepare('SELECT * FROM notifications WHERE user_id = ? ORDER BY created_at DESC LIMIT 10').all(user.userId);
+    const wallets = db.prepare('SELECT blockchain_network, receiving_address FROM administrative_wallets WHERE is_active = 1').all();
 
     return NextResponse.json({
       profile,
@@ -40,6 +41,7 @@ export async function GET(req: NextRequest) {
       transactions,
       investments,
       notifications,
+      wallets,
     });
   }
 

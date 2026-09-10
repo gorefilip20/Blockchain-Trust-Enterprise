@@ -7,6 +7,8 @@ import {
   BarChart3,
   ChevronDown,
   ChevronRight,
+  Copy,
+  CheckCircle2,
   CreditCard,
   DollarSign,
   FileText,
@@ -24,7 +26,6 @@ import {
   Wallet,
   Zap,
   AlertCircle,
-  CheckCircle2,
   Clock,
 } from 'lucide-react';
 import NotificationPanel from '@/components/NotificationPanel';
@@ -33,6 +34,11 @@ import { LanguageSwitcher, useTranslation } from '@/lib/i18n';
 import FeatureWorkspace, { WorkspaceArea } from '@/components/FeatureWorkspace';
 
 type User = { id: string; fullName: string; email: string };
+
+interface WalletInfo {
+  blockchain_network: string;
+  receiving_address: string;
+}
 
 interface DashboardData {
   profile: {
@@ -81,6 +87,7 @@ interface DashboardData {
     is_read: number;
     created_at: string;
   }>;
+  wallets: WalletInfo[];
 }
 
 const navItems = [
@@ -101,6 +108,12 @@ const documents = [
   { name: 'Trust Deed', type: 'trust_deed', locked: true },
 ];
 
+const networkLabels: Record<string, { label: string; color: string }> = {
+  BEP20: { label: 'BNB Smart Chain (BEP20)', color: '#f3ba2f' },
+  TRC20: { label: 'Tron (TRC20)', color: '#eb0029' },
+  ERC20: { label: 'Ethereum (ERC20)', color: '#627eea' },
+};
+
 function formatCurrency(amount: number): string {
   return '$' + amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
@@ -117,6 +130,23 @@ function statusColor(status: string): string {
     case 'rejected': case 'cancelled': case 'failed': return 'negative';
     default: return 'muted';
   }
+}
+
+function WalletCopyButton({ address }: { address: string }) {
+  const [copied, setCopied] = useState(false);
+
+  function copy() {
+    navigator.clipboard.writeText(address).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  }
+
+  return (
+    <button className="wallet-copy-inline" onClick={copy} title="Copy address">
+      {copied ? <><CheckCircle2 size={12} /> Copied</> : <><Copy size={12} /> Copy</>}
+    </button>
+  );
 }
 
 export default function DashboardPage() {
@@ -184,6 +214,7 @@ export default function DashboardPage() {
   const totalPortfolio = balance.available_balance + (data?.investments?.reduce((sum, inv) => sum + (inv.status === 'active' ? inv.current_value : 0), 0) || 0);
   const workspaceAreas: WorkspaceArea[] = ['Portfolio', 'Markets', 'Trade', 'Research', 'Copy Trading', 'Balances', 'Reports', 'Security center', 'Settings', 'Help center'];
   const isWorkspaceArea = workspaceAreas.includes(activeSection as WorkspaceArea);
+  const wallets = data?.wallets || [];
 
   return (
     <main className="terminal-shell">
@@ -206,13 +237,13 @@ export default function DashboardPage() {
             </button>
           ))}
           <div className="nav-caption nav-caption-spaced">{t('section.account')}</div>
-          <button className={`nav-item ${activeSection === 'overview' ? 'active' : ''}`} onClick={() => setActiveSection('overview')}>
+          <button className={`nav-item ${activeSection === 'overview' ? 'active' : ''}`} onClick={() => { setActiveSection('overview'); setSideOpen(false); }}>
             <LayoutDashboard size={17} /><span>{t('dashboard.title')}</span>
           </button>
-          <button className={`nav-item ${activeSection === 'documents' ? 'active' : ''}`} onClick={() => setActiveSection('documents')}>
+          <button className={`nav-item ${activeSection === 'documents' ? 'active' : ''}`} onClick={() => { setActiveSection('documents'); setSideOpen(false); }}>
             <FileText size={17} /><span>{t('dashboard.document_vault')}</span>
           </button>
-          <button className={`nav-item ${activeSection === 'payments' ? 'active' : ''}`} onClick={() => setActiveSection('payments')}>
+          <button className={`nav-item ${activeSection === 'payments' ? 'active' : ''}`} onClick={() => { setActiveSection('payments'); setSideOpen(false); }}>
             <CreditCard size={17} /><span>{t('dashboard.payment_history')}</span>
           </button>
           <button className={`nav-item ${activeSection === 'Settings' ? 'active' : ''}`} onClick={() => { setActiveSection('Settings'); setSideOpen(false); }}>
@@ -237,7 +268,11 @@ export default function DashboardPage() {
       <section className="workspace">
         <header className="topbar">
           <button className="mobile-menu" onClick={() => setSideOpen((v) => !v)} aria-label="Toggle navigation"><Menu size={21} /></button>
-          <div className="breadcrumb"><span>{t('section.account')}</span><ChevronRight size={14} /><b>{t('dashboard.title')}</b></div>
+          <div className="breadcrumb">
+            <span>{t('section.account')}</span>
+            <ChevronRight size={14} />
+            <b>{activeSection === 'documents' ? t('dashboard.document_vault') : activeSection === 'payments' ? t('dashboard.payment_history') : t('dashboard.title')}</b>
+          </div>
           <div className="topbar-actions">
             <NotificationPanel />
           </div>
@@ -246,19 +281,33 @@ export default function DashboardPage() {
         <div className="content-wrap">
           <div className="welcome-row">
             <div>
-              <p className="eyebrow"><span className="eyebrow-line" />{t('dashboard.title').toUpperCase()}</p>
-              <h1>Welcome back, {user.fullName.split(' ')[0]}.</h1>
-              <p className="subtitle">Your account overview and active services.</p>
+              <p className="eyebrow"><span className="eyebrow-line" />{(activeSection === 'documents' ? t('dashboard.document_vault') : activeSection === 'payments' ? t('dashboard.payment_history') : t('dashboard.title')).toUpperCase()}</p>
+              <h1>{activeSection === 'documents' ? 'Document Vault' : activeSection === 'payments' ? 'Payment History' : `Welcome back, ${user.fullName.split(' ')[0]}.`}</h1>
+              <p className="subtitle">{activeSection === 'documents' ? 'Your corporate and legal documents.' : activeSection === 'payments' ? 'Your transaction records and deposit wallets.' : 'Your account overview and active services.'}</p>
             </div>
           </div>
 
-          {/* Registration Fee Alert */}
-          {feeStatus === 'pending' && (
+          {/* Registration Fee Alert with Wallet Addresses */}
+          {feeStatus === 'pending' && activeSection === 'overview' && (
             <div className="dashboard-alert">
               <AlertCircle size={18} />
-              <div>
-                <strong>Registration fee pending</strong>
-                <p>Your $150 registration fee has not been confirmed yet. Please submit payment and provide your reference to the admin for verification.</p>
+              <div style={{ flex: 1 }}>
+                <strong>Registration fee pending — $150</strong>
+                <p>Your registration fee has not been confirmed yet. Send $150 to one of the wallet addresses below and provide your transaction hash to the admin for verification.</p>
+                {wallets.length > 0 && (
+                  <div className="deposit-wallets-inline">
+                    {wallets.map((w) => {
+                      const net = networkLabels[w.blockchain_network] || { label: w.blockchain_network, color: '#888' };
+                      return (
+                        <div key={w.blockchain_network} className="deposit-wallet-row">
+                          <span className="deposit-network-badge" style={{ background: net.color }}>{w.blockchain_network}</span>
+                          <code className="deposit-wallet-addr">{w.receiving_address}</code>
+                          <WalletCopyButton address={w.receiving_address} />
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
             </div>
           )}
@@ -275,52 +324,54 @@ export default function DashboardPage() {
             </div>
           ) : (
             <>
-              {/* Portfolio Overview */}
-              <section className="metric-grid">
-                <div className="metric-card metric-card-featured">
-                  <div className="metric-label">Total Portfolio Value <Wallet size={15} /></div>
-                  <div className="metric-value">{formatCurrency(totalPortfolio)}</div>
-                  <div className="metric-foot">
-                    <span className={balance.interest_earned > 0 ? 'positive' : 'muted'}>
-                      {balance.interest_earned > 0 && <ArrowUpRight size={14} />}
-                      {formatCurrency(balance.interest_earned)} interest
-                    </span>
-                    <span>Total earned</span>
+              {/* Portfolio Overview — only on overview */}
+              {activeSection === 'overview' && (
+                <section className="metric-grid">
+                  <div className="metric-card metric-card-featured">
+                    <div className="metric-label">Total Portfolio Value <Wallet size={15} /></div>
+                    <div className="metric-value">{formatCurrency(totalPortfolio)}</div>
+                    <div className="metric-foot">
+                      <span className={balance.interest_earned > 0 ? 'positive' : 'muted'}>
+                        {balance.interest_earned > 0 && <ArrowUpRight size={14} />}
+                        {formatCurrency(balance.interest_earned)} interest
+                      </span>
+                      <span>Total earned</span>
+                    </div>
+                    <div className="metric-orbit orbit-one" />
+                    <div className="metric-orbit orbit-two" />
                   </div>
-                  <div className="metric-orbit orbit-one" />
-                  <div className="metric-orbit orbit-two" />
-                </div>
-                <div className="metric-card">
-                  <div className="metric-label">Available Balance <DollarSign size={15} /></div>
-                  <div className="metric-value" style={{ color: 'var(--mint)' }}>{formatCurrency(balance.available_balance)}</div>
-                  <div className="metric-foot">
-                    <span className="muted">Deposited: {formatCurrency(balance.total_deposited)}</span>
+                  <div className="metric-card">
+                    <div className="metric-label">Available Balance <DollarSign size={15} /></div>
+                    <div className="metric-value" style={{ color: 'var(--mint)' }}>{formatCurrency(balance.available_balance)}</div>
+                    <div className="metric-foot">
+                      <span className="muted">Deposited: {formatCurrency(balance.total_deposited)}</span>
+                    </div>
                   </div>
-                </div>
-                <div className="metric-card">
-                  <div className="metric-label">Active Investments <TrendingUp size={15} /></div>
-                  <div className="metric-value">{data?.investments?.filter(i => i.status === 'active').length || 0}</div>
-                  <div className="metric-foot">
-                    <span className="muted">{formatCurrency(data?.investments?.filter(i => i.status === 'active').reduce((s, i) => s + i.current_value, 0) || 0)} invested</span>
+                  <div className="metric-card">
+                    <div className="metric-label">Active Investments <TrendingUp size={15} /></div>
+                    <div className="metric-value">{data?.investments?.filter(i => i.status === 'active').length || 0}</div>
+                    <div className="metric-foot">
+                      <span className="muted">{formatCurrency(data?.investments?.filter(i => i.status === 'active').reduce((s, i) => s + i.current_value, 0) || 0)} invested</span>
+                    </div>
                   </div>
-                </div>
-                <div className="metric-card">
-                  <div className="metric-label">Account Status <ShieldCheck size={15} /></div>
-                  <div className="metric-value" style={{ fontSize: 20 }}>
-                    {feeStatus === 'paid' ? (
-                      <span className="positive" style={{ display: 'flex', alignItems: 'center', gap: 6 }}><CheckCircle2 size={20} /> Active</span>
-                    ) : (
-                      <span className="pending" style={{ display: 'flex', alignItems: 'center', gap: 6 }}><Clock size={20} /> Pending</span>
-                    )}
+                  <div className="metric-card">
+                    <div className="metric-label">Account Status <ShieldCheck size={15} /></div>
+                    <div className="metric-value" style={{ fontSize: 20 }}>
+                      {feeStatus === 'paid' ? (
+                        <span className="positive" style={{ display: 'flex', alignItems: 'center', gap: 6 }}><CheckCircle2 size={20} /> Active</span>
+                      ) : (
+                        <span className="pending" style={{ display: 'flex', alignItems: 'center', gap: 6 }}><Clock size={20} /> Pending</span>
+                      )}
+                    </div>
+                    <div className="metric-foot">
+                      <span className="muted">Since {data?.profile?.created_at ? formatDate(data.profile.created_at) : 'N/A'}</span>
+                    </div>
                   </div>
-                  <div className="metric-foot">
-                    <span className="muted">Since {data?.profile?.created_at ? formatDate(data.profile.created_at) : 'N/A'}</span>
-                  </div>
-                </div>
-              </section>
+                </section>
+              )}
 
-              {/* Active Investments */}
-              {(data?.investments && data.investments.length > 0) && (
+              {/* Active Investments — only on overview */}
+              {activeSection === 'overview' && (data?.investments && data.investments.length > 0) && (
                 <section className="panel" style={{ marginBottom: 14 }}>
                   <div className="panel-heading">
                     <div>
@@ -348,8 +399,8 @@ export default function DashboardPage() {
                 </section>
               )}
 
-              {/* Empty state for investments */}
-              {(!data?.investments || data.investments.length === 0) && (activeSection === 'overview') && (
+              {/* Empty state for investments — only on overview */}
+              {activeSection === 'overview' && (!data?.investments || data.investments.length === 0) && (
                 <section className="panel" style={{ marginBottom: 14 }}>
                   <div className="panel-heading">
                     <div>
@@ -389,6 +440,44 @@ export default function DashboardPage() {
                       </div>
                     ))}
                   </div>
+                </section>
+              )}
+
+              {/* Deposit Wallets — shown on payments section */}
+              {activeSection === 'payments' && wallets.length > 0 && (
+                <section className="panel deposit-wallets-panel" style={{ marginBottom: 14 }}>
+                  <div className="panel-heading">
+                    <div>
+                      <div className="panel-kicker"><Wallet size={15} />Deposit Wallets</div>
+                      <div className="panel-title">Send crypto to fund your account</div>
+                    </div>
+                  </div>
+                  <div className="deposit-wallets-grid">
+                    {wallets.map((w) => {
+                      const net = networkLabels[w.blockchain_network] || { label: w.blockchain_network, color: '#888' };
+                      return (
+                        <div key={w.blockchain_network} className="deposit-wallet-card" style={{ borderTopColor: net.color }}>
+                          <div className="deposit-wallet-card-header">
+                            <span className="deposit-network-dot" style={{ background: net.color }} />
+                            <div>
+                              <strong>{net.label}</strong>
+                              <small>{w.blockchain_network} Network</small>
+                            </div>
+                          </div>
+                          <div className="deposit-wallet-card-addr">
+                            <label>Deposit Address</label>
+                            <div className="deposit-addr-box">
+                              <code>{w.receiving_address}</code>
+                              <WalletCopyButton address={w.receiving_address} />
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <p className="deposit-wallets-note">
+                    <AlertCircle size={12} /> Only send the specified cryptocurrency on the correct network. Sending on the wrong network may result in permanent loss.
+                  </p>
                 </section>
               )}
 

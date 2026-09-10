@@ -31,6 +31,8 @@ function initializeDatabase(db: SqliteDatabase) {
   safeAlter('ALTER TABLE mentors ADD COLUMN fee_amount_override REAL');
   safeAlter('ALTER TABLE mentors ADD COLUMN youtube_channel TEXT');
   safeAlter('ALTER TABLE mentors ADD COLUMN guide_pdf TEXT');
+  safeAlter('ALTER TABLE admin_messages ADD COLUMN admin_reply TEXT');
+  safeAlter('ALTER TABLE admin_messages ADD COLUMN admin_reply_at TEXT');
 
   db.exec(`
     -- Clients table

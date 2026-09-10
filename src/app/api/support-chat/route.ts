@@ -24,31 +24,66 @@ function getUser(req: NextRequest): UserPayload | null {
 }
 
 export async function POST(req: NextRequest) {
-  const { message } = await req.json();
-  if (!message) return NextResponse.json({ error: 'Message is required.' }, { status: 400 });
+  try {
+    const { message } = await req.json();
+    if (!message) return NextResponse.json({ error: 'Message is required.' }, { status: 400 });
 
-  const user = getUser(req);
-  const db = getDb();
-  const id = uuidv4();
+    const user = getUser(req);
+    const db = getDb();
+    const id = uuidv4();
 
-  db.prepare(
-    'INSERT INTO admin_messages (id, user_id, user_name, user_email, category, subject, body) VALUES (?, ?, ?, ?, ?, ?, ?)'
-  ).run(
-    id,
-    user?.userId || 'anonymous',
-    user?.name || 'Live Chat Visitor',
-    user?.email || 'anonymous@chat',
-    'Live Chat',
-    'Live chat support message',
-    message
-  );
+    db.prepare(
+      'INSERT INTO admin_messages (id, user_id, user_name, user_email, category, subject, body) VALUES (?, ?, ?, ?, ?, ?, ?)'
+    ).run(
+      id,
+      user?.userId || 'anonymous',
+      user?.name || 'Live Chat Visitor',
+      user?.email || 'anonymous@chat',
+      'Live Chat',
+      'Live chat support message',
+      message
+    );
 
-  return NextResponse.json({ success: true, messageId: id }, { status: 201 });
+    return NextResponse.json({ success: true, messageId: id }, { status: 201 });
+  } catch {
+    return NextResponse.json({ error: 'Failed to send message.' }, { status: 500 });
+  }
 }
 
 export async function GET(req: NextRequest) {
-  if (!admin(req)) return NextResponse.json({ error: 'Admin authentication required.' }, { status: 401 });
+  const user = getUser(req);
+  const isAdmin = admin(req);
+
+  if (!user && !isAdmin) {
+    return NextResponse.json({ error: 'Authentication required.' }, { status: 401 });
+  }
+
   const db = getDb();
-  const messages = db.prepare("SELECT * FROM admin_messages WHERE category = 'Live Chat' ORDER BY created_at DESC LIMIT 100").all();
+
+  if (isAdmin) {
+    const messages = db.prepare("SELECT * FROM admin_messages WHERE category = 'Live Chat' ORDER BY created_at DESC LIMIT 100").all();
+    return NextResponse.json({ messages });
+  }
+
+  const messages = db.prepare(
+    "SELECT id, body, admin_reply, admin_reply_at, created_at FROM admin_messages WHERE user_id = ? AND category = 'Live Chat' ORDER BY created_at ASC LIMIT 50"
+  ).all(user!.userId);
+
   return NextResponse.json({ messages });
+}
+
+export async function PATCH(req: NextRequest) {
+  if (!admin(req)) return NextResponse.json({ error: 'Admin authentication required.' }, { status: 401 });
+
+  try {
+    const { messageId, reply } = await req.json();
+    if (!messageId || !reply) return NextResponse.json({ error: 'messageId and reply are required.' }, { status: 400 });
+
+    const db = getDb();
+    db.prepare("UPDATE admin_messages SET admin_reply = ?, admin_reply_at = datetime('now'), status = 'resolved' WHERE id = ?").run(reply, messageId);
+
+    return NextResponse.json({ success: true });
+  } catch {
+    return NextResponse.json({ error: 'Failed to save reply.' }, { status: 500 });
+  }
 }
