@@ -1,0 +1,192 @@
+================================================================================
+           BLOCKCHAIN TRUST ENTERPRISE (BTE) - EDUCATIONAL TRADING GUIDE
+================================================================================
+
+    RISK-FIRST TRADING
+    Emotional Discipline and Capital Preservation
+    Mentor: Humbled Trader
+    Series: BTE Risk Management Academy
+    Version: 2.0
+
+================================================================================
+                            TABLE OF CONTENTS
+================================================================================
+
+    1. Why Risk Management Comes First
+    2. Position Sizing and Risk Calculation
+    3. Emotional Discipline and Trading Psychology
+    4. Building a Risk-First Trading Plan
+
+================================================================================
+    SECTION 1: WHY RISK MANAGEMENT COMES FIRST
+================================================================================
+
+Most new traders focus on finding the perfect entry. They search for the
+indicator that never fails, the pattern that always works, the guru who always
+wins. This search is futile. No strategy wins 100% of the time. What separates
+profitable traders from the 90% who fail is not their win rate. It is how they
+manage risk.
+
+THE MATH OF RUIN:
+    A 10% loss requires an 11% gain to break even.
+    A 20% loss requires a 25% gain to break even.
+    A 50% loss requires a 100% gain to break even.
+    A 75% loss requires a 300% gain to break even.
+
+This asymmetry means that large losses are exponentially harder to recover from.
+Your primary job as a trader is not to make money. It is to avoid large losses.
+Profits take care of themselves when losses are controlled.
+
+THE RISK-FIRST HIERARCHY:
+    Priority 1: Protect capital (survive to trade another day)
+    Priority 2: Minimize drawdowns (preserve psychological capital)
+    Priority 3: Grow account steadily (compound small, consistent gains)
+    Priority 4: Hit home runs (only after priorities 1-3 are secured)
+
+PROFESSIONAL RISK BENCHMARKS:
+    - Maximum risk per trade: 0.5-2% of account equity
+    - Maximum daily loss: 3-5% of account equity
+    - Maximum weekly loss: 6-8% of account equity
+    - Maximum monthly drawdown: 10-15% of account equity
+    - Maximum portfolio heat (total open risk): 6-10% of account equity
+
+When any of these limits is hit, you stop trading for that period. These are
+non-negotiable circuit breakers that protect your capital and your mental state.
+
+================================================================================
+    SECTION 2: POSITION SIZING AND RISK CALCULATION
+================================================================================
+
+Position sizing is the most important skill in trading. It determines whether
+a losing streak is a minor setback or a career-ending disaster.
+
+THE FIXED FRACTIONAL METHOD:
+
+Step 1: Determine your risk percentage (1% recommended for most traders).
+Step 2: Calculate your dollar risk: Account Balance x Risk Percentage.
+Step 3: Determine your stop loss distance from your entry price.
+Step 4: Calculate position size: Dollar Risk / Stop Loss Distance.
+
+WORKED EXAMPLE:
+    Account: $50,000
+    Risk per trade: 1% = $500
+    Stock entry: $25.00
+    Stop loss: $24.00 (risk of $1.00 per share)
+    Position size: $500 / $1.00 = 500 shares
+    Total position value: 500 x $25 = $12,500 (25% of account)
+
+COMMON MISTAKES:
+    - Sizing based on how much you want to make (greed-based sizing)
+    - Using the same number of shares for every trade regardless of volatility
+    - Not accounting for gaps (overnight risk can exceed your stop loss)
+    - Adding to losing positions (doubling down is not a strategy)
+
+CORRELATION RISK: If you hold five tech stocks simultaneously, you do not have
+five independent positions. You have one large tech bet. Correlation amplifies
+risk because all positions can move against you at the same time. Limit
+exposure to any single sector to 2-3 positions.
+
+THE KELLY CRITERION (simplified):
+    Optimal risk % = Win Rate - (Loss Rate / Average Win-Loss Ratio)
+
+    Example: 55% win rate, average winner $2 for every $1 loser
+    Kelly = 0.55 - (0.45 / 2.0) = 0.55 - 0.225 = 0.325 or 32.5%
+
+    In practice, NEVER risk the full Kelly amount. Use quarter-Kelly (about 8%)
+    as your maximum total portfolio heat. Full Kelly leads to devastating
+    drawdowns despite being mathematically optimal long-term.
+
+================================================================================
+    SECTION 3: EMOTIONAL DISCIPLINE AND TRADING PSYCHOLOGY
+================================================================================
+
+Every trader has a plan until the market punches them in the face. Emotional
+discipline is what keeps you executing your plan when fear and greed scream at
+you to deviate.
+
+THE FIVE EMOTIONAL ENEMIES:
+
+    1. FEAR OF MISSING OUT (FOMO): Chasing entries after the move has already
+    happened. The cure: Accept that you will miss many moves. There is always
+    another setup tomorrow. The market is not going anywhere.
+
+    2. REVENGE TRADING: Taking impulsive trades to recover losses. The cure:
+    Enforce your daily loss limit. When hit, close your platform. Physical
+    separation from the screens is the only reliable prevention.
+
+    3. OVERCONFIDENCE: After a winning streak, increasing risk and ignoring
+    rules. The cure: Keep position sizes fixed regardless of recent results.
+    A hot streak does not change your edge.
+
+    4. ANALYSIS PARALYSIS: Second-guessing every trade, watching too many
+    indicators, and never pulling the trigger. The cure: Simplify your
+    strategy to 3-5 clear rules. If the rules are met, take the trade.
+
+    5. HOPE: Holding a losing trade because "it might come back." The cure:
+    Use hard stop losses that execute automatically. Remove the decision from
+    your emotional brain.
+
+THE PRE-TRADE CHECKLIST:
+Before every trade, answer these questions honestly:
+    [ ] Does this setup match my written trading plan?
+    [ ] Have I calculated my exact position size based on risk?
+    [ ] Is my stop loss placed at a logical technical level?
+    [ ] Am I within my daily and weekly risk limits?
+    [ ] Am I emotionally neutral (not trading from fear, greed, or boredom)?
+
+If any answer is no, do not take the trade.
+
+JOURNAL EVERY TRADE: Record the setup, your emotional state, whether you
+followed your rules, and the outcome. Review weekly. Patterns will emerge that
+reveal your specific psychological weaknesses.
+
+================================================================================
+    SECTION 4: BUILDING A RISK-FIRST TRADING PLAN
+================================================================================
+
+A complete trading plan prioritizes risk rules before strategy rules. Here is
+the template:
+
+SECTION A - RISK PARAMETERS (non-negotiable):
+    Max risk per trade: ___% of account
+    Max daily loss: ___% of account
+    Max weekly loss: ___% of account
+    Max positions at once: ___
+    Max correlation exposure: ___ positions per sector
+    Circuit breaker: After ___ consecutive losses, stop for ___ hours
+
+SECTION B - STRATEGY RULES:
+    Markets traded: ___
+    Timeframes: ___
+    Setup criteria: (list specific, measurable conditions)
+    Entry trigger: ___
+    Stop loss placement: ___
+    Profit targets: ___
+    Position management: ___
+
+SECTION C - DAILY ROUTINE:
+    Pre-market: Review plan, scan for setups, set alerts
+    During session: Execute plan, log trades, monitor risk limits
+    Post-market: Journal trades, calculate daily P&L, review mistakes
+    Weekend: Weekly performance review, plan adjustments if needed
+
+SECTION D - ACCOUNTABILITY:
+    Trading buddy or mentor check-in frequency: ___
+    Monthly performance review date: ___
+    Conditions for increasing risk: (e.g., 3 consecutive profitable months)
+    Conditions for reducing risk: (e.g., 2 consecutive losing weeks)
+
+THE GOLDEN RULE OF TRADING: Protect your capital at all costs. A trader who
+preserves their account through difficult periods will always find opportunities
+to profit when conditions improve. A trader who blows up has no opportunities
+at all. Survival is the prerequisite for success.
+
+You do not need to be right on every trade. You need to be right about risk
+management on every trade. This distinction is the difference between a career
+in trading and a costly hobby.
+
+================================================================================
+    Published by Blockchain Trust Enterprise (BTE)
+    For educational purposes only. Not financial advice.
+    All trading involves risk of loss.
+================================================================================

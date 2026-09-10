@@ -1,0 +1,157 @@
+================================================================================
+           BLOCKCHAIN TRUST ENTERPRISE (BTE) - EDUCATIONAL TRADING GUIDE
+================================================================================
+
+    STOCK SWING TRADING SYSTEM
+    Complete Entry and Exit Rules
+    Mentor: Ariel
+    Series: BTE Equity Swing Academy
+    Version: 2.0
+
+================================================================================
+                            TABLE OF CONTENTS
+================================================================================
+
+    1. The Swing Trading Framework
+    2. Entry Rules and Setup Identification
+    3. Exit Rules and Position Management
+    4. Weekly Routine and Watchlist Building
+
+================================================================================
+    SECTION 1: THE SWING TRADING FRAMEWORK
+================================================================================
+
+Swing trading captures intermediate price moves lasting 3-20 trading days. This
+timeframe sits in the sweet spot between the noise of day trading and the
+patience required for position trading. It allows working professionals to trade
+actively without watching screens all day.
+
+CORE PHILOSOPHY: Buy stocks that are pulling back within an established uptrend,
+and sell stocks that are bouncing within an established downtrend. You are not
+predicting reversals. You are joining momentum after a temporary pause.
+
+TIMEFRAME HIERARCHY:
+    Weekly chart: Determines the primary trend direction
+    Daily chart: Identifies pullback zones and entry setups
+    4-Hour chart: Fine-tunes entry timing (optional)
+
+MARKET REGIME FILTER: Before taking any trade, assess the overall market
+environment using the S&P 500 and Nasdaq Composite.
+
+    BULLISH REGIME: SPY above its 50-day and 200-day moving averages with the
+    50 above the 200. Take long setups aggressively. Avoid shorts.
+
+    BEARISH REGIME: SPY below both moving averages with the 50 below the 200.
+    Focus on short setups or stay in cash. Avoid longs.
+
+    CHOPPY/NEUTRAL: SPY is range-bound between the moving averages. Reduce
+    position sizes by 50% and only take the highest-conviction setups.
+
+================================================================================
+    SECTION 2: ENTRY RULES AND SETUP IDENTIFICATION
+================================================================================
+
+THE PULLBACK BUY SETUP (Long Trades):
+
+All five conditions must be met before entering:
+
+    1. TREND CONFIRMATION: Stock must be above its rising 20-day and 50-day
+       exponential moving averages (EMA) on the daily chart.
+
+    2. PULLBACK ZONE: Price has pulled back to the 10-day or 20-day EMA after
+       a swing high. The pullback should retrace 30-60% of the prior swing.
+
+    3. VOLUME CONTRACTION: During the pullback, volume should decrease compared
+       to the prior up-move. This shows selling pressure is weak.
+
+    4. RELATIVE STRENGTH: The stock should be outperforming the S&P 500 over
+       the past 20 days. Use a relative strength line or ratio chart.
+
+    5. TRIGGER CANDLE: Enter when a daily candle closes above the high of the
+       prior pullback candle with expanding volume. This confirms buyers are
+       stepping back in.
+
+ENTRY EXECUTION:
+    - Place a buy stop order 0.05 above the trigger candle high
+    - If the order is not triggered within 2 days, cancel and re-evaluate
+    - Enter at market open only if the gap is less than 2%
+
+THE BREAKDOWN SHORT SETUP (Short Trades):
+    - Mirror image of the pullback buy
+    - Stock below declining 20-day and 50-day EMAs
+    - Bounce into the 10-day or 20-day EMA with decreasing volume
+    - Enter on a breakdown candle below the bounce low
+
+================================================================================
+    SECTION 3: EXIT RULES AND POSITION MANAGEMENT
+================================================================================
+
+STOP LOSS PLACEMENT:
+    - Initial stop: Below the pullback low minus 0.10 (for longs)
+    - Maximum risk per trade: 1% of total account equity
+    - If the stop distance exceeds 7-8% from entry, skip the trade
+
+PROFIT TARGET FRAMEWORK:
+    Target 1 (T1): Previous swing high (typically 1:1 risk-to-reward)
+    Target 2 (T2): 1.618 Fibonacci extension of the prior swing
+    Target 3 (T3): Trail with 10-day EMA for extended moves
+
+POSITION MANAGEMENT RULES:
+    - At T1: Sell 1/3 of position, move stop to breakeven
+    - At T2: Sell another 1/3, trail stop below 10-day EMA
+    - Final 1/3: Hold until 10-day EMA is broken on a closing basis
+
+TIME-BASED EXIT: If the trade has not reached T1 within 10 trading days, close
+the position regardless of profit or loss. Dead money has an opportunity cost.
+
+STOP ADJUSTMENT SCHEDULE:
+    Day 1-3: Keep initial stop, no adjustments
+    Day 4-5: If in profit, tighten stop to below the most recent daily low
+    Day 6+: Trail stop below the 5-day EMA on a closing basis
+
+MAXIMUM CONCURRENT POSITIONS: Hold no more than 5-8 swing trades at any time.
+Each position should represent 10-15% of your portfolio, with no more than 25%
+exposure to any single sector.
+
+================================================================================
+    SECTION 4: WEEKLY ROUTINE AND WATCHLIST BUILDING
+================================================================================
+
+WEEKEND PREPARATION (Saturday/Sunday - 2 hours):
+    1. Review the weekly charts of SPY, QQQ, IWM, and sector ETFs
+    2. Determine the market regime (bullish, bearish, choppy)
+    3. Scan for pullback setups using a stock screener with these filters:
+       - Price above $10, average volume above 500K shares
+       - Above 50-day and 200-day moving averages
+       - RSI between 40-60 (pulled back but not oversold)
+       - Within 5% of the 20-day EMA
+    4. Narrow to 10-15 candidates and set alert levels
+
+DAILY ROUTINE (15-30 minutes):
+    Morning (before market open):
+        - Review pre-market gaps on watchlist stocks
+        - Check for overnight news or earnings on holdings
+        - Verify all orders are correctly placed
+
+    After market close:
+        - Review triggered entries and adjust stops
+        - Log all trades in your journal with entry reason
+        - Remove stocks from watchlist that have moved past entry zones
+
+MONTHLY PERFORMANCE REVIEW:
+    Track these metrics each month:
+    - Total trades taken vs. plan adherence rate
+    - Win rate (target 50-60%)
+    - Average risk-to-reward realized (target 1.5:1 or better)
+    - Largest winner and largest loser
+    - Portfolio heat (total open risk across all positions)
+
+Consistency in routine creates consistency in results. The swing trading edge
+comes not from any single trade, but from disciplined repetition of a
+high-probability process over hundreds of trades.
+
+================================================================================
+    Published by Blockchain Trust Enterprise (BTE)
+    For educational purposes only. Not financial advice.
+    All trading involves risk of loss.
+================================================================================

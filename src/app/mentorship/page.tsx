@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { BookOpen, Users, TrendingUp, Star, ChevronDown, ChevronUp, Send, Award, BarChart3, Target, Shield, Zap, MessageCircle, FileText } from 'lucide-react';
+import { BookOpen, Users, TrendingUp, Star, ChevronDown, ChevronUp, Send, Award, BarChart3, Target, Shield, Zap, MessageCircle, FileText, Video, Lock, Copy, Check, Wallet, DollarSign, Eye, X } from 'lucide-react';
 
 interface Strategy {
   id: string; title: string; trader_name: string; category: string; markets: string;
@@ -10,6 +10,11 @@ interface Strategy {
 interface Mentor {
   id: string; name: string; specialty: string; bio: string; experience_years: number;
   markets: string; telegram_handle: string; total_students: number; rating: number;
+  youtube_channel?: string; guide_pdf?: string;
+}
+interface WalletInfo {
+  blockchain_network: string;
+  receiving_address: string;
 }
 
 const difficultyColor: Record<string, string> = { Beginner: '#3b82f6', Intermediate: '#0fa987', Advanced: '#e0a800' };
@@ -17,9 +22,132 @@ const categoryIcon: Record<string, React.ReactNode> = {
   'Swing Trading': <TrendingUp size={16} />, 'Day Trading': <Zap size={16} />,
 };
 
+const guidePreview: Record<string, { title: string; sections: string[]; previewText: string }> = {
+  'mentor-kane-prop-firm-playbook': {
+    title: 'Prop Firm Trading Playbook',
+    sections: ['Understanding Funded Accounts', 'Risk Rules & Drawdown Management', 'The Repeatable Setup', 'Scaling Your Prop Firm Career'],
+    previewText: 'Prop firm trading has revolutionized access to capital for skilled traders. Instead of risking your own money, you trade with the firm\'s capital and keep a share of profits — typically 70-90%. The key to passing evaluations and staying funded is strict risk management. Most firms set a maximum daily drawdown of 4-5% and a total drawdown cap of 8-12%. Your edge isn\'t in finding the biggest trade — it\'s in consistency. Focus on setups with a 2:1 reward-to-risk ratio and keep position sizes small enough that no single loss triggers a rule violation...',
+  },
+  'mentor-brando-options-masterclass': {
+    title: 'Options Swing Trading Masterclass',
+    sections: ['The Size for Zero Method', 'Reading Options Flow', 'Entry Timing & Strike Selection', 'Managing Winners & Cutting Losers'],
+    previewText: 'The Size for Zero method is built on one principle: size your position so that your maximum loss is a predetermined, comfortable amount — effectively zero impact on your trading psychology. When you remove the fear of loss from the equation, you trade your plan with precision. Start by identifying a stock with strong directional momentum on the daily chart. Look for pullbacks to the 21 EMA or a key support level. Select call options 30-45 days to expiration, one or two strikes in-the-money, to reduce theta decay...',
+  },
+  'mentor-ariel-swing-system': {
+    title: 'Stock Swing Trading System',
+    sections: ['Eliminating FOMO with Rules', 'The Setup Scanner', 'Entry, Stop & Target Framework', 'Journaling for Growth'],
+    previewText: 'FOMO — Fear of Missing Out — is the silent killer of trading accounts. Every time you chase a stock that already moved 30%, you\'re buying someone else\'s profits. This system eliminates FOMO by giving you a strict checklist: if the setup doesn\'t meet all five criteria, you don\'t trade. Criteria 1: The stock must be above its 50-day moving average. Criteria 2: Volume on the breakout candle must exceed the 20-day average by at least 50%. Criteria 3: The entry must be within 3% of the breakout level...',
+  },
+  'mentor-rayner-price-action-guide': {
+    title: 'Price Action & Trend Following Guide',
+    sections: ['Reading Price Action Like a Pro', 'Trend Following Fundamentals', 'Multi-Timeframe Analysis', 'Building a Trading Plan'],
+    previewText: 'Price action trading strips away the noise of indicators and focuses on what matters most: the price itself. Every candlestick tells a story about the battle between buyers and sellers. A long lower wick on a daily candle at a support level isn\'t just a pattern — it\'s rejection. Buyers stepped in aggressively and overwhelmed sellers. When you see this at a level where price has bounced three or more times, you have a high-probability long setup. The stop goes below the wick; the target is the next resistance level...',
+  },
+  'mentor-ross-daytrading-blueprint': {
+    title: 'Small-Cap Day Trading Blueprint',
+    sections: ['Gap-and-Go Strategy', 'VWAP as Your Compass', 'Momentum Breakout Playbook', 'The $583 to $10M Journey'],
+    previewText: 'The Gap-and-Go strategy targets stocks gapping up 10%+ in pre-market on significant news — earnings beats, FDA approvals, contract wins. These stocks attract massive volume and retail attention, creating predictable momentum patterns. Scan for stocks gapping up at least 10% with pre-market volume exceeding 500K shares. Wait for the market open, then watch for the first pullback to VWAP or the pre-market high. If the stock holds above VWAP and forms a bull flag or flat-top breakout pattern, enter on the break with a stop below VWAP...',
+  },
+  'mentor-cryptobanter-crypto-playbook': {
+    title: 'Crypto Market Analysis Playbook',
+    sections: ['Macro Cycles & BTC Dominance', 'Altcoin Rotation Strategy', 'DeFi Alpha & Yield Farming', 'On-Chain Analysis Basics'],
+    previewText: 'Understanding Bitcoin dominance (BTC.D) is the single most important skill in crypto trading. When BTC dominance rises, capital flows from altcoins into Bitcoin — this is "alt season ending." When it falls, capital rotates into altcoins — this is where 10-100x gains happen. Track BTC.D on the weekly chart. A break below 50% historically signals the start of alt season. During this phase, focus on large-cap altcoins first (ETH, SOL, AVAX), then mid-caps, then small-caps. The rotation follows a predictable waterfall pattern...',
+  },
+  'mentor-humbled-risk-management': {
+    title: 'Risk-First Day Trading Guide',
+    sections: ['The Reality of Day Trading', 'Position Sizing That Protects You', 'Emotional Discipline Framework', 'Building Consistent Habits'],
+    previewText: 'Here\'s the truth nobody tells you on YouTube: 90% of day traders lose money. Not because trading doesn\'t work, but because most people skip the boring part — risk management. Before you learn any strategy, you need to answer: "How much am I willing to lose today?" Set a hard daily loss limit of 1-2% of your account. When you hit it, close your platform. No exceptions. This single rule will save your account while you learn. Position sizing follows: if your daily max loss is $200 and your stop loss on a trade is $0.50 per share...',
+  },
+  'mentor-ttchannel-technical-systems': {
+    title: 'Technical Analysis Systems Guide',
+    sections: ['Supply & Demand Zone Mapping', 'Order Flow Fundamentals', 'Multi-Timeframe Confluence', 'Backtesting Your Edge'],
+    previewText: 'Supply and demand zones are not the same as support and resistance. Support and resistance are horizontal lines; supply and demand zones are areas where institutional orders cluster. To identify a demand zone: find a strong bullish move that left a base of 1-3 candles before the impulse. Draw a rectangle from the low of the base to the open of the last bearish candle before the rally. This zone represents unfilled buy orders. When price returns to this zone, institutional buyers are likely to step in again...',
+  },
+  'mentor-umar-momentum-swings': {
+    title: 'Momentum Swing Trading Guide',
+    sections: ['Finding Momentum Before the Crowd', 'Sector Rotation Timing', 'Breakout Pattern Recognition', 'Scaling Into Winners'],
+    previewText: 'Momentum trading is about being early, not first. You don\'t need to catch the bottom — you need to catch the acceleration. Use relative strength (RS) to find stocks outperforming the market. When the S&P 500 pulls back 2% and a stock only dips 0.5%, that stock has institutional support. Build a watchlist of 20-30 high-RS names each week. When the broader market stabilizes or bounces, these stocks will lead the rally. Enter on a breakout above a clean resistance level with volume confirmation...',
+  },
+  'mentor-cryptoface-leverage-guide': {
+    title: 'Crypto Leverage Trading Guide',
+    sections: ['Understanding Leverage & Liquidation', 'Order Flow & Liquidation Maps', 'Risk-Adjusted Leverage Strategy', 'Advanced BTC/ETH Setups'],
+    previewText: 'Leverage is a tool, not a strategy. Using 50x leverage doesn\'t make you 50x more profitable — it makes you 50x more likely to get liquidated. Smart leverage trading starts with understanding liquidation prices. At 10x leverage on a BTC long, a 10% drop liquidates your position. At 3x, you can withstand a 33% drawdown. For most traders, 2-5x leverage is the sweet spot — enough amplification to make meaningful gains, low enough to survive normal market volatility...',
+  },
+};
+
+function CopyButton({ text }: { text: string }) {
+  const [copied, setCopied] = useState(false);
+  return (
+    <button
+      className="wallet-copy-btn"
+      onClick={() => { navigator.clipboard.writeText(text); setCopied(true); setTimeout(() => setCopied(false), 2000); }}
+    >
+      {copied ? <><Check size={12} /> Copied</> : <><Copy size={12} /> Copy</>}
+    </button>
+  );
+}
+
+function PdfPreviewModal({ mentor, onClose, hasAccess }: { mentor: Mentor; onClose: () => void; hasAccess: boolean }) {
+  const slug = mentor.guide_pdf?.replace('/guides/', '').replace('.pdf', '') || '';
+  const preview = guidePreview[slug];
+  if (!preview) return null;
+
+  return (
+    <div className="pdf-preview-overlay" onClick={onClose}>
+      <div className="pdf-preview-modal" onClick={e => e.stopPropagation()}>
+        <button className="pdf-preview-close" onClick={onClose}><X size={18} /></button>
+        <div className="pdf-preview-header">
+          <FileText size={24} />
+          <div>
+            <h2>{preview.title}</h2>
+            <p>by <strong>{mentor.name}</strong> {mentor.youtube_channel && <span>({mentor.youtube_channel})</span>}</p>
+          </div>
+        </div>
+
+        <div className="pdf-preview-toc">
+          <h4>Table of Contents</h4>
+          <ol>
+            {preview.sections.map((s, i) => (
+              <li key={i}><span>{i + 1}.</span> {s}</li>
+            ))}
+          </ol>
+        </div>
+
+        <div className="pdf-preview-content">
+          <h4>{preview.sections[0]}</h4>
+          <p>{preview.previewText}</p>
+        </div>
+
+        {!hasAccess && (
+          <div className="pdf-paywall-overlay">
+            <div className="pdf-paywall-fade" />
+            <div className="pdf-paywall-card">
+              <Lock size={28} />
+              <h3>Continue reading</h3>
+              <p>This guide is exclusive to BTE mentorship students. Pay the one-time $150 access fee to unlock all mentor guides and the private mentorship class.</p>
+              <a href="#student-access" onClick={(e) => { e.preventDefault(); onClose(); const el = document.querySelector('[data-tab="student"]'); if (el instanceof HTMLElement) el.click(); }}>
+                <Shield size={14} /> Register &amp; Pay $150 to Unlock
+              </a>
+            </div>
+          </div>
+        )}
+
+        {hasAccess && (
+          <div className="pdf-full-access">
+            <a href={mentor.guide_pdf} download className="pdf-download-btn">
+              <FileText size={15} /> Download Full Guide (PDF)
+            </a>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 export default function MentorshipPage() {
   const [strategies, setStrategies] = useState<Strategy[]>([]);
   const [mentors, setMentors] = useState<Mentor[]>([]);
+  const [wallets, setWallets] = useState<WalletInfo[]>([]);
   const [expanded, setExpanded] = useState<string | null>(null);
   const [tab, setTab] = useState<'strategies' | 'mentors' | 'apply' | 'student'>('strategies');
   const [studentForm, setStudentForm] = useState({ fullName: '', email: '', paymentReference: '' });
@@ -29,11 +157,15 @@ export default function MentorshipPage() {
   const [result, setResult] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [filter, setFilter] = useState('All');
+  const [previewMentor, setPreviewMentor] = useState<Mentor | null>(null);
+
+  const hasStudentAccess = studentAccess?.notion_access_enabled === 1;
 
   useEffect(() => {
     fetch('/api/mentorship').then(r => r.json()).then(d => {
       setStrategies(d.strategies || []);
       setMentors(d.mentors || []);
+      setWallets(d.wallets || []);
     });
     const token = localStorage.getItem('bte-user-token');
     if (token) fetch('/api/mentorship?section=student', { headers: { Authorization: `Bearer ${token}` } }).then(r => r.ok ? r.json() : null).then(d => d && setStudentAccess(d.subscription ? { ...d.subscription, notionUrl: d.notionUrl } : null));
@@ -81,12 +213,12 @@ export default function MentorshipPage() {
           <h1>Master the markets with battle-tested strategies.</h1>
           <p className="mentorship-hero-sub">
             Access trading playbooks from consistently profitable traders, verified by track record.
-            Learn the frameworks behind millions in real returns — completely free.
+            Learn the frameworks behind millions in real returns.
           </p>
           <div className="mentorship-hero-stats">
             <div className="mh-stat"><BookOpen size={18} /><strong>{strategies.length}</strong><span>Strategies</span></div>
             <div className="mh-stat"><Users size={18} /><strong>{mentors.length}</strong><span>Active Mentors</span></div>
-            <div className="mh-stat"><Star size={18} /><strong>Free</strong><span>All Strategies</span></div>
+            <div className="mh-stat"><DollarSign size={18} /><strong>$150</strong><span>Student Access</span></div>
             <div className="mh-stat"><Award size={18} /><strong>Verified</strong><span>Profitable Traders</span></div>
           </div>
         </div>
@@ -101,7 +233,7 @@ export default function MentorshipPage() {
           <button className={tab === 'apply' ? 'mt-active' : ''} onClick={() => setTab('apply')}>
             <Send size={15} /> Become a Mentor
           </button>
-          <button className={tab === 'student' ? 'mt-active' : ''} onClick={() => setTab('student')}>
+          <button data-tab="student" className={tab === 'student' ? 'mt-active' : ''} onClick={() => setTab('student')}>
             <Shield size={15} /> Student Access
           </button>
         </div>
@@ -172,15 +304,53 @@ export default function MentorshipPage() {
             <div className="mentor-apply-wrap">
               <div className="mentor-apply-info">
                 <h2>Join the mentorship class</h2>
-                <p>Submit your registration and payment reference for manual review. Your private mentorship guide appears here automatically only after an administrator confirms both payment and approval.</p>
-                <div className="apply-fee-box"><h4>Access status</h4><div className="apply-fee-amount">{studentAccess?.notion_access_enabled ? 'Approved' : studentAccess ? 'Under review' : 'Not registered'} <span>admin-controlled access</span></div><p>{studentAccess ? `Payment: ${studentAccess.payment_status} · Approval: ${studentAccess.approval_status}` : 'Sign in and submit your payment reference to begin.'}</p>{studentAccess?.notion_access_enabled && studentAccess.notionUrl && <a className="apply-payment-link" href={studentAccess.notionUrl} target="_blank" rel="noreferrer"><BookOpen size={16} /><span>Open private mentorship guide</span></a>}</div>
+                <p>Get full access to all mentor guides, copy trading documents, and the private mentorship class. One-time payment of $150 reviewed by admin.</p>
+
+                <div className="apply-fee-box">
+                  <h4><DollarSign size={16} /> Mentorship Access Fee</h4>
+                  <div className="apply-fee-amount">$150 <span>one-time payment</span></div>
+                  <p>Send exactly $150 in crypto to any wallet below, then paste your transaction hash in the registration form.</p>
+                </div>
+
+                {wallets.length > 0 && (
+                  <div className="mentorship-wallets">
+                    <h4><Wallet size={16} /> Payment Wallets</h4>
+                    {wallets.map(w => (
+                      <div key={w.blockchain_network} className="mentorship-wallet-row">
+                        <div className="wallet-network-badge">{w.blockchain_network}</div>
+                        <div className="wallet-address-wrap">
+                          <code className="wallet-address-code">{w.receiving_address}</code>
+                          <CopyButton text={w.receiving_address} />
+                        </div>
+                      </div>
+                    ))}
+                    <p className="wallet-note">Send exactly <strong>$150 USDT</strong> to any network above. Copy the transaction hash after sending.</p>
+                  </div>
+                )}
+
+                <div className="apply-fee-box" style={{ marginTop: 16 }}>
+                  <h4>Access status</h4>
+                  <div className="apply-fee-amount">
+                    {studentAccess?.notion_access_enabled ? 'Approved' : studentAccess ? 'Under review' : 'Not registered'}
+                    <span>admin-controlled access</span>
+                  </div>
+                  <p>{studentAccess ? `Payment: ${studentAccess.payment_status} · Approval: ${studentAccess.approval_status}` : 'Sign in and submit your payment reference to begin.'}</p>
+                  {studentAccess?.notion_access_enabled && studentAccess.notionUrl && (
+                    <a className="apply-payment-link" href={studentAccess.notionUrl} target="_blank" rel="noreferrer"><BookOpen size={16} /><span>Open private mentorship guide</span></a>
+                  )}
+                </div>
               </div>
+
               <form className="mentor-apply-form" onSubmit={handleStudentRegistration}>
                 <h3>Student registration</h3>
+                <div className="student-fee-reminder">
+                  <DollarSign size={16} />
+                  <span>Fee: <strong>$150</strong> — Send USDT to a wallet above, then paste your TX hash below</span>
+                </div>
                 {studentResult && <div className={`invest-alert invest-alert-${studentResult.type}`}>{studentResult.message}</div>}
                 <label>Full name *<input value={studentForm.fullName} onChange={e => setStudentForm(p => ({ ...p, fullName: e.target.value }))} required /></label>
                 <label>Email *<input type="email" value={studentForm.email} onChange={e => setStudentForm(p => ({ ...p, email: e.target.value }))} required /></label>
-                <label>Payment reference / transaction hash *<input value={studentForm.paymentReference} onChange={e => setStudentForm(p => ({ ...p, paymentReference: e.target.value }))} placeholder="Paste the reference for admin review" required /></label>
+                <label>Payment reference / transaction hash *<input value={studentForm.paymentReference} onChange={e => setStudentForm(p => ({ ...p, paymentReference: e.target.value }))} placeholder="Paste your $150 USDT transaction hash" required /></label>
                 <button type="submit">Submit for approval <Send size={14} /></button>
               </form>
             </div>
@@ -194,6 +364,9 @@ export default function MentorshipPage() {
                 <div className="mentor-card" key={m.id}>
                   <div className="mentor-avatar">{m.name.split(' ').map(w => w[0]).join('').slice(0, 2)}</div>
                   <h3>{m.name}</h3>
+                  {m.youtube_channel && (
+                    <div className="mentor-youtube-badge"><Video size={13} /> {m.youtube_channel}</div>
+                  )}
                   <p className="mentor-specialty">{m.specialty}</p>
                   <p className="mentor-bio">{m.bio}</p>
                   <div className="mentor-meta">
@@ -202,6 +375,13 @@ export default function MentorshipPage() {
                     <span><Star size={12} /> {m.rating}/5</span>
                   </div>
                   <div className="mentor-markets"><Target size={12} /> {m.markets}</div>
+                  {m.guide_pdf && (
+                    <button className="mentor-guide-btn" onClick={() => setPreviewMentor(m)}>
+                      <Eye size={14} />
+                      <span>Preview Trading Guide</span>
+                      {!hasStudentAccess && <Lock size={11} />}
+                    </button>
+                  )}
                   <div className="mentor-contact">
                     <MessageCircle size={14} />
                     <span>Contact via Live Chat</span>
@@ -260,6 +440,10 @@ export default function MentorshipPage() {
           </section>
         )}
       </div>
+
+      {previewMentor && (
+        <PdfPreviewModal mentor={previewMentor} onClose={() => setPreviewMentor(null)} hasAccess={hasStudentAccess} />
+      )}
     </main>
   );
 }

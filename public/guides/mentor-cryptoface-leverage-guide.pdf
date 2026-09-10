@@ -1,0 +1,179 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+2 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+3 0 obj
+<< /Length 245 >>
+stream
+BT
+/F2 24 Tf
+50 700 Td
+(Crypto Leverage Trading Guide) Tj
+/F1 12 Tf
+0 -40 Td
+(by Crypto Face) Tj
+/F1 10 Tf
+0 -30 Td
+(Blockchain Trust Enterprise - Mentorship Program) Tj
+/F1 9 Tf
+0 -400 Td
+(CONFIDENTIAL - For registered BTE students only) Tj
+ET
+endstream
+endobj
+4 0 obj
+<< /Length 835 >>
+stream
+BT
+/F2 16 Tf
+50 750 Td
+(Chapter 1: Understanding Leverage and Liquidation) Tj
+/F1 11 Tf
+0 -30 Td
+0 -16 Td
+(Leverage is a tool, not a strategy. Using fifty times leverage does not make you) Tj
+0 -16 Td
+(fifty times more profitable. It makes you fifty times more likely to get liquidated.) Tj
+0 -16 Td
+(Smart leverage trading starts with understanding liquidation prices. At ten times) Tj
+0 -16 Td
+(leverage on a Bitcoin long, a ten percent drop liquidates your position. At three) Tj
+0 -16 Td
+(times, you can withstand a thirty-three percent drawdown. For most traders, two to) Tj
+0 -16 Td
+(five times leverage is the sweet spot. That is enough amplification to make) Tj
+0 -16 Td
+(meaningful gains, low enough to survive normal market volatility. Always calculate) Tj
+0 -16 Td
+(your liquidation price before entering a position.) Tj
+ET
+endstream
+endobj
+5 0 obj
+<< /Length 810 >>
+stream
+BT
+/F2 16 Tf
+50 750 Td
+(Chapter 2: Order Flow and Liquidation Maps) Tj
+/F1 11 Tf
+0 -30 Td
+0 -16 Td
+(Liquidation maps show you where leveraged positions will be force-closed. When a) Tj
+0 -16 Td
+(large cluster of long liquidations sits at a certain price, market makers know that) Tj
+0 -16 Td
+(hitting that level triggers a cascade of sell orders, giving them cheap fills. This) Tj
+0 -16 Td
+(is why price often sweeps below obvious support levels before reversing. Monitor) Tj
+0 -16 Td
+(liquidation data from aggregators to identify these clusters. Trade with the market) Tj
+0 -16 Td
+(makers: wait for the liquidation sweep, then enter in the direction of the prevailing) Tj
+0 -16 Td
+(trend once the cascade is absorbed. This approach puts you on the same side as the) Tj
+0 -16 Td
+(largest participants.) Tj
+ET
+endstream
+endobj
+6 0 obj
+<< /Length 763 >>
+stream
+BT
+/F2 16 Tf
+50 750 Td
+(Chapter 3: Risk-Adjusted Leverage Strategy) Tj
+/F1 11 Tf
+0 -30 Td
+0 -16 Td
+(The golden rule: never risk more than one to two percent of your total account on a) Tj
+0 -16 Td
+(single trade, regardless of leverage. If your account is ten thousand USDT and you) Tj
+0 -16 Td
+(risk one percent, your maximum loss per trade is one hundred USDT. With a stop loss) Tj
+0 -16 Td
+(of two percent away from entry at five times leverage, your position size should be) Tj
+0 -16 Td
+(one thousand USDT, ten percent of your account. The leverage amplifies your gains) Tj
+0 -16 Td
+(within your risk tolerance without threatening your account. Use isolated margin,) Tj
+0 -16 Td
+(never cross margin, so a bad trade cannot liquidate your entire account.) Tj
+ET
+endstream
+endobj
+7 0 obj
+<< /Length 800 >>
+stream
+BT
+/F2 16 Tf
+50 750 Td
+(Chapter 4: Advanced BTC and ETH Setups) Tj
+/F1 11 Tf
+0 -30 Td
+0 -16 Td
+(Bitcoin respects key psychological levels such as round numbers like one hundred) Tj
+0 -16 Td
+(thousand and fifty thousand more than traditional assets. For Bitcoin longs, wait for) Tj
+0 -16 Td
+(a sweep below a key level on high volume, then enter on the reclaim candle with a) Tj
+0 -16 Td
+(stop below the sweep wick. For shorts, look for failed breakouts above round numbers) Tj
+0 -16 Td
+(with declining volume. The ETH to BTC ratio tells you about risk appetite. When it) Tj
+0 -16 Td
+(rises, traders are risk-on and altcoins follow. Funding rates above zero point zero) Tj
+0 -16 Td
+(five percent signal overleveraged longs. Trade against extreme funding for mean) Tj
+0 -16 Td
+(reversion setups.) Tj
+ET
+endstream
+endobj
+8 0 obj
+<< /Type /Pages /Kids [9 0 R 10 0 R 11 0 R 12 0 R 13 0 R] /Count 5 >>
+endobj
+9 0 obj
+<< /Type /Page /Parent 8 0 R /MediaBox [0 0 612 792] /Contents 3 0 R /Resources << /Font << /F1 1 0 R /F2 2 0 R >> >> >>
+endobj
+10 0 obj
+<< /Type /Page /Parent 8 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 1 0 R /F2 2 0 R >> >> >>
+endobj
+11 0 obj
+<< /Type /Page /Parent 8 0 R /MediaBox [0 0 612 792] /Contents 5 0 R /Resources << /Font << /F1 1 0 R /F2 2 0 R >> >> >>
+endobj
+12 0 obj
+<< /Type /Page /Parent 8 0 R /MediaBox [0 0 612 792] /Contents 6 0 R /Resources << /Font << /F1 1 0 R /F2 2 0 R >> >> >>
+endobj
+13 0 obj
+<< /Type /Page /Parent 8 0 R /MediaBox [0 0 612 792] /Contents 7 0 R /Resources << /Font << /F1 1 0 R /F2 2 0 R >> >> >>
+endobj
+14 0 obj
+<< /Type /Catalog /Pages 8 0 R >>
+endobj
+xref
+0 15
+0000000000 65535 f 
+0000000009 00000 n 
+0000000079 00000 n 
+0000000154 00000 n 
+0000000449 00000 n 
+0000001334 00000 n 
+0000002194 00000 n 
+0000003007 00000 n 
+0000003857 00000 n 
+0000003942 00000 n 
+0000004078 00000 n 
+0000004215 00000 n 
+0000004352 00000 n 
+0000004489 00000 n 
+0000004626 00000 n 
+trailer
+<< /Size 15 /Root 14 0 R >>
+startxref
+4676
+%%EOF

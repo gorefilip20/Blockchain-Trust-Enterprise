@@ -1,0 +1,165 @@
+================================================================================
+           BLOCKCHAIN TRUST ENTERPRISE (BTE) - EDUCATIONAL TRADING GUIDE
+================================================================================
+
+    PRICE ACTION TRADING AND TREND FOLLOWING
+    A Complete Guide to Reading the Market
+    Mentor: Rayner
+    Series: BTE Price Action Academy
+    Version: 2.0
+
+================================================================================
+                            TABLE OF CONTENTS
+================================================================================
+
+    1. Price Action Fundamentals
+    2. Market Structure and Trend Identification
+    3. Key Price Action Patterns
+    4. Trend Following Strategy and Execution
+
+================================================================================
+    SECTION 1: PRICE ACTION FUNDAMENTALS
+================================================================================
+
+Price action trading is the discipline of making trading decisions based purely
+on the movement of price itself, without reliance on lagging indicators. Every
+indicator is derived from price. By reading price directly, you see the market's
+story as it unfolds, not after the fact.
+
+THE THREE PILLARS OF PRICE ACTION:
+
+    1. SUPPORT AND RESISTANCE: Horizontal levels where price has historically
+       reversed or stalled. These are the market's memory. The more times a
+       level is tested, the more significant it becomes. However, levels that
+       are tested too many times weaken and eventually break.
+
+    2. CANDLESTICK PATTERNS: Individual candles and multi-candle formations
+       that reveal the battle between buyers and sellers. Focus on the story
+       they tell about momentum, rejection, and indecision.
+
+    3. MARKET STRUCTURE: The sequence of higher highs and higher lows (uptrend)
+       or lower highs and lower lows (downtrend). Structure is the backbone of
+       every price action analysis.
+
+CLEAN CHARTS: Remove all indicators except perhaps one or two moving averages
+for dynamic support and resistance. A clean chart forces you to read what price
+is actually doing rather than what an indicator suggests it might do.
+
+THE PRICE ACTION TRADER'S EDGE: You see reversals, continuations, and
+breakouts in real time. Indicator traders see these events after they happen,
+when much of the move is already over.
+
+================================================================================
+    SECTION 2: MARKET STRUCTURE AND TREND IDENTIFICATION
+================================================================================
+
+DEFINING MARKET STRUCTURE:
+
+    UPTREND: A series of higher highs (HH) and higher lows (HL). Each swing
+    high exceeds the previous swing high, and each pullback low holds above the
+    previous pullback low. As long as this pattern holds, the trend is intact.
+
+    DOWNTREND: A series of lower highs (LH) and lower lows (LL). Each rally
+    fails below the previous rally high, and each decline breaks below the
+    previous swing low.
+
+    RANGE: Price oscillates between a defined support and resistance level.
+    Neither buyers nor sellers can establish control. Ranges eventually resolve
+    with a breakout in one direction.
+
+BREAK OF STRUCTURE (BOS): When price violates the pattern of its current trend,
+it signals a potential reversal. In an uptrend, a BOS occurs when price makes
+a lower low, breaking below the most recent higher low. This does not guarantee
+a reversal, but it demands attention.
+
+CHANGE OF CHARACTER (CHOCH): A more aggressive signal than BOS. In an uptrend,
+CHOCH occurs when price not only breaks the recent higher low but also creates
+a lower high. Two consecutive structure breaks confirm the character change.
+
+USING MOVING AVERAGES AS STRUCTURE TOOLS:
+    - 20 EMA: Short-term trend direction and dynamic support/resistance
+    - 50 EMA: Medium-term trend. Price above = bullish bias, below = bearish
+    - 200 SMA: Long-term trend and major institutional level
+
+================================================================================
+    SECTION 3: KEY PRICE ACTION PATTERNS
+================================================================================
+
+REVERSAL CANDLESTICK PATTERNS:
+
+    PIN BAR (Hammer/Shooting Star): A candle with a long wick and small body.
+    The long wick shows strong rejection of a price level. A bullish pin bar at
+    support has a long lower wick; a bearish pin bar at resistance has a long
+    upper wick. The wick should be at least 2x the length of the body.
+
+    ENGULFING PATTERN: A two-candle pattern where the second candle's body
+    completely engulfs the first. A bullish engulfing at support shows buyers
+    overwhelming sellers. A bearish engulfing at resistance shows the opposite.
+
+    INSIDE BAR: A candle whose entire range is contained within the previous
+    candle's range. This represents consolidation and a potential breakout.
+    Trade the break of the mother candle's high or low.
+
+CONTINUATION PATTERNS:
+
+    FLAG/PENNANT: After a strong impulse move, price consolidates in a tight
+    channel (flag) or triangle (pennant) before continuing in the original
+    direction. Enter on the breakout of the pattern with a stop below the
+    pattern low.
+
+    ASCENDING/DESCENDING TRIANGLE: Flat resistance with rising lows (ascending)
+    or flat support with declining highs (descending). These typically resolve
+    in the direction of the flat boundary.
+
+PATTERN CONFLUENCE: The most powerful setups occur when multiple factors align.
+A pin bar rejection at a key support level during an uptrend pullback to the
+50 EMA represents triple confluence and a high-probability trade.
+
+================================================================================
+    SECTION 4: TREND FOLLOWING STRATEGY AND EXECUTION
+================================================================================
+
+THE TREND FOLLOWING FRAMEWORK:
+
+Trend following is the most reliable long-term trading approach. Markets trend
+approximately 30% of the time, but those trends produce the largest moves. Your
+job is to capture those moves while minimizing losses during choppy periods.
+
+ENTRY METHOD - THE PULLBACK CONTINUATION:
+    1. Identify the trend direction on the daily chart using structure and EMAs
+    2. Wait for a pullback to a key level (50 EMA, previous structure, or
+       Fibonacci 50-61.8% retracement)
+    3. Look for a reversal candle pattern at that level (pin bar, engulfing)
+    4. Enter on the close of the reversal candle or on a break of its high
+    5. Stop loss below the reversal candle low (longs) or above its high (shorts)
+
+TREND FOLLOWING RULES:
+    - Only trade in the direction of the higher timeframe trend
+    - Never try to pick tops or bottoms; let structure confirm the trend
+    - Accept that you will miss the first 10-20% of every move
+    - Accept that you will give back 10-20% at the end of every move
+    - Your edge is in the middle 60-80% of the trend
+
+TRAILING STOP METHODS:
+    Method 1: Trail below the 20 EMA on a closing basis (tight trail)
+    Method 2: Trail below each new higher low (standard trail)
+    Method 3: Use ATR-based trailing stop at 2x ATR below price (wide trail)
+
+POSITION SIZING FOR TREND FOLLOWERS:
+    Risk 1% of account per trade. Calculate position size as:
+    Position Size = (Account Risk) / (Entry Price - Stop Loss Price)
+
+    Example: $100,000 account, risking 1% = $1,000
+    Entry at $50, stop at $47 = $3 risk per share
+    Position size = $1,000 / $3 = 333 shares
+
+The beauty of price action trend following is its simplicity. You need no
+proprietary software, no expensive indicators, and no complex algorithms. A
+candlestick chart, a few moving averages, and disciplined risk management are
+all you need to extract consistent profits from the market.
+
+================================================================================
+    Published by Blockchain Trust Enterprise (BTE)
+    For educational purposes only. Not financial advice.
+    All trading involves risk of loss.
+================================================================================

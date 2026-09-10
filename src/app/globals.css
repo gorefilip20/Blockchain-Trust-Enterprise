@@ -777,6 +777,67 @@ html:not([data-theme="dark"]) .terminal-shell ::-webkit-scrollbar-thumb { backgr
 
 .eyebrow { font-weight: 700; letter-spacing: .15em; }
 
+/* ── Mentorship wallets ── */
+.mentorship-wallets { margin-top: 20px; padding: 18px; background: rgba(0,212,170,.04); border: 1px solid rgba(0,212,170,.18); border-radius: 12px; }
+.mentorship-wallets > h4 { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 700; color: var(--mint); margin-bottom: 14px; }
+.mentorship-wallet-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+.wallet-network-badge { display: inline-flex; align-items: center; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; background: rgba(0,212,170,.12); color: var(--mint); white-space: nowrap; min-width: 70px; justify-content: center; }
+.wallet-address-wrap { display: flex; align-items: center; gap: 6px; flex: 1; min-width: 0; }
+.wallet-address-code { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 12px; color: var(--text); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 6px 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; min-width: 0; }
+.wallet-copy-btn { display: inline-flex; align-items: center; gap: 4px; padding: 5px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; background: var(--mint); color: #061a17; border: none; cursor: pointer; transition: .18s ease; white-space: nowrap; }
+.wallet-copy-btn:hover { background: #6aefc6; }
+.mentorship-wallets .wallet-note { font-size: 12px; color: var(--muted); margin-top: 12px; margin-bottom: 0; }
+
+/* ── Mentor YouTube badge ── */
+.mentor-youtube-badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; background: rgba(255,0,0,.1); color: #ff4444; margin-bottom: 6px; }
+
+/* ── Mentor guide preview button ── */
+.mentor-guide-btn { display: flex; align-items: center; gap: 7px; width: 100%; padding: 10px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; background: linear-gradient(135deg, rgba(0,212,170,.12), rgba(0,212,170,.06)); border: 1px solid rgba(0,212,170,.2); color: var(--mint); cursor: pointer; transition: .2s ease; margin-top: 8px; }
+.mentor-guide-btn:hover { background: linear-gradient(135deg, rgba(0,212,170,.2), rgba(0,212,170,.1)); border-color: var(--mint); }
+.mentor-guide-btn span { flex: 1; text-align: left; }
+
+/* ── PDF preview overlay & modal ── */
+.pdf-preview-overlay { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; background: rgba(3,6,9,.78); backdrop-filter: blur(6px); padding: 20px; overflow-y: auto; }
+.pdf-preview-modal { position: relative; width: min(640px, 100%); max-height: 90vh; overflow-y: auto; background: #111a23; border: 1px solid #2e4652; border-radius: 14px; padding: 28px; box-shadow: 0 32px 90px rgba(0,0,0,.55); }
+.pdf-preview-close { position: absolute; top: 14px; right: 14px; display: grid; place-items: center; width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); color: var(--muted); cursor: pointer; transition: .18s ease; }
+.pdf-preview-close:hover { color: var(--text); border-color: var(--mint); }
+.pdf-preview-header { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 22px; padding-bottom: 18px; border-bottom: 1px solid var(--line); }
+.pdf-preview-header h2 { font-size: 18px; font-weight: 700; margin: 0; }
+.pdf-preview-header p { font-size: 13px; color: var(--muted); margin: 4px 0 0; }
+.pdf-preview-header svg { color: var(--mint); flex-shrink: 0; margin-top: 2px; }
+
+/* ── Table of contents ── */
+.pdf-preview-toc { margin-bottom: 20px; padding: 16px; background: var(--surface); border-radius: 10px; border: 1px solid var(--line); }
+.pdf-preview-toc h4 { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--mint); margin-bottom: 12px; }
+.pdf-preview-toc ol { list-style: none; padding: 0; margin: 0; }
+.pdf-preview-toc li { display: flex; align-items: center; gap: 8px; padding: 7px 0; font-size: 13px; color: var(--text); border-bottom: 1px solid rgba(255,255,255,.04); }
+.pdf-preview-toc li:last-child { border-bottom: none; }
+.pdf-preview-toc li span { color: var(--mint); font-weight: 700; font-size: 12px; min-width: 20px; }
+
+/* ── Preview content ── */
+.pdf-preview-content { position: relative; padding: 18px 0 60px; }
+.pdf-preview-content h4 { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 12px; }
+.pdf-preview-content p { font-size: 14px; line-height: 1.75; color: var(--muted); }
+
+/* ── Paywall overlay (Medium-style) ── */
+.pdf-paywall-overlay { position: relative; margin-top: -80px; }
+.pdf-paywall-fade { height: 100px; background: linear-gradient(to bottom, transparent 0%, #111a23 100%); pointer-events: none; }
+.pdf-paywall-card { text-align: center; padding: 28px 24px; background: linear-gradient(135deg, #0f2a35, #172d3d); border: 1px solid rgba(0,212,170,.2); border-radius: 14px; }
+.pdf-paywall-card svg { color: var(--mint); margin-bottom: 10px; }
+.pdf-paywall-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+.pdf-paywall-card p { font-size: 13px; color: var(--muted); line-height: 1.6; max-width: 400px; margin: 0 auto 18px; }
+.pdf-paywall-card a { display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; border-radius: 8px; background: var(--mint); color: #061a17; font-weight: 700; font-size: 13px; text-decoration: none; transition: .2s ease; }
+.pdf-paywall-card a:hover { background: #6aefc6; }
+
+/* ── Full access / download ── */
+.pdf-full-access { text-align: center; padding: 20px 0 4px; }
+.pdf-download-btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; border-radius: 8px; background: var(--mint); color: #061a17; font-weight: 700; font-size: 13px; text-decoration: none; transition: .2s ease; }
+.pdf-download-btn:hover { background: #6aefc6; }
+
+/* ── Student fee reminder ── */
+.student-fee-reminder { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-radius: 8px; background: rgba(224,168,0,.08); border: 1px solid rgba(224,168,0,.2); color: var(--gold); font-size: 12px; margin-bottom: 14px; }
+.student-fee-reminder strong { color: #f0c000; }
+
 @media (max-width: 700px) {
   html:not([data-theme="dark"]) .terminal-shell .content-wrap { padding: 32px 20px 24px; }
   html:not([data-theme="dark"]) .terminal-shell .welcome-row h1 { font-size: 30px; }
@@ -785,6 +846,10 @@ html:not([data-theme="dark"]) .terminal-shell ::-webkit-scrollbar-thumb { backgr
   .payments-hero h1 { font-size: 28px; }
   .account-copy h1 { font-size: 38px; }
   .blog-hero h1 { font-size: 28px; }
+  .mentorship-wallet-row { flex-direction: column; align-items: flex-start; }
+  .wallet-address-wrap { width: 100%; }
+  .pdf-preview-modal { padding: 18px; }
+  .pdf-paywall-card { padding: 20px 16px; }
 }
 
 

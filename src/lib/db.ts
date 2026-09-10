@@ -681,11 +681,18 @@ function initializeDatabase(db: SqliteDatabase) {
        'Advanced', 'https://www.chartfanatics.com/playbook/intraday-liquidity-volatility-model');
 
     -- Seed demo mentors
-    INSERT OR IGNORE INTO mentors (id, name, email, specialty, bio, experience_years, markets, fee_paid, telegram_handle, status, total_students, rating)
+    INSERT OR IGNORE INTO mentors (id, name, email, specialty, bio, experience_years, markets, fee_paid, telegram_handle, status, total_students, rating, youtube_channel, guide_pdf)
     VALUES
-      ('mentor-1', 'Kane', 'kane@chartfanatics.com', 'Prop Firm Trading', 'Prop firm trader with $2.3M+ payouts. Held the record for largest single payout and made $1.4M in one month trading a focused, repeatable strategy emphasizing patience and consistent gains.', 8, 'Futures, Forex', 1, '@kane_trades', 'active', 342, 4.9),
-      ('mentor-2', 'Brando', 'brando@chartfanatics.com', 'Options Swing Trading', 'Turned $6K into over $10,000,000 trading. Made $1M+ in a single month using the Size for Zero method. Only takes trades using a strict playbook that anyone can learn.', 10, 'Options, Stocks', 1, '@brando_options', 'active', 567, 4.8),
-      ('mentor-3', 'Ariel', 'ariel@chartfanatics.com', 'Stock Swing Trading', 'Teaches a repeatable swing trading system designed to eliminate FOMO and scale with confidence. Uses the same setups, entries, and execution rules in every real trade.', 6, 'Stocks', 1, '@ariel_swings', 'active', 218, 4.7);
+      ('mentor-1', 'Kane', 'kane@chartfanatics.com', 'Prop Firm Trading', 'Prop firm trader with $2.3M+ payouts. Held the record for largest single payout and made $1.4M in one month trading a focused, repeatable strategy emphasizing patience and consistent gains.', 8, 'Futures, Forex', 1, '@kane_trades', 'active', 342, 4.9, 'Chart Fanatics', '/guides/mentor-kane-prop-firm-playbook.pdf'),
+      ('mentor-2', 'Brando', 'brando@chartfanatics.com', 'Options Swing Trading', 'Turned $6K into over $10,000,000 trading. Made $1M+ in a single month using the Size for Zero method. Only takes trades using a strict playbook that anyone can learn.', 10, 'Options, Stocks', 1, '@brando_options', 'active', 567, 4.8, 'Chart Fanatics', '/guides/mentor-brando-options-masterclass.pdf'),
+      ('mentor-3', 'Ariel', 'ariel@chartfanatics.com', 'Stock Swing Trading', 'Teaches a repeatable swing trading system designed to eliminate FOMO and scale with confidence. Uses the same setups, entries, and execution rules in every real trade.', 6, 'Stocks', 1, '@ariel_swings', 'active', 218, 4.7, 'Chart Fanatics', '/guides/mentor-ariel-swing-system.pdf'),
+      ('mentor-4', 'Rayner Teo', 'rayner@tradingwithrayner.com', 'Price Action & Trend Following', 'One of the most-followed trading educators with 2M+ YouTube subscribers. Teaches systematic price action, trend following, and risk management strategies that work across all timeframes.', 12, 'Forex, Stocks', 1, '@rayaborntrade', 'active', 1240, 4.9, 'Rayner Teo', '/guides/mentor-rayner-price-action-guide.pdf'),
+      ('mentor-5', 'Ross Cameron', 'ross@warriortrading.com', 'Small-Cap Day Trading', 'Founder of Warrior Trading. Turned $583 into $10M+ day trading small-cap momentum stocks. Teaches gap-and-go, VWAP, and momentum breakout strategies with strict risk rules.', 14, 'Stocks', 1, '@warrior_ross', 'active', 2150, 4.8, 'Warrior Trading', '/guides/mentor-ross-daytrading-blueprint.pdf'),
+      ('mentor-6', 'Crypto Banter', 'team@cryptobanter.com', 'Crypto Market Analysis', 'The largest live crypto trading show on YouTube. Ran Sheldon and team deliver daily macro analysis, altcoin picks, and DeFi alpha for retail and advanced crypto traders worldwide.', 7, 'Crypto', 1, '@cryptobanter', 'active', 890, 4.7, 'Crypto Banter', '/guides/mentor-cryptobanter-crypto-playbook.pdf'),
+      ('mentor-7', 'Humbled Trader', 'shay@humbledtrader.com', 'Risk-First Day Trading', 'Former marketing professional turned full-time trader. Known for honest, no-hype education on day trading reality. Teaches small-cap scalping, risk management, and emotional discipline.', 6, 'Stocks, Options', 1, '@humbledtrader', 'active', 780, 4.8, 'Humbled Trader', '/guides/mentor-humbled-risk-management.pdf'),
+      ('mentor-8', 'The Trading Channel', 'steven@ttchannel.com', 'Technical Analysis Systems', 'Steven Hart teaches systematic technical analysis and backtested trading strategies. Focuses on supply-demand zones, order flow, and multi-timeframe confluence with data-driven results.', 9, 'Forex, Futures', 1, '@ttchannel', 'active', 620, 4.7, 'The Trading Channel', '/guides/mentor-ttchannel-technical-systems.pdf'),
+      ('mentor-9', 'Umar Ashraf', 'umar@umarashraf.com', 'Momentum Swing Trading', 'Self-taught trader who grew a small account into millions trading momentum stocks. Teaches breakout patterns, sector rotation, and scaling into winners with proper position sizing.', 8, 'Stocks, Options', 1, '@umarashraf', 'active', 950, 4.8, 'Umar Ashraf', '/guides/mentor-umar-momentum-swings.pdf'),
+      ('mentor-10', 'Crypto Face', 'face@cryptoface.com', 'Crypto Leverage Trading', 'Professional crypto trader known for high-conviction leveraged trades on BTC and ETH. Teaches order flow reading, liquidation maps, and risk-adjusted leverage strategies for advanced traders.', 5, 'Crypto', 1, '@cryptoface', 'active', 430, 4.6, 'Crypto Face', '/guides/mentor-cryptoface-leverage-guide.pdf');
 
     -- Seed demo notifications (tied to any user that registers)
     INSERT OR IGNORE INTO notifications (id, user_id, type, title, message, is_read, created_at)
@@ -703,6 +710,8 @@ function initializeDatabase(db: SqliteDatabase) {
   safeAlter('ALTER TABLE app_users ADD COLUMN registration_fee_paid INTEGER DEFAULT 0');
   safeAlter('ALTER TABLE app_users ADD COLUMN registration_fee_reference TEXT');
   safeAlter('ALTER TABLE mentors ADD COLUMN fee_amount_override REAL');
+  safeAlter('ALTER TABLE mentors ADD COLUMN youtube_channel TEXT');
+  safeAlter('ALTER TABLE mentors ADD COLUMN guide_pdf TEXT');
 }
 
 export { getDb, uuidv4 };

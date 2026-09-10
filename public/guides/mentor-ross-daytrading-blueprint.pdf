@@ -1,0 +1,185 @@
+================================================================================
+           BLOCKCHAIN TRUST ENTERPRISE (BTE) - EDUCATIONAL TRADING GUIDE
+================================================================================
+
+    SMALL-CAP DAY TRADING BLUEPRINT
+    Gap-and-Go Strategy and Momentum Scalping
+    Mentor: Ross
+    Series: BTE Day Trading Academy
+    Version: 2.0
+
+================================================================================
+                            TABLE OF CONTENTS
+================================================================================
+
+    1. Small-Cap Day Trading Fundamentals
+    2. The Gap-and-Go Strategy
+    3. Momentum Scalping Techniques
+    4. Risk Management for Day Traders
+
+================================================================================
+    SECTION 1: SMALL-CAP DAY TRADING FUNDAMENTALS
+================================================================================
+
+Small-cap day trading focuses on stocks priced between $2 and $20 with high
+relative volume. These stocks can move 20-100% in a single session, creating
+extraordinary profit opportunities for prepared traders.
+
+WHY SMALL CAPS MOVE:
+    - Low float (shares available for public trading) creates supply scarcity
+    - News catalysts trigger outsized reactions in thinly-traded names
+    - Short squeezes develop when bearish traders are forced to cover
+    - Retail momentum creates self-reinforcing price spirals
+
+THE IDEAL SMALL-CAP DAY TRADE CANDIDATE:
+    Float: Under 20 million shares (under 10 million is ideal)
+    Price: $2 to $20 (enough liquidity, enough volatility)
+    Volume: At least 3x average daily volume in pre-market
+    Catalyst: News, earnings, FDA approval, contract announcement
+    Gap: Gapping up at least 10% from prior close in pre-market
+
+TOOLS REQUIRED:
+    - Level 2 market data (order book depth)
+    - Time and sales (tape reading)
+    - Real-time news scanner
+    - Pre-market gap scanner
+    - Hot key setup for rapid order execution
+
+TRADING HOURS: The most profitable window for small-cap day trading is the
+first 60-90 minutes after the market open (9:30-11:00 EST). This is when
+volume is highest and moves are sharpest. After 11:00 AM, most small-cap
+momentum fades and spreads widen.
+
+================================================================================
+    SECTION 2: THE GAP-AND-GO STRATEGY
+================================================================================
+
+Gap-and-Go is a momentum strategy that trades stocks gapping up significantly
+in pre-market. The premise is simple: stocks that gap up on high volume with
+a catalyst tend to continue higher in the first minutes of the regular session.
+
+PRE-MARKET PREPARATION (7:00-9:30 AM EST):
+
+    Step 1 - SCAN: Run your gap scanner to find all stocks gapping up more
+    than 10% with volume exceeding 100,000 shares pre-market.
+
+    Step 2 - FILTER: Narrow the list using these criteria:
+        - Must have a news catalyst (check press releases, SEC filings)
+        - Float under 20 million shares
+        - No major overhead resistance within 20% of current price
+        - Clean daily chart (not in a long-term downtrend)
+
+    Step 3 - LEVELS: For your top 2-3 candidates, mark these levels:
+        - Pre-market high
+        - Whole dollar and half-dollar levels
+        - Prior day's high
+        - Daily chart resistance levels
+
+GAP-AND-GO ENTRY RULES:
+
+    ENTRY TYPE 1 - Break of Pre-Market High:
+    Buy when price breaks above the pre-market high on the first 1-minute
+    candle that makes a new high after 9:30 AM. Volume on the breakout candle
+    must be significantly above the 1-minute average.
+
+    ENTRY TYPE 2 - First Pullback Buy:
+    If you miss the initial breakout, wait for the first 1-minute pullback.
+    Enter when price holds above VWAP and the first pullback low, showing
+    buyers are still in control. This is often the lower-risk entry.
+
+    ENTRY TYPE 3 - Opening Range Breakout:
+    Let the first 5 minutes establish a range. Enter on a break above the
+    5-minute opening range high with confirming volume.
+
+EXIT RULES FOR GAP-AND-GO:
+    - Target 1: Next whole dollar resistance (sell 1/3)
+    - Target 2: 2x your risk distance from entry (sell 1/3)
+    - Target 3: Trail remaining with the 9 EMA on the 1-minute chart
+    - Hard stop: Below VWAP or below the entry candle low
+
+================================================================================
+    SECTION 3: MOMENTUM SCALPING TECHNIQUES
+================================================================================
+
+When a small-cap stock enters a parabolic move, scalping techniques extract
+quick profits from the rapid price appreciation.
+
+THE MICRO PULLBACK SCALP:
+During a strong uptrend on the 1-minute chart, price will make brief 1-3
+candle pullbacks before continuing higher. Enter at the pullback low when:
+    - The stock is above VWAP and the 9 EMA
+    - Volume remains elevated
+    - The pullback is on lighter volume than the impulse move
+    - A hammer or doji candle forms at the pullback low
+
+TAPE READING SIGNALS:
+    - Large bid stacking: Institutional buyers placing visible support
+    - Rapid prints at the ask: Aggressive buying pressure
+    - Hidden orders: Large volume transacting with minimal price change
+    - Sweeps: Rapid clearing of multiple ask levels simultaneously
+
+VWAP RECLAIM TRADE:
+When a gapping stock pulls back to test VWAP and holds, this is a powerful
+re-entry signal. VWAP represents the average price for the day. Institutions
+use VWAP as a benchmark, so reclaiming it often triggers algorithmic buying.
+
+    Entry: First 1-minute candle that closes above VWAP after testing it
+    Stop: Below the VWAP test low
+    Target: Prior high of day, then new highs
+
+AVOID THESE MOMENTUM TRAPS:
+    - Extended stocks more than 100% above the daily 20 EMA
+    - Stocks with halted trading (circuit breaker halts are unpredictable)
+    - Stocks with no news catalyst running purely on social media hype
+    - Any stock you arrive late to (if the big move already happened, wait)
+
+================================================================================
+    SECTION 4: RISK MANAGEMENT FOR DAY TRADERS
+================================================================================
+
+Day trading small caps is high-reward but also high-risk. Without strict risk
+management, one bad trade can erase a week of profits.
+
+THE 1% RULE: Never risk more than 1% of your account on any single trade. For
+a $25,000 account, maximum risk per trade is $250.
+
+POSITION SIZING FORMULA:
+    Risk Amount = Account Size x 0.01
+    Shares = Risk Amount / (Entry Price - Stop Loss Price)
+
+    Example: $25,000 account, 1% risk = $250
+    Entry at $5.00, stop at $4.75 = $0.25 risk per share
+    Maximum shares = $250 / $0.25 = 1,000 shares
+
+DAILY LOSS LIMIT: Set a maximum daily loss of 3% of your account ($750 on a
+$25K account). When you hit this limit, stop trading for the day. No exceptions.
+This prevents revenge trading and emotional spirals.
+
+MAX CONSECUTIVE LOSSES RULE: After three consecutive losing trades, take a
+mandatory 30-minute break. Step away from the screens. The fourth trade taken
+in frustration is almost always the worst trade of the day.
+
+THE THREE-STRIKE RULE: If you hit your daily loss limit three times in a single
+week, take the rest of the week off and review your trading journal. Something
+in your process needs adjustment.
+
+SCALING INTO WINNERS:
+    - Start with 50% of your planned position size
+    - Add the remaining 50% only if the trade moves in your favor
+    - Never add to a losing position
+    - Your average entry price should improve, not worsen
+
+GREEN-TO-RED MOVE: If a profitable trade reverses back to your entry price,
+exit immediately. Do not let a winning trade become a loser. A break-even exit
+on a trade that was once profitable is a win for your psychology.
+
+Day trading small caps is not for everyone. It requires intense focus, rapid
+decision-making, and emotional resilience. But for those who master the
+mechanics and the mindset, it offers unmatched income potential from relatively
+small account sizes.
+
+================================================================================
+    Published by Blockchain Trust Enterprise (BTE)
+    For educational purposes only. Not financial advice.
+    All trading involves risk of loss.
+================================================================================

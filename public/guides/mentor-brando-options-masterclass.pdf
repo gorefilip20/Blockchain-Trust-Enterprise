@@ -1,0 +1,149 @@
+================================================================================
+           BLOCKCHAIN TRUST ENTERPRISE (BTE) - EDUCATIONAL TRADING GUIDE
+================================================================================
+
+    OPTIONS SWING TRADING MASTERCLASS
+    The Size for Zero Method
+    Mentor: Brando
+    Series: BTE Options Academy
+    Version: 2.0
+
+================================================================================
+                            TABLE OF CONTENTS
+================================================================================
+
+    1. Foundations of Options Swing Trading
+    2. The Size for Zero Method Explained
+    3. Strike Selection and Expiration Timing
+    4. Managing Winners and Losers
+
+================================================================================
+    SECTION 1: FOUNDATIONS OF OPTIONS SWING TRADING
+================================================================================
+
+Options swing trading combines the leverage of derivatives with the patience of
+multi-day holds. Unlike day trading options, swing trades capture moves that
+develop over 3-15 trading days, allowing you to use wider stops and ride
+meaningful price swings.
+
+KEY CONCEPTS FOR OPTIONS SWING TRADERS:
+
+INTRINSIC VALUE: The real, tangible value of an option. A call with a strike of
+$100 on a stock trading at $110 has $10 of intrinsic value.
+
+EXTRINSIC VALUE: The time premium and implied volatility component. This is
+what decays over time (theta) and is what makes option buying a depreciating
+asset. Swing traders must account for this decay in every trade.
+
+DELTA: Measures how much the option price moves for every $1 move in the
+underlying stock. For swing trades, target options with a delta between 0.50
+and 0.70. This gives you meaningful exposure without overpaying for premium.
+
+THE GREEKS THAT MATTER MOST FOR SWINGS:
+    Delta: Directional exposure (aim for 0.50-0.70)
+    Theta: Time decay cost per day (the enemy of option buyers)
+    Vega: Sensitivity to implied volatility changes
+    Gamma: Rate of delta change (accelerates profits on big moves)
+
+================================================================================
+    SECTION 2: THE SIZE FOR ZERO METHOD EXPLAINED
+================================================================================
+
+The Size for Zero method is a risk management technique that transforms options
+trading from gambling into a structured business. The core principle: always
+plan to recover your initial investment quickly, then let the remaining
+position ride risk-free.
+
+HOW IT WORKS:
+
+Step 1 - POSITION ENTRY: Buy your full position in one lot. For example,
+purchase 10 contracts of AAPL $180 calls at $5.00 each. Total cost: $5,000.
+
+Step 2 - FIRST TARGET: When the option appreciates 50-100%, sell HALF your
+position. If those calls reach $10.00, sell 5 contracts for $5,000. You have
+now recovered your entire initial investment.
+
+Step 3 - FREE RIDE: The remaining 5 contracts have a cost basis of zero. You
+cannot lose money on this trade regardless of what happens next. Let these
+contracts ride with a trailing stop or toward a larger technical target.
+
+Step 4 - FINAL EXIT: Close the remaining position at your technical target or
+when momentum fades. Any profit from here is pure upside with zero risk.
+
+WHY THIS WORKS: Most traders lose because they hold full positions through
+adverse moves, hoping for a recovery. Size for Zero removes hope from the
+equation. You either hit your first target and ride free, or you cut the
+full position at your predefined stop loss.
+
+POSITION SIZING RULE: Never risk more than 3-5% of your trading account on any
+single options trade. If your account is $50,000, your maximum position size is
+$1,500-$2,500 in premium.
+
+================================================================================
+    SECTION 3: STRIKE SELECTION AND EXPIRATION TIMING
+================================================================================
+
+Choosing the right strike price and expiration date is where most options
+traders fail. Here are the rules for swing trading:
+
+EXPIRATION TIMING: Always buy options with at least 30-45 days until
+expiration, even if you plan to hold for only 5-10 days. This buffer protects
+you from accelerating theta decay that hits options hard inside 21 days to
+expiration (DTE).
+
+STRIKE SELECTION FRAMEWORK:
+    - Slightly In-The-Money (ITM): Delta 0.55-0.65. Best for high-conviction
+      directional trades. Less extrinsic value to decay.
+    - At-The-Money (ATM): Delta ~0.50. Balanced risk/reward with moderate
+      theta exposure.
+    - AVOID deep Out-of-The-Money (OTM): Delta below 0.30. These are cheap
+      for a reason. They require large moves to profit and decay rapidly.
+
+VOLATILITY AWARENESS: Check the Implied Volatility Rank (IVR) before buying.
+If IVR is above 50, options are expensive relative to their historical range.
+Consider selling premium or waiting for a volatility contraction. Buy options
+when IVR is below 30 for the best value.
+
+EARNINGS AVOIDANCE: Never hold swing trade options through earnings
+announcements unless that is your specific strategy. The implied volatility
+crush after earnings can destroy 30-50% of an option's value overnight, even
+if the stock moves in your direction.
+
+================================================================================
+    SECTION 4: MANAGING WINNERS AND LOSERS
+================================================================================
+
+WINNER MANAGEMENT (Size for Zero in action):
+    - At 50% gain: Sell half, move stop to breakeven on remainder
+    - At 100% gain: Sell another quarter if you still hold more than 2 contracts
+    - Let final portion ride with a trailing stop 20-25% below peak value
+
+LOSER MANAGEMENT:
+    - Maximum loss per trade: The full premium paid (never add to losers)
+    - Cut at 40-50% loss if the technical thesis is invalidated
+    - Time stop: Exit if the trade has not moved in your favor within 5 days
+    - Never average down on a losing options position
+
+TRADE JOURNAL METRICS TO TRACK:
+    1. Win rate (target 45-55% for swing options)
+    2. Average winner vs. average loser ratio (target 2:1 or better)
+    3. Percentage of trades that reach Size for Zero target
+    4. Average holding period for winners vs. losers
+    5. Theta cost per trade (how much time decay ate into profits)
+
+THE WEEKLY REVIEW PROCESS:
+Every weekend, review your closed trades from the week. Categorize each trade
+as either: followed the plan (win or lose), or deviated from the plan. The goal
+is 100% plan adherence. Profitable deviations are just as dangerous as
+unprofitable ones because they reinforce bad habits.
+
+Options swing trading with the Size for Zero method gives you asymmetric
+risk-reward on every trade. Your losses are small and defined. Your winners
+can run indefinitely with no risk. Over hundreds of trades, this edge
+compounds into consistent profitability.
+
+================================================================================
+    Published by Blockchain Trust Enterprise (BTE)
+    For educational purposes only. Not financial advice.
+    All trading involves risk of loss.
+================================================================================

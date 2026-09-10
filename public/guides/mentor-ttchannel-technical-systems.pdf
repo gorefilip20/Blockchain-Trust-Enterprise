@@ -1,0 +1,179 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+2 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+3 0 obj
+<< /Length 272 >>
+stream
+BT
+/F2 24 Tf
+50 700 Td
+(Technical Analysis Systems Guide) Tj
+/F1 12 Tf
+0 -40 Td
+(by The Trading Channel \(Steven Hart\)) Tj
+/F1 10 Tf
+0 -30 Td
+(Blockchain Trust Enterprise - Mentorship Program) Tj
+/F1 9 Tf
+0 -400 Td
+(CONFIDENTIAL - For registered BTE students only) Tj
+ET
+endstream
+endobj
+4 0 obj
+<< /Length 951 >>
+stream
+BT
+/F2 16 Tf
+50 750 Td
+(Chapter 1: Supply and Demand Zone Mapping) Tj
+/F1 11 Tf
+0 -30 Td
+0 -16 Td
+(Supply and demand zones are not the same as support and resistance. Support and) Tj
+0 -16 Td
+(resistance are horizontal lines, while supply and demand zones are areas where) Tj
+0 -16 Td
+(institutional orders cluster. To identify a demand zone, find a strong bullish move) Tj
+0 -16 Td
+(that left a base of one to three candles before the impulse. Draw a rectangle from) Tj
+0 -16 Td
+(the low of the base to the open of the last bearish candle before the rally. This) Tj
+0 -16 Td
+(zone represents unfilled buy orders. When price returns to this zone, institutional) Tj
+0 -16 Td
+(buyers step in again, creating a high-probability entry. Fresh zones that have not) Tj
+0 -16 Td
+(been tested are stronger than zones that have been revisited multiple times. The key) Tj
+0 -16 Td
+(is patience: wait for price to come to your zone rather than chasing it.) Tj
+ET
+endstream
+endobj
+5 0 obj
+<< /Length 777 >>
+stream
+BT
+/F2 16 Tf
+50 750 Td
+(Chapter 2: Order Flow Fundamentals) Tj
+/F1 11 Tf
+0 -30 Td
+0 -16 Td
+(Order flow analysis reveals what is happening behind the candlestick. While a candle) Tj
+0 -16 Td
+(shows open, high, low, and close, order flow shows the actual transactions:) Tj
+0 -16 Td
+(aggressive buyers hitting the ask, sellers hitting the bid, and passive limit orders) Tj
+0 -16 Td
+(absorbing momentum. The delta, the difference between market buys and market sells,) Tj
+0 -16 Td
+(tells you who is in control. A rising price with negative delta means buyers are) Tj
+0 -16 Td
+(exhausting and a reversal is near. Tools like footprint charts and volume profile) Tj
+0 -16 Td
+(give you the institutional perspective that candlestick patterns alone cannot) Tj
+0 -16 Td
+(provide.) Tj
+ET
+endstream
+endobj
+6 0 obj
+<< /Length 719 >>
+stream
+BT
+/F2 16 Tf
+50 750 Td
+(Chapter 3: Multi-Timeframe Confluence) Tj
+/F1 11 Tf
+0 -30 Td
+0 -16 Td
+(The most reliable setups occur when multiple timeframes agree on direction. Start) Tj
+0 -16 Td
+(with the weekly chart to identify the major trend. Move to the daily to find the) Tj
+0 -16 Td
+(current swing structure. Then drop to the four-hour or one-hour chart for your entry.) Tj
+0 -16 Td
+(A demand zone on the daily that aligns with a weekly support level and a four-hour) Tj
+0 -16 Td
+(bullish divergence is a triple-confluence trade with high probability. Never trade a) Tj
+0 -16 Td
+(lower timeframe signal that contradicts the higher timeframe trend. This single rule) Tj
+0 -16 Td
+(eliminates most losing trades.) Tj
+ET
+endstream
+endobj
+7 0 obj
+<< /Length 719 >>
+stream
+BT
+/F2 16 Tf
+50 750 Td
+(Chapter 4: Backtesting Your Edge) Tj
+/F1 11 Tf
+0 -30 Td
+0 -16 Td
+(A strategy without backtesting data is a guess. Record at least one hundred) Tj
+0 -16 Td
+(historical trades using your exact rules including entry criteria, stop loss, and) Tj
+0 -16 Td
+(take profit levels. Calculate win rate, average win, average loss, and expectancy.) Tj
+0 -16 Td
+(Expectancy equals win rate times average win minus loss rate times average loss. If) Tj
+0 -16 Td
+(expectancy is positive, you have a statistical edge. If not, adjust one variable at a) Tj
+0 -16 Td
+(time and retest. Forward-test with small position sizes for thirty days before) Tj
+0 -16 Td
+(committing real capital. The numbers never lie.) Tj
+ET
+endstream
+endobj
+8 0 obj
+<< /Type /Pages /Kids [9 0 R 10 0 R 11 0 R 12 0 R 13 0 R] /Count 5 >>
+endobj
+9 0 obj
+<< /Type /Page /Parent 8 0 R /MediaBox [0 0 612 792] /Contents 3 0 R /Resources << /Font << /F1 1 0 R /F2 2 0 R >> >> >>
+endobj
+10 0 obj
+<< /Type /Page /Parent 8 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 1 0 R /F2 2 0 R >> >> >>
+endobj
+11 0 obj
+<< /Type /Page /Parent 8 0 R /MediaBox [0 0 612 792] /Contents 5 0 R /Resources << /Font << /F1 1 0 R /F2 2 0 R >> >> >>
+endobj
+12 0 obj
+<< /Type /Page /Parent 8 0 R /MediaBox [0 0 612 792] /Contents 6 0 R /Resources << /Font << /F1 1 0 R /F2 2 0 R >> >> >>
+endobj
+13 0 obj
+<< /Type /Page /Parent 8 0 R /MediaBox [0 0 612 792] /Contents 7 0 R /Resources << /Font << /F1 1 0 R /F2 2 0 R >> >> >>
+endobj
+14 0 obj
+<< /Type /Catalog /Pages 8 0 R >>
+endobj
+xref
+0 15
+0000000000 65535 f 
+0000000009 00000 n 
+0000000079 00000 n 
+0000000154 00000 n 
+0000000476 00000 n 
+0000001477 00000 n 
+0000002304 00000 n 
+0000003073 00000 n 
+0000003842 00000 n 
+0000003927 00000 n 
+0000004063 00000 n 
+0000004200 00000 n 
+0000004337 00000 n 
+0000004474 00000 n 
+0000004611 00000 n 
+trailer
+<< /Size 15 /Root 14 0 R >>
+startxref
+4661
+%%EOF

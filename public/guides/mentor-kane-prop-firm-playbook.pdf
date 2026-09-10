@@ -1,0 +1,128 @@
+================================================================================
+           BLOCKCHAIN TRUST ENTERPRISE (BTE) - EDUCATIONAL TRADING GUIDE
+================================================================================
+
+    PROP FIRM TRADING PLAYBOOK
+    Mentor: Kane
+    Series: BTE Funded Trader Academy
+    Version: 2.0
+
+================================================================================
+                            TABLE OF CONTENTS
+================================================================================
+
+    1. Understanding Prop Firm Trading
+    2. Risk Rules and Account Management
+    3. Developing a Funded Account Strategy
+    4. Scaling Your Funded Career
+
+================================================================================
+    SECTION 1: UNDERSTANDING PROP FIRM TRADING
+================================================================================
+
+Proprietary trading firms provide capital to traders who demonstrate consistent
+profitability. As a funded trader, you trade the firm's money in exchange for a
+profit split, typically ranging from 70% to 90% in your favor.
+
+The evaluation process usually involves two phases. In Phase 1, you must hit a
+profit target (commonly 8-10%) while staying within a maximum drawdown limit.
+Phase 2 requires a smaller profit target (4-5%) with the same drawdown rules.
+
+Key prop firm models include:
+- Challenge-based firms (FTMO, MyFundedFX, The Funded Trader)
+- Instant funding programs with higher profit splits to the firm
+- Combine-style evaluations with live market simulations
+
+The most important mindset shift: you are not trying to get rich on one account.
+You are proving you can manage risk. Firms want consistency, not home runs.
+
+================================================================================
+    SECTION 2: RISK RULES AND ACCOUNT MANAGEMENT
+================================================================================
+
+Every prop firm enforces strict risk parameters. Violating any single rule
+results in immediate account termination with no exceptions.
+
+DAILY DRAWDOWN RULE: Most firms cap daily losses at 4-5% of your starting
+balance. This resets each trading day. If your account starts the day at
+$100,000, you cannot lose more than $5,000 in that session. Calculate your
+maximum position size BEFORE entering any trade.
+
+MAXIMUM DRAWDOWN RULE: The trailing or static max drawdown is typically 8-12%.
+A trailing drawdown moves up with your equity high-water mark, meaning profits
+do not create a safety cushion. A static drawdown is measured from your initial
+balance, which is more forgiving.
+
+Position sizing formula for prop accounts:
+    Risk per trade = 0.5% to 1% of account balance
+    Stop loss distance determines lot size
+    Example: $100K account, 1% risk = $1,000 max loss per trade
+    If stop loss is 20 pips on EUR/USD, max lot size = 0.50 lots
+
+CONSISTENCY RULES: Some firms require that no single trading day accounts for
+more than 30-40% of your total profits. This prevents luck-based passes and
+encourages steady, repeatable performance.
+
+Never risk more than 1% on any single trade in a prop account. The math is
+clear: even five consecutive losers only cost you 5%, well within drawdown
+limits. But two 4% losers and you are done.
+
+================================================================================
+    SECTION 3: DEVELOPING A FUNDED ACCOUNT STRATEGY
+================================================================================
+
+The ideal prop firm strategy prioritizes capital preservation above all else.
+Here is a framework that has passed thousands of evaluations:
+
+TRADE SELECTION: Focus on 2-3 pairs or instruments maximum. Specialization
+reduces decision fatigue and improves pattern recognition. Recommended pairs
+for forex prop accounts include EUR/USD, GBP/USD, and USD/JPY due to their
+liquidity and tighter spreads.
+
+SESSION TIMING: Trade during the London-New York overlap (8:00-12:00 EST) for
+maximum volatility and liquidity. Avoid trading during major news releases
+unless your strategy specifically accounts for high-impact events.
+
+ENTRY CRITERIA (must meet all three):
+    1. Higher timeframe trend alignment (4H or Daily bias)
+    2. Key level reaction (support/resistance, supply/demand zone)
+    3. Lower timeframe entry trigger (engulfing candle, break of structure)
+
+TRADE MANAGEMENT: Once a trade moves 1:1 risk-to-reward in your favor, move
+your stop loss to break even. Target a minimum 1:2 risk-to-reward ratio. Take
+partials at 1:1 and let the remainder run to 2:1 or beyond.
+
+================================================================================
+    SECTION 4: SCALING YOUR FUNDED CAREER
+================================================================================
+
+Once you pass your first evaluation, the real work begins. Treat every funded
+account as a business asset generating monthly income.
+
+MULTI-ACCOUNT STRATEGY: Run 2-4 funded accounts simultaneously across different
+firms. This diversifies your income streams and protects against any single
+firm's payout issues. Use the same strategy across all accounts for consistency.
+
+SCALING PLAN:
+    Month 1-3: Trade one $50K-$100K account, focus on consistency
+    Month 4-6: Add a second account, increase to $200K total
+    Month 7-12: Scale to $400K-$500K across multiple firms
+    Year 2+: Manage $1M+ in funded capital with refined systems
+
+PAYOUT MANAGEMENT: Most firms offer bi-weekly or monthly payouts. Withdraw
+consistently rather than compounding. Your funded capital is not your money;
+treat payouts as your actual trading income.
+
+RECORD KEEPING: Maintain a detailed trading journal for every funded account.
+Track your win rate, average risk-to-reward, maximum consecutive losses, and
+profit factor. These metrics reveal whether your edge is sustainable.
+
+The prop firm model has democratized access to institutional capital. Traders
+who master risk management and maintain discipline can build a six-figure
+income without risking personal savings.
+
+================================================================================
+    Published by Blockchain Trust Enterprise (BTE)
+    For educational purposes only. Not financial advice.
+    All trading involves risk of loss.
+================================================================================
