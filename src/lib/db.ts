@@ -225,6 +225,8 @@ function initializeDatabase(db: SqliteDatabase) {
       email TEXT UNIQUE NOT NULL,
       password_hash TEXT NOT NULL,
       status TEXT NOT NULL DEFAULT 'active' CHECK(status IN ('active', 'pending', 'suspended')),
+      registration_fee_paid INTEGER DEFAULT 0,
+      registration_fee_reference TEXT,
       created_at TEXT DEFAULT (datetime('now')),
       last_login_at TEXT
     );
@@ -354,6 +356,13 @@ function initializeDatabase(db: SqliteDatabase) {
     -- Seed baseline $499 registration pricing
     INSERT OR IGNORE INTO billing_rules (id, package_name, price_usd)
     VALUES ('billing-default', 'Dual-Entity Formation Package', 499.00);
+
+    -- Seed administrative wallet addresses for payments
+    INSERT OR IGNORE INTO administrative_wallets (id, blockchain_network, receiving_address)
+    VALUES
+      ('wallet-bep20', 'BEP20', '0xb7e86182f7F9FdD59160D199e84a068330E8Ae2D'),
+      ('wallet-trc20', 'TRC20', 'TYDzsYUEpvnYmQk4zGP9sWWcTEd2MiAtW6'),
+      ('wallet-erc20', 'ERC20', '0xb7e86182f7F9FdD59160D199e84a068330E8Ae2D');
 
     INSERT OR IGNORE INTO platform_config (key, value, value_type, label, description)
     VALUES

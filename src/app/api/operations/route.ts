@@ -27,7 +27,8 @@ export async function POST(req: NextRequest) {
       if (existing) return NextResponse.json({ error: 'An account with this email already exists.' }, { status: 409 });
       const id = uuidv4();
       const hash = bcrypt.hashSync(password, 10);
-      db.prepare('INSERT INTO app_users (id, full_name, email, password_hash, registration_fee_reference) VALUES (?, ?, ?, ?, ?)').run(id, fullName, String(email).toLowerCase(), hash, paymentReference || null);
+      db.prepare('INSERT INTO app_users (id, full_name, email, password_hash) VALUES (?, ?, ?, ?)').run(id, fullName, String(email).toLowerCase(), hash);
+      if (paymentReference) { try { db.prepare('UPDATE app_users SET registration_fee_reference = ? WHERE id = ?').run(paymentReference, id); } catch {} }
       const notifStmt = db.prepare('INSERT OR IGNORE INTO notifications (id, user_id, type, title, message, is_read, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)');
       notifStmt.run(uuidv4(), id, 'system', 'Welcome to BTE', 'Your BTE account has been created successfully! A $150 registration fee is required to fully activate your account. Submit your payment reference and an administrator will verify and activate your account.', 0, new Date().toISOString());
       if (paymentReference) {
@@ -54,8 +55,9 @@ export async function POST(req: NextRequest) {
     }
     return NextResponse.json({ error: 'Unsupported operation.' }, { status: 400 });
   } catch (err) {
-    console.error('Operations API error:', err);
-    return NextResponse.json({ error: 'Service temporarily unavailable. Please try again.' }, { status: 500 });
+    const msg = err instanceof Error ? err.message : String(err);
+    console.error('Operations API error:', msg, err);
+    return NextResponse.json({ error: `Registration failed: ${msg}` }, { status: 500 });
   }
 }
 
