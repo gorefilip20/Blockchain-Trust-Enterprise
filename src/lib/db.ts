@@ -23,6 +23,15 @@ function getDb(): SqliteDatabase {
 }
 
 function initializeDatabase(db: SqliteDatabase) {
+  // Migrate existing tables first — add columns that older schemas lack.
+  // Must run BEFORE the main db.exec() block so seed INSERTs can reference them.
+  const safeAlter = (sql: string) => { try { db.exec(sql); } catch {} };
+  safeAlter('ALTER TABLE app_users ADD COLUMN registration_fee_paid INTEGER DEFAULT 0');
+  safeAlter('ALTER TABLE app_users ADD COLUMN registration_fee_reference TEXT');
+  safeAlter('ALTER TABLE mentors ADD COLUMN fee_amount_override REAL');
+  safeAlter('ALTER TABLE mentors ADD COLUMN youtube_channel TEXT');
+  safeAlter('ALTER TABLE mentors ADD COLUMN guide_pdf TEXT');
+
   db.exec(`
     -- Clients table
     CREATE TABLE IF NOT EXISTS clients (
@@ -634,6 +643,9 @@ function initializeDatabase(db: SqliteDatabase) {
       status TEXT NOT NULL DEFAULT 'pending' CHECK(status IN ('pending','approved','active','suspended','rejected')),
       total_students INTEGER DEFAULT 0,
       rating REAL DEFAULT 0,
+      youtube_channel TEXT,
+      guide_pdf TEXT,
+      fee_amount_override REAL,
       created_at TEXT DEFAULT (datetime('now')),
       updated_at TEXT DEFAULT (datetime('now'))
     );
@@ -713,14 +725,6 @@ function initializeDatabase(db: SqliteDatabase) {
       ('notif-demo-5', 'demo-user', 'payment_confirmed', 'Payment confirmed', 'Your $499.00 formation package payment via BEP20 has been confirmed on-chain.', 1, datetime('now', '-2 days')),
       ('notif-demo-6', 'demo-user', 'system', 'Security review complete', 'Your account security review has been completed. No issues found.', 1, datetime('now', '-3 days'));
   `);
-
-  // Add columns to existing tables (safe to fail if already exists)
-  const safeAlter = (sql: string) => { try { db.exec(sql); } catch {} };
-  safeAlter('ALTER TABLE app_users ADD COLUMN registration_fee_paid INTEGER DEFAULT 0');
-  safeAlter('ALTER TABLE app_users ADD COLUMN registration_fee_reference TEXT');
-  safeAlter('ALTER TABLE mentors ADD COLUMN fee_amount_override REAL');
-  safeAlter('ALTER TABLE mentors ADD COLUMN youtube_channel TEXT');
-  safeAlter('ALTER TABLE mentors ADD COLUMN guide_pdf TEXT');
 }
 
 export { getDb, uuidv4 };
