@@ -2,19 +2,33 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { ShieldCheck } from 'lucide-react';
+
+const C = { bg: '#f3f2f2', surface: '#eae9e9', text: '#201e1d', accent: '#6a3df0', accentHover: '#5a2fd6', ink: '#2d2b2b', accentLight: '#f1ecff' };
+const FONT = "'Archivo', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif";
+
+function LogoMark({ size = 28 }: { size?: number }) {
+  const inner = Math.round(size * 0.375);
+  const offset = Math.round((size - inner) / 2);
+  return (
+    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} fill="none">
+      <rect x="1" y="1" width={size - 2} height={size - 2} stroke={C.text} strokeWidth="2" />
+      <rect x={offset} y={offset} width={inner} height={inner} fill={C.accent} />
+    </svg>
+  );
+}
+
+const faqs = [
+  { q: 'What jurisdictions do you work with?', a: 'We primarily form entities in Delaware (multi-member partnerships) and Wyoming (single-member anonymous LLCs). Each jurisdiction offers distinct privacy and tax advantages depending on your situation.' },
+  { q: 'What entity types are available?', a: 'We offer Holding LLCs for long-term asset protection, Operating LLCs for active trading and mining, and DAO LLCs (Wyoming) for decentralized governance with legal entity protection.' },
+  { q: 'How long does the formation process take?', a: 'A standard dual-state formation (Delaware parent + Wyoming subsidiary) typically completes in 10–15 business days. Expedited filings are available for time-sensitive situations.' },
+];
 
 export default function ContactPage() {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    company: '',
-    clientType: '',
-    holdings: '',
-    message: '',
-  });
+  const [formData, setFormData] = useState({ name: '', email: '', who: 'investor', goals: '' });
   const [submitted, setSubmitted] = useState(false);
 
-  function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
+  function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   }
 
@@ -23,249 +37,134 @@ export default function ContactPage() {
     setSubmitted(true);
   }
 
-  return (
-    <div className="min-h-screen bg-[#F8FAFC]">
-      {/* Nav */}
-      <nav className="bg-[#0A1628] border-b border-white/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <Link href="/" className="flex items-center gap-3">
-              <div className="w-9 h-9 bg-[#00D4AA] rounded-lg flex items-center justify-center">
-                <span className="text-[#0A1628] font-black text-sm">BTE</span>
-              </div>
-              <span className="font-bold text-white text-lg">Blockchain Trust Enterprise</span>
-            </Link>
-            <Link href="/" className="text-sm text-slate-300 hover:text-white transition-colors">
-              &larr; Back to Home
-            </Link>
-          </div>
-        </div>
-      </nav>
+  const inputStyle: React.CSSProperties = { width: '100%', padding: '12px 14px', border: '2px solid rgba(32,30,29,0.25)', background: '#fff', fontSize: 14, fontFamily: FONT, color: C.text, boxSizing: 'border-box' };
+  const labelStyle: React.CSSProperties = { display: 'flex', flexDirection: 'column', gap: 6, fontSize: 11, fontWeight: 700, letterSpacing: '0.05em', textTransform: 'uppercase', color: C.text };
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
-          {/* Contact Info */}
-          <div className="animate-fade-in">
-            <div className="inline-flex items-center gap-2 bg-[#00D4AA]/10 text-[#00D4AA] px-3 py-1 rounded-full text-sm font-medium mb-6">
-              <span className="w-2 h-2 bg-[#00D4AA] rounded-full"></span>
-              Get Started
+  return (
+    <>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&display=swap" />
+      <style>{`
+        .bte-contact-input::placeholder { color: rgba(32,30,29,0.35); }
+        .bte-contact-input:focus { outline: none; border-color: ${C.accent} !important; box-shadow: 0 0 0 3px rgba(106,61,240,0.18); }
+        .bte-contact-submit:hover:not(:disabled) { background: ${C.accentHover} !important; }
+        .bte-contact-nav a:hover { color: ${C.accent} !important; }
+        @media (max-width: 860px) {
+          .bte-contact-grid { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
+      <main style={{ minHeight: '100vh', fontFamily: FONT, color: C.text, background: C.bg }}>
+        {/* Nav */}
+        <nav style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 48px', height: 64, borderBottom: `2px solid ${C.surface}` }}>
+          <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', color: C.text }}>
+            <LogoMark />
+            <div style={{ lineHeight: 1.15 }}>
+              <div style={{ fontWeight: 800, fontSize: 13, letterSpacing: '0.06em', textTransform: 'uppercase' }}>Blockchain Trust</div>
+              <div style={{ fontSize: 10, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(32,30,29,0.45)' }}>Enterprise markets</div>
             </div>
-            <h1 className="text-4xl sm:text-5xl font-bold text-[#0A1628] leading-tight">
-              Start Your{' '}
-              <span className="bg-gradient-to-r from-[#00D4AA] to-[#0052FF] bg-clip-text text-transparent">
-                Entity Formation
-              </span>
+          </Link>
+          <div className="bte-contact-nav" style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
+            <Link href="/#strategies" style={{ fontSize: 13, fontWeight: 600, color: 'rgba(32,30,29,0.6)', textDecoration: 'none' }}>Strategies</Link>
+            <Link href="/academy" style={{ fontSize: 13, fontWeight: 600, color: 'rgba(32,30,29,0.6)', textDecoration: 'none' }}>Academy</Link>
+            <Link href="/contact" style={{ fontSize: 13, fontWeight: 600, color: C.accent, textDecoration: 'none' }}>Contact</Link>
+          </div>
+        </nav>
+
+        {/* Two-column split */}
+        <div className="bte-contact-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2, background: C.surface, maxWidth: 1120, margin: '48px auto 0', padding: '0 24px' }}>
+          {/* Left: info */}
+          <div style={{ background: C.bg, padding: '48px 40px' }}>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, border: `2px solid rgba(32,30,29,0.25)`, padding: '6px 12px', fontSize: 11, letterSpacing: '0.06em', textTransform: 'uppercase', fontWeight: 600 }}>
+              Get started
+            </span>
+            <h1 style={{ fontSize: 44, fontWeight: 800, lineHeight: 1.08, margin: '24px 0 0', letterSpacing: '-0.01em' }}>
+              Start the<br /><span style={{ color: C.accent }}>conversation.</span>
             </h1>
-            <p className="mt-6 text-lg text-slate-600 leading-relaxed">
-              Schedule a free structural assessment with our team. We&apos;ll determine the optimal
-              entity type, jurisdiction, and governance setup for your specific situation.
+            <p style={{ marginTop: 16, fontSize: 15, lineHeight: 1.65, color: 'rgba(32,30,29,0.6)', maxWidth: 400 }}>
+              Schedule a free structural assessment with our team. We determine the optimal entity type, jurisdiction, and governance setup for your situation.
             </p>
 
-            <div className="mt-10 space-y-6">
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-[#0052FF]/10 rounded-xl flex items-center justify-center flex-shrink-0">
-                  <svg className="w-6 h-6 text-[#0052FF]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
-                </div>
-                <div>
-                  <h3 className="font-semibold text-[#0A1628]">Email Us</h3>
-                  <p className="text-slate-600 mt-1">contact@blockchaintrust.enterprise</p>
-                  <p className="text-sm text-slate-500 mt-1">We respond within 24 hours</p>
-                </div>
+            <div style={{ marginTop: 32, paddingTop: 24, borderTop: `2px solid ${C.surface}` }}>
+              <div style={{ marginBottom: 20 }}>
+                <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', color: 'rgba(32,30,29,0.5)', marginBottom: 6 }}>Jurisdiction comparison</div>
+                <p style={{ fontSize: 14, lineHeight: 1.6, color: 'rgba(32,30,29,0.7)' }}>Delaware for multi-member partnerships. Wyoming for anonymous single-member asset vaults.</p>
               </div>
-
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-[#00D4AA]/10 rounded-xl flex items-center justify-center flex-shrink-0">
-                  <svg className="w-6 h-6 text-[#00D4AA]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                  </svg>
-                </div>
-                <div>
-                  <h3 className="font-semibold text-[#0A1628]">Call Us</h3>
-                  <p className="text-slate-600 mt-1">+1 (307) 555-0199</p>
-                  <p className="text-sm text-slate-500 mt-1">Mon-Fri, 9am-6pm EST</p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                  <svg className="w-6 h-6 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
-                </div>
-                <div>
-                  <h3 className="font-semibold text-[#0A1628]">Headquarters</h3>
-                  <p className="text-slate-600 mt-1">Cheyenne, Wyoming, USA</p>
-                  <p className="text-sm text-slate-500 mt-1">Primary jurisdiction for privacy-forward LLC formation</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-10 p-6 bg-[#0A1628] rounded-2xl">
-              <h3 className="font-semibold text-white mb-3">What Happens Next?</h3>
-              <div className="space-y-3">
-                {[
-                  'We review your submission within 24 hours',
-                  'A dedicated advisor schedules a discovery call',
-                  'We provide a custom structural recommendation',
-                  'Entity formation begins upon your approval',
-                ].map((step, i) => (
-                  <div key={i} className="flex items-center gap-3">
-                    <span className="w-6 h-6 bg-[#00D4AA] rounded-full flex items-center justify-center text-[#0A1628] text-xs font-bold flex-shrink-0">
-                      {i + 1}
-                    </span>
-                    <span className="text-sm text-slate-300">{step}</span>
-                  </div>
-                ))}
+              <div>
+                <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', color: 'rgba(32,30,29,0.5)', marginBottom: 6 }}>Entity types</div>
+                <p style={{ fontSize: 14, lineHeight: 1.6, color: 'rgba(32,30,29,0.7)' }}>Holding LLCs, Operating LLCs, and DAO LLCs — each with tailored governance and tax treatment.</p>
               </div>
             </div>
           </div>
 
-          {/* Form */}
-          <div className="animate-fade-in" style={{ animationDelay: '0.2s' }}>
+          {/* Right: form */}
+          <div style={{ background: '#fff', padding: '48px 40px' }}>
             {submitted ? (
-              <div className="bg-white rounded-2xl border border-slate-200 p-12 text-center">
-                <div className="w-16 h-16 bg-[#00D4AA]/10 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <svg className="w-8 h-8 text-[#00D4AA]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                  </svg>
-                </div>
-                <h2 className="text-2xl font-bold text-[#0A1628]">Thank You!</h2>
-                <p className="mt-3 text-slate-600">
-                  Your assessment request has been received. Our team will reach out within 24 hours
-                  to schedule your discovery call.
-                </p>
-                <Link href="/" className="mt-8 inline-block bg-[#0A1628] text-white px-6 py-3 rounded-xl font-medium hover:bg-[#132039] transition-colors">
-                  Back to Home
+              <div style={{ textAlign: 'center', padding: '40px 0' }}>
+                <ShieldCheck size={40} color={C.accent} style={{ marginBottom: 16 }} />
+                <h2 style={{ fontSize: 24, fontWeight: 800, margin: '0 0 12px' }}>Thank you</h2>
+                <p style={{ fontSize: 14, color: 'rgba(32,30,29,0.6)', lineHeight: 1.6 }}>Your assessment request has been received. Our team will reach out within 24 hours.</p>
+                <Link href="/" style={{ display: 'inline-block', marginTop: 24, padding: '12px 24px', background: C.ink, color: '#fff', fontWeight: 700, fontSize: 13, textDecoration: 'none', letterSpacing: '0.03em', textTransform: 'uppercase' }}>
+                  Back to home
                 </Link>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="bg-white rounded-2xl border border-slate-200 p-8">
-                <h2 className="text-xl font-bold text-[#0A1628] mb-6">Free Structural Assessment</h2>
-
-                <div className="space-y-5">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-slate-700 mb-1.5">Full Name *</label>
-                      <input
-                        type="text"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleChange}
-                        required
-                        className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-[#0052FF] focus:border-[#0052FF] outline-none transition-all"
-                        placeholder="John Doe"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-slate-700 mb-1.5">Email *</label>
-                      <input
-                        type="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        required
-                        className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-[#0052FF] focus:border-[#0052FF] outline-none transition-all"
-                        placeholder="john@example.com"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1.5">Company / Organization</label>
-                    <input
-                      type="text"
-                      name="company"
-                      value={formData.company}
-                      onChange={handleChange}
-                      className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-[#0052FF] focus:border-[#0052FF] outline-none transition-all"
-                      placeholder="Your company name"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1.5">Client Type *</label>
-                    <select
-                      name="clientType"
-                      value={formData.clientType}
-                      onChange={handleChange}
-                      required
-                      className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-[#0052FF] focus:border-[#0052FF] outline-none transition-all"
-                    >
-                      <option value="">Select your profile...</option>
-                      <option value="hnw_investor">HNW Crypto Investor / Trader</option>
-                      <option value="web3_founder">Web3 Founder</option>
-                      <option value="dao_member">DAO Member</option>
-                      <option value="crypto_miner">Crypto Miner</option>
-                      <option value="staking_operator">Staking Operator</option>
-                      <option value="institutional">Institutional Fund</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1.5">Estimated Digital Asset Holdings</label>
-                    <select
-                      name="holdings"
-                      value={formData.holdings}
-                      onChange={handleChange}
-                      className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-[#0052FF] focus:border-[#0052FF] outline-none transition-all"
-                    >
-                      <option value="">Select range...</option>
-                      <option value="100k-500k">$100K - $500K</option>
-                      <option value="500k-1m">$500K - $1M</option>
-                      <option value="1m-5m">$1M - $5M</option>
-                      <option value="5m-25m">$5M - $25M</option>
-                      <option value="25m+">$25M+</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1.5">Tell Us About Your Needs</label>
-                    <textarea
-                      name="message"
-                      value={formData.message}
-                      onChange={handleChange}
-                      rows={4}
-                      className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-[#0052FF] focus:border-[#0052FF] outline-none transition-all resize-none"
-                      placeholder="Describe your current situation and what you're looking to achieve..."
-                    />
-                  </div>
-
-                  <button
-                    type="submit"
-                    className="w-full bg-[#00D4AA] text-[#0A1628] py-3 rounded-xl font-semibold hover:bg-[#00E4BA] transition-colors text-sm"
-                  >
-                    Request Free Assessment
-                  </button>
-
-                  <p className="text-xs text-slate-500 text-center">
-                    By submitting, you agree to our privacy policy. We never share your information.
-                  </p>
+              <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+                  <label style={labelStyle}>
+                    Name
+                    <input className="bte-contact-input" name="name" type="text" value={formData.name} onChange={handleChange} required placeholder="Your name" style={inputStyle} />
+                  </label>
+                  <label style={labelStyle}>
+                    Email
+                    <input className="bte-contact-input" name="email" type="email" value={formData.email} onChange={handleChange} required placeholder="you@example.com" style={inputStyle} />
+                  </label>
                 </div>
+
+                <div>
+                  <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.05em', textTransform: 'uppercase', color: C.text, marginBottom: 8 }}>Who are you?</div>
+                  <div style={{ display: 'flex', border: `2px solid ${C.surface}` }}>
+                    {[['investor', 'Investor'], ['founder', 'Founder'], ['institution', 'Institution']].map(([val, label]) => (
+                      <button key={val} type="button" onClick={() => setFormData({ ...formData, who: val })} style={{ flex: 1, padding: '10px 0', fontSize: 12, fontWeight: 600, letterSpacing: '0.03em', textTransform: 'uppercase', border: 'none', cursor: 'pointer', fontFamily: FONT, background: formData.who === val ? C.accent : 'transparent', color: formData.who === val ? '#fff' : 'rgba(32,30,29,0.6)', transition: 'all 0.15s' }}>
+                        {label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <label style={labelStyle}>
+                  Goals
+                  <textarea className="bte-contact-input" name="goals" value={formData.goals} onChange={handleChange} rows={4} placeholder="Describe your situation and goals..." style={{ ...inputStyle, resize: 'vertical' }} />
+                </label>
+
+                <button type="submit" className="bte-contact-submit" style={{ width: '100%', padding: '15px 0', border: 'none', background: C.accent, color: '#fff', fontSize: 14, fontWeight: 700, letterSpacing: '0.04em', textTransform: 'uppercase', fontFamily: FONT, cursor: 'pointer', textAlign: 'center', transition: 'background 0.15s' }}>
+                  Request free assessment
+                </button>
               </form>
             )}
           </div>
         </div>
-      </div>
 
-      {/* Footer */}
-      <footer className="bg-[#0A1628] border-t border-white/10 mt-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-[#00D4AA] rounded-lg flex items-center justify-center">
-                <span className="text-[#0A1628] font-black text-xs">BTE</span>
-              </div>
-              <span className="font-bold text-white">Blockchain Trust Enterprise</span>
-            </div>
-            <p className="text-sm text-slate-500">
-              &copy; 2026 Blockchain Trust Enterprise. All Rights Reserved.
-            </p>
+        {/* FAQ */}
+        <div style={{ maxWidth: 1120, margin: '0 auto', padding: '48px 24px' }}>
+          <div style={{ borderTop: `2px solid ${C.surface}`, paddingTop: 32 }}>
+            <h2 style={{ fontSize: 20, fontWeight: 800, margin: '0 0 24px' }}>Frequently asked questions</h2>
+            {faqs.map((faq, i) => (
+              <details key={i} style={{ borderBottom: `1px solid ${C.surface}`, padding: '16px 0' }}>
+                <summary style={{ fontSize: 14, fontWeight: 700, cursor: 'pointer', color: C.text }}>{faq.q}</summary>
+                <p style={{ marginTop: 8, fontSize: 14, lineHeight: 1.65, color: 'rgba(32,30,29,0.65)' }}>{faq.a}</p>
+              </details>
+            ))}
           </div>
         </div>
-      </footer>
-    </div>
+
+        {/* Footer */}
+        <footer style={{ borderTop: `2px solid ${C.surface}`, padding: '24px 48px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <LogoMark size={24} />
+            <span style={{ fontWeight: 800, fontSize: 12, letterSpacing: '0.06em', textTransform: 'uppercase' }}>Blockchain Trust</span>
+          </div>
+          <span style={{ fontSize: 12, color: 'rgba(32,30,29,0.4)' }}>© {new Date().getFullYear()} Blockchain Trust Enterprise. All rights reserved.</span>
+        </footer>
+      </main>
+    </>
   );
 }

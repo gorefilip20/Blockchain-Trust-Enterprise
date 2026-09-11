@@ -312,16 +312,16 @@ export default function AdminOnboardingPage() {
     }
   }
 
-  const inputClass = 'w-full px-3 py-2.5 border border-[#E2E8F0] rounded-lg text-sm focus:ring-2 focus:ring-[#00D4AA] focus:border-[#00D4AA] outline-none';
+  const inputClass = 'w-full px-3 py-2.5 border border-[#E2E8F0] rounded-none text-sm focus:ring-2 focus:ring-[#6a3df0] focus:border-[#6a3df0] outline-none';
 
   function SelectionCard({ selected, onClick, children }: { selected: boolean; onClick: () => void; children: React.ReactNode }) {
     return (
       <button
         onClick={onClick}
-        className="p-4 rounded-lg border-2 text-left transition-all w-full"
+        className="p-4 rounded-none border-2 text-left transition-all w-full"
         style={
           selected
-            ? { borderColor: '#00D4AA', backgroundColor: 'rgba(0,212,170,0.05)' }
+            ? { borderColor: '#6a3df0', backgroundColor: 'rgba(106,61,240,0.05)' }
             : { borderColor: '#E2E8F0', backgroundColor: 'transparent' }
         }
       >
@@ -343,22 +343,22 @@ export default function AdminOnboardingPage() {
           <div key={i} className="flex items-center shrink-0">
             <button
               onClick={() => setCurrentStep(i)}
-              className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all"
+              className="flex items-center gap-2 px-3 py-2 rounded-none text-sm font-medium transition-all"
               style={
                 i === currentStep
-                  ? { backgroundColor: '#00D4AA', color: '#FFFFFF' }
+                  ? { backgroundColor: '#6a3df0', color: '#FFFFFF' }
                   : i < currentStep
-                  ? { backgroundColor: 'rgba(0,212,170,0.1)', color: '#00A080' }
+                  ? { backgroundColor: 'rgba(106,61,240,0.1)', color: '#5a2fd6' }
                   : { backgroundColor: '#F1F5F9', color: '#94A3B8' }
               }
             >
               <span
-                className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold"
+                className="w-6 h-6 rounded-none flex items-center justify-center text-xs font-bold"
                 style={
                   i === currentStep
                     ? { backgroundColor: 'rgba(255,255,255,0.2)' }
                     : i < currentStep
-                    ? { backgroundColor: 'rgba(0,212,170,0.2)' }
+                    ? { backgroundColor: 'rgba(106,61,240,0.2)' }
                     : { backgroundColor: 'rgba(0,0,0,0.05)' }
                 }
               >
@@ -373,21 +373,21 @@ export default function AdminOnboardingPage() {
               <span className="hidden lg:inline">{step.title}</span>
             </button>
             {i < STEPS.length - 1 && (
-              <div className="w-6 h-0.5 mx-1" style={{ backgroundColor: i < currentStep ? '#00D4AA' : '#E2E8F0' }} />
+              <div className="w-6 h-0.5 mx-1" style={{ backgroundColor: i < currentStep ? '#6a3df0' : '#E2E8F0' }} />
             )}
           </div>
         ))}
       </div>
 
       {error && (
-        <div className="mb-6 p-4 rounded-lg border" style={{ backgroundColor: '#FEF2F2', borderColor: '#FECACA' }}>
+        <div className="mb-6 p-4 rounded-none border" style={{ backgroundColor: '#FEF2F2', borderColor: '#FECACA' }}>
           <p className="text-sm" style={{ color: '#991B1B' }}>{error}</p>
         </div>
       )}
 
-      <div className="bg-white rounded-2xl border border-[#E2E8F0] p-8">
+      <div className="bg-white rounded-none border border-[#E2E8F0] p-8">
         <div className="flex items-center gap-3 mb-6">
-          <span style={{ color: '#00D4AA' }}>{stepIcons[currentStep]}</span>
+          <span style={{ color: '#6a3df0' }}>{stepIcons[currentStep]}</span>
           <div>
             <h2 className="text-xl font-semibold text-slate-900">Stage {currentStep + 1}: {STEPS[currentStep].title}</h2>
             <p className="text-sm text-slate-500">{STEPS[currentStep].description}</p>
@@ -447,9 +447,9 @@ export default function AdminOnboardingPage() {
             </div>
 
             {/* Payment Gate */}
-            <div className="p-5 rounded-xl border-2" style={{ borderColor: '#00D4AA', backgroundColor: 'rgba(0,212,170,0.03)' }}>
+            <div className="p-5 rounded-none border-2" style={{ borderColor: '#6a3df0', backgroundColor: 'rgba(106,61,240,0.03)' }}>
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: '#00D4AA' }}>
+                <div className="w-10 h-10 rounded-none flex items-center justify-center" style={{ backgroundColor: '#6a3df0' }}>
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <line x1="12" y1="1" x2="12" y2="23" />
                     <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
@@ -475,7 +475,7 @@ export default function AdminOnboardingPage() {
                   </select>
                 </div>
 
-                <div className="p-3 rounded-lg bg-slate-50 border border-[#E2E8F0]">
+                <div className="p-3 rounded-none bg-slate-50 border border-[#E2E8F0]">
                   <div className="text-xs text-slate-500 mb-1">Send ${billingPrice.toFixed(2)} USDT to:</div>
                   <code className="text-sm font-mono text-slate-800 break-all">
                     {gateways.find(g => g.blockchain_network === selectedNetwork)?.receiving_address || 'No wallet configured for this network — set up in Settings'}
@@ -495,9 +495,9 @@ export default function AdminOnboardingPage() {
               </div>
             </div>
 
-            <div className="p-4 rounded-lg border" style={{ backgroundColor: 'rgba(0,82,255,0.03)', borderColor: 'rgba(0,82,255,0.15)' }}>
+            <div className="p-4 rounded-none border" style={{ backgroundColor: 'rgba(0,82,255,0.03)', borderColor: 'rgba(0,82,255,0.15)' }}>
               <div className="flex items-start gap-3">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0052FF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 mt-0.5">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6a3df0" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 mt-0.5">
                   <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                 </svg>
                 <div>
@@ -525,7 +525,7 @@ export default function AdminOnboardingPage() {
                         <div className="text-sm text-slate-500 mt-1">{et.desc}</div>
                       </div>
                       {et.recommended.includes(clientType) && (
-                        <span className="text-xs px-2 py-1 rounded-full font-medium" style={{ backgroundColor: 'rgba(0,212,170,0.1)', color: '#00A080' }}>Recommended</span>
+                        <span className="text-xs px-2 py-1 rounded-none font-medium" style={{ backgroundColor: 'rgba(106,61,240,0.1)', color: '#5a2fd6' }}>Recommended</span>
                       )}
                     </div>
                   </SelectionCard>
@@ -534,13 +534,13 @@ export default function AdminOnboardingPage() {
             </div>
 
             {/* Two-Tier Structure Visualization */}
-            <div className="p-5 rounded-xl" style={{ backgroundColor: '#0A1628' }}>
+            <div className="p-5 rounded-none" style={{ backgroundColor: '#2d2b2b' }}>
               <h3 className="text-sm font-semibold text-white mb-4">Two-Tier Parent-Subsidiary Architecture</h3>
               <div className="space-y-3">
-                <div className="p-4 rounded-lg border" style={{ backgroundColor: 'rgba(0,82,255,0.1)', borderColor: 'rgba(0,82,255,0.3)' }}>
+                <div className="p-4 rounded-none border" style={{ backgroundColor: 'rgba(0,82,255,0.1)', borderColor: 'rgba(0,82,255,0.3)' }}>
                   <div className="flex items-center justify-between mb-1">
                     <span className="text-xs font-medium" style={{ color: '#60A5FA' }}>TIER 1: DELAWARE PARENT (Multi-Member)</span>
-                    <span className="text-xs px-2 py-0.5 rounded-full" style={{ backgroundColor: 'rgba(0,82,255,0.2)', color: '#93C5FD' }}>Fundraising Hub</span>
+                    <span className="text-xs px-2 py-0.5 rounded-none" style={{ backgroundColor: 'rgba(0,82,255,0.2)', color: '#93C5FD' }}>Fundraising Hub</span>
                   </div>
                   <input
                     type="text"
@@ -555,16 +555,16 @@ export default function AdminOnboardingPage() {
 
                 <div className="flex justify-center">
                   <div className="flex flex-col items-center">
-                    <div className="w-0.5 h-4" style={{ backgroundColor: '#00D4AA' }} />
-                    <span className="text-xs px-2 py-0.5 rounded" style={{ backgroundColor: 'rgba(0,212,170,0.15)', color: '#00D4AA' }}>100% Owner &amp; Manager</span>
-                    <div className="w-0.5 h-4" style={{ backgroundColor: '#00D4AA' }} />
+                    <div className="w-0.5 h-4" style={{ backgroundColor: '#6a3df0' }} />
+                    <span className="text-xs px-2 py-0.5 rounded" style={{ backgroundColor: 'rgba(106,61,240,0.15)', color: '#6a3df0' }}>100% Owner &amp; Manager</span>
+                    <div className="w-0.5 h-4" style={{ backgroundColor: '#6a3df0' }} />
                   </div>
                 </div>
 
-                <div className="p-4 rounded-lg border" style={{ backgroundColor: 'rgba(0,212,170,0.05)', borderColor: 'rgba(0,212,170,0.3)' }}>
+                <div className="p-4 rounded-none border" style={{ backgroundColor: 'rgba(106,61,240,0.05)', borderColor: 'rgba(106,61,240,0.3)' }}>
                   <div className="flex items-center justify-between mb-1">
                     <span className="text-xs font-medium" style={{ color: '#34D399' }}>TIER 2: WYOMING SUBSIDIARY (Single-Member)</span>
-                    <span className="text-xs px-2 py-0.5 rounded-full" style={{ backgroundColor: 'rgba(0,212,170,0.2)', color: '#6EE7B7' }}>Privacy &amp; Asset Vault</span>
+                    <span className="text-xs px-2 py-0.5 rounded-none" style={{ backgroundColor: 'rgba(106,61,240,0.2)', color: '#6EE7B7' }}>Privacy &amp; Asset Vault</span>
                   </div>
                   <input
                     type="text"
@@ -591,7 +591,7 @@ export default function AdminOnboardingPage() {
                   <SelectionCard key={ra.name} selected={registeredAgent === ra.name} onClick={() => setRegisteredAgent(ra.name)}>
                     <div className="flex items-center justify-between mb-1">
                       <div className="font-medium text-sm text-slate-900">{ra.name}</div>
-                      {ra.preferred && <span className="text-xs px-1.5 py-0.5 rounded-full" style={{ backgroundColor: '#F3E8FF', color: '#7C3AED' }}>Preferred</span>}
+                      {ra.preferred && <span className="text-xs px-1.5 py-0.5 rounded-none" style={{ backgroundColor: '#F3E8FF', color: '#7C3AED' }}>Preferred</span>}
                     </div>
                     <div className="text-xs text-slate-500">{ra.addr}</div>
                   </SelectionCard>
@@ -599,15 +599,15 @@ export default function AdminOnboardingPage() {
               </div>
             </div>
 
-            <div className="flex items-center gap-3 p-4 bg-slate-50 rounded-lg">
-              <input type="checkbox" id="privacy" checked={privacyShield} onChange={(e) => setPrivacyShield(e.target.checked)} className="w-4 h-4 rounded" style={{ accentColor: '#00D4AA' }} />
+            <div className="flex items-center gap-3 p-4 bg-slate-50 rounded-none">
+              <input type="checkbox" id="privacy" checked={privacyShield} onChange={(e) => setPrivacyShield(e.target.checked)} className="w-4 h-4 rounded" style={{ accentColor: '#6a3df0' }} />
               <label htmlFor="privacy" className="text-sm text-slate-700">
                 <span className="font-medium">Enable Privacy Shielding</span> &mdash; Omit member/manager details from Wyoming public state records. Registered Agent&apos;s corporate address replaces founder&apos;s personal address.
               </label>
             </div>
 
             {/* Web3 Operating Agreement Clauses */}
-            <div className="p-4 rounded-lg border" style={{ backgroundColor: '#FFFBEB', borderColor: '#FDE68A' }}>
+            <div className="p-4 rounded-none border" style={{ backgroundColor: '#FFFBEB', borderColor: '#FDE68A' }}>
               <h4 className="text-sm font-medium mb-2" style={{ color: '#92400E' }}>Web3 Clauses Auto-Injected into Operating Agreements</h4>
               <div className="space-y-1.5 text-xs" style={{ color: '#92400E' }}>
                 <p><strong>Section 3.1 Capital Contributions:</strong> All digital asset deposits log txhash, timestamp, and USD FMV under IRC Section 721.</p>
@@ -624,16 +624,16 @@ export default function AdminOnboardingPage() {
         {currentStep === 2 && (
           <div className="space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <div className="p-5 rounded-xl border border-[#E2E8F0]">
+              <div className="p-5 rounded-none border border-[#E2E8F0]">
                 <div className="flex items-center gap-2 mb-3">
-                  <span className="text-xs font-medium px-2 py-0.5 rounded-full" style={{ backgroundColor: 'rgba(0,82,255,0.1)', color: '#0052FF' }}>EIN #1</span>
+                  <span className="text-xs font-medium px-2 py-0.5 rounded-none" style={{ backgroundColor: 'rgba(0,82,255,0.1)', color: '#6a3df0' }}>EIN #1</span>
                   <span className="text-sm font-semibold text-slate-900">Delaware Parent</span>
                 </div>
                 <div className="space-y-3 text-sm text-slate-700">
                   <div className="flex justify-between"><span className="text-slate-500">Entity:</span><span className="font-medium">{parentName || `${firstName} ${lastName} Enterprise LLC`}</span></div>
                   <div className="flex justify-between"><span className="text-slate-500">IRS Form:</span><span>SS-4 (Automated Processing)</span></div>
                   <div className="flex justify-between"><span className="text-slate-500">Classification:</span>
-                    <select value={parentTaxClass} onChange={(e) => setParentTaxClass(e.target.value)} className="text-sm border border-slate-200 rounded px-2 py-1 outline-none focus:ring-1 focus:ring-[#00D4AA]">
+                    <select value={parentTaxClass} onChange={(e) => setParentTaxClass(e.target.value)} className="text-sm border border-slate-200 rounded px-2 py-1 outline-none focus:ring-1 focus:ring-[#6a3df0]">
                       <option value="partnership_1065">Partnership (Form 1065)</option>
                       <option value="c_corp_1120">C-Corp (Form 1120)</option>
                       <option value="s_corp_1120s">S-Corp (Form 1120-S)</option>
@@ -643,9 +643,9 @@ export default function AdminOnboardingPage() {
                 </div>
               </div>
 
-              <div className="p-5 rounded-xl border border-[#E2E8F0]">
+              <div className="p-5 rounded-none border border-[#E2E8F0]">
                 <div className="flex items-center gap-2 mb-3">
-                  <span className="text-xs font-medium px-2 py-0.5 rounded-full" style={{ backgroundColor: 'rgba(0,212,170,0.1)', color: '#00A080' }}>EIN #2</span>
+                  <span className="text-xs font-medium px-2 py-0.5 rounded-none" style={{ backgroundColor: 'rgba(106,61,240,0.1)', color: '#5a2fd6' }}>EIN #2</span>
                   <span className="text-sm font-semibold text-slate-900">Wyoming Subsidiary</span>
                 </div>
                 <div className="space-y-3 text-sm text-slate-700">
@@ -663,9 +663,9 @@ export default function AdminOnboardingPage() {
               <p className="text-xs text-slate-500 mt-1">SSN/ITIN of the responsible party. Encrypted via AES-256 at rest, air-gapped from state public lookups.</p>
             </div>
 
-            <div className="p-4 rounded-lg" style={{ backgroundColor: 'rgba(0,212,170,0.05)', border: '1px solid rgba(0,212,170,0.2)' }}>
+            <div className="p-4 rounded-none" style={{ backgroundColor: 'rgba(106,61,240,0.05)', border: '1px solid rgba(106,61,240,0.2)' }}>
               <div className="flex items-start gap-3">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00D4AA" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 mt-0.5">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6a3df0" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 mt-0.5">
                   <rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" />
                 </svg>
                 <div>
@@ -680,7 +680,7 @@ export default function AdminOnboardingPage() {
         {/* Stage 4: Corporate Treasury Banking & Exchange KYB */}
         {currentStep === 3 && (
           <div className="space-y-6">
-            <div className="p-4 rounded-lg border" style={{ backgroundColor: '#FFFBEB', borderColor: '#FDE68A' }}>
+            <div className="p-4 rounded-none border" style={{ backgroundColor: '#FFFBEB', borderColor: '#FDE68A' }}>
               <p className="text-sm" style={{ color: '#92400E' }}>
                 <strong>Critical:</strong> All accounts must be opened under the entity&apos;s EIN and legal name &mdash; never personal SSNs. This preserves the corporate liability shield.
               </p>
@@ -698,7 +698,7 @@ export default function AdminOnboardingPage() {
                   <SelectionCard key={bank.name} selected={bankProvider === bank.name} onClick={() => setBankProvider(bank.name)}>
                     <div className="flex items-center justify-between mb-1">
                       <div className="font-medium text-sm text-slate-900">{bank.name}</div>
-                      {bank.badge && <span className="text-xs px-1.5 py-0.5 rounded-full" style={{ backgroundColor: 'rgba(0,212,170,0.1)', color: '#00A080' }}>{bank.badge}</span>}
+                      {bank.badge && <span className="text-xs px-1.5 py-0.5 rounded-none" style={{ backgroundColor: 'rgba(106,61,240,0.1)', color: '#5a2fd6' }}>{bank.badge}</span>}
                     </div>
                     <div className="text-xs text-slate-500">{bank.desc}</div>
                   </SelectionCard>
@@ -718,7 +718,7 @@ export default function AdminOnboardingPage() {
                   <SelectionCard key={ex.name} selected={exchangeProvider === ex.name} onClick={() => setExchangeProvider(ex.name)}>
                     <div className="flex items-center justify-between mb-1">
                       <div className="font-medium text-sm text-slate-900">{ex.name}</div>
-                      {ex.badge && <span className="text-xs px-1.5 py-0.5 rounded-full" style={{ backgroundColor: '#F3E8FF', color: '#7C3AED' }}>{ex.badge}</span>}
+                      {ex.badge && <span className="text-xs px-1.5 py-0.5 rounded-none" style={{ backgroundColor: '#F3E8FF', color: '#7C3AED' }}>{ex.badge}</span>}
                     </div>
                     <div className="text-xs text-slate-500">{ex.desc}</div>
                   </SelectionCard>
@@ -736,7 +736,7 @@ export default function AdminOnboardingPage() {
               </select>
             </div>
 
-            <div className="p-4 bg-slate-50 rounded-lg">
+            <div className="p-4 bg-slate-50 rounded-none">
               <h4 className="text-sm font-medium text-slate-700 mb-2">KYB Compliance Package (Auto-Generated)</h4>
               <div className="text-xs text-slate-600 space-y-1">
                 <p>The system provides exchange compliance desks with an automated, visual corporate tree proving:</p>
@@ -766,7 +766,7 @@ export default function AdminOnboardingPage() {
                   <SelectionCard key={w.name} selected={multisigProvider === w.name} onClick={() => setMultisigProvider(w.name)}>
                     <div className="flex items-center justify-between mb-1">
                       <div className="font-medium text-sm text-slate-900">{w.name}</div>
-                      {w.badge && <span className="text-xs px-1.5 py-0.5 rounded-full" style={{ backgroundColor: 'rgba(0,212,170,0.1)', color: '#00A080' }}>{w.badge}</span>}
+                      {w.badge && <span className="text-xs px-1.5 py-0.5 rounded-none" style={{ backgroundColor: 'rgba(106,61,240,0.1)', color: '#5a2fd6' }}>{w.badge}</span>}
                     </div>
                     <div className="text-xs text-slate-500">{w.desc}</div>
                   </SelectionCard>
@@ -781,10 +781,10 @@ export default function AdminOnboardingPage() {
                   <button
                     key={t}
                     onClick={() => setSigThreshold(t)}
-                    className="p-3 rounded-lg border-2 text-center text-sm font-mono transition-all"
+                    className="p-3 rounded-none border-2 text-center text-sm font-mono transition-all"
                     style={
                       sigThreshold === t
-                        ? { borderColor: '#00D4AA', backgroundColor: 'rgba(0,212,170,0.05)' }
+                        ? { borderColor: '#6a3df0', backgroundColor: 'rgba(106,61,240,0.05)' }
                         : { borderColor: '#E2E8F0' }
                     }
                   >
@@ -805,29 +805,29 @@ export default function AdminOnboardingPage() {
               </select>
             </div>
 
-            <div className="p-4 bg-slate-50 rounded-lg space-y-3">
+            <div className="p-4 bg-slate-50 rounded-none space-y-3">
               <h4 className="text-sm font-medium text-slate-700">Governance Configuration</h4>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm text-slate-600">
                 <div className="flex items-start gap-2">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00D4AA" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 mt-0.5"><polyline points="20 6 9 17 4 12" /></svg>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6a3df0" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 mt-0.5"><polyline points="20 6 9 17 4 12" /></svg>
                   <span>Spending over $10K requires multi-sig approval</span>
                 </div>
                 <div className="flex items-start gap-2">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00D4AA" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 mt-0.5"><polyline points="20 6 9 17 4 12" /></svg>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6a3df0" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 mt-0.5"><polyline points="20 6 9 17 4 12" /></svg>
                   <span>Emergency key recovery protocol documented</span>
                 </div>
                 <div className="flex items-start gap-2">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00D4AA" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 mt-0.5"><polyline points="20 6 9 17 4 12" /></svg>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6a3df0" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 mt-0.5"><polyline points="20 6 9 17 4 12" /></svg>
                   <span>On-chain txns bind to Operating Agreement</span>
                 </div>
                 <div className="flex items-start gap-2">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00D4AA" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 mt-0.5"><polyline points="20 6 9 17 4 12" /></svg>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6a3df0" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 mt-0.5"><polyline points="20 6 9 17 4 12" /></svg>
                   <span>Dead-man&apos;s switch after 90 days inactivity</span>
                 </div>
               </div>
             </div>
 
-            <div className="p-4 rounded-lg border" style={{ backgroundColor: 'rgba(0,82,255,0.03)', borderColor: 'rgba(0,82,255,0.15)' }}>
+            <div className="p-4 rounded-none border" style={{ backgroundColor: 'rgba(0,82,255,0.03)', borderColor: 'rgba(0,82,255,0.15)' }}>
               <p className="text-sm" style={{ color: '#1E40AF' }}>
                 <strong>Resolution Binding:</strong> On-chain multi-sig wallets are linked to the Stage 2 Operating Agreement. All signed transactions automatically write to the digital corporate minute book.
               </p>
@@ -849,7 +849,7 @@ export default function AdminOnboardingPage() {
                   <SelectionCard key={tool.name} selected={accountingTool === tool.name} onClick={() => setAccountingTool(tool.name)}>
                     <div className="flex items-center justify-between mb-1">
                       <div className="font-medium text-sm text-slate-900">{tool.name}</div>
-                      {tool.preferred && <span className="text-xs px-1.5 py-0.5 rounded-full" style={{ backgroundColor: '#F3E8FF', color: '#7C3AED' }}>Preferred</span>}
+                      {tool.preferred && <span className="text-xs px-1.5 py-0.5 rounded-none" style={{ backgroundColor: '#F3E8FF', color: '#7C3AED' }}>Preferred</span>}
                     </div>
                     <div className="text-xs text-slate-500">{tool.desc}</div>
                   </SelectionCard>
@@ -857,30 +857,30 @@ export default function AdminOnboardingPage() {
               </div>
             </div>
 
-            <div className="flex items-center gap-3 p-4 rounded-lg border" style={{ backgroundColor: 'rgba(0,82,255,0.03)', borderColor: 'rgba(0,82,255,0.15)' }}>
-              <input type="checkbox" id="api" checked={connectApi} onChange={(e) => setConnectApi(e.target.checked)} className="w-4 h-4 rounded" style={{ accentColor: '#0052FF' }} />
+            <div className="flex items-center gap-3 p-4 rounded-none border" style={{ backgroundColor: 'rgba(0,82,255,0.03)', borderColor: 'rgba(0,82,255,0.15)' }}>
+              <input type="checkbox" id="api" checked={connectApi} onChange={(e) => setConnectApi(e.target.checked)} className="w-4 h-4 rounded" style={{ accentColor: '#6a3df0' }} />
               <label htmlFor="api" className="text-sm" style={{ color: '#1E40AF' }}>
                 <span className="font-medium">Enable Auto-Sync</span> &mdash; Connect read-only APIs and wallet public keys to map directly to {accountingTool || 'accounting software'} for real-time cost-basis tracking
               </label>
             </div>
 
             {/* Tax Flow-Through Architecture */}
-            <div className="p-5 rounded-xl" style={{ backgroundColor: '#0A1628' }}>
+            <div className="p-5 rounded-none" style={{ backgroundColor: '#2d2b2b' }}>
               <h3 className="text-sm font-semibold text-white mb-4">Flow-Through Tax Architecture</h3>
               <div className="space-y-2">
-                <div className="p-3 rounded-lg" style={{ backgroundColor: 'rgba(0,212,170,0.1)', border: '1px solid rgba(0,212,170,0.2)' }}>
+                <div className="p-3 rounded-none" style={{ backgroundColor: 'rgba(106,61,240,0.1)', border: '1px solid rgba(106,61,240,0.2)' }}>
                   <p className="text-xs" style={{ color: '#6EE7B7' }}>
                     <strong>On-Chain Activity</strong> &mdash; {subsidiaryName || `${firstName} ${lastName} Holdings LLC`} (WY)
                   </p>
                 </div>
                 <div className="flex justify-center">
                   <div className="flex flex-col items-center">
-                    <div className="w-0.5 h-3" style={{ backgroundColor: '#00D4AA' }} />
+                    <div className="w-0.5 h-3" style={{ backgroundColor: '#6a3df0' }} />
                     <span className="text-xs px-2 py-0.5 rounded" style={{ color: '#94A3B8' }}>Disregarded entity pass-through</span>
-                    <div className="w-0.5 h-3" style={{ backgroundColor: '#00D4AA' }} />
+                    <div className="w-0.5 h-3" style={{ backgroundColor: '#6a3df0' }} />
                   </div>
                 </div>
-                <div className="p-3 rounded-lg" style={{ backgroundColor: 'rgba(0,82,255,0.1)', border: '1px solid rgba(0,82,255,0.2)' }}>
+                <div className="p-3 rounded-none" style={{ backgroundColor: 'rgba(0,82,255,0.1)', border: '1px solid rgba(0,82,255,0.2)' }}>
                   <p className="text-xs" style={{ color: '#93C5FD' }}>
                     <strong>Form 1065 + Schedule K-1</strong> &mdash; {parentName || `${firstName} ${lastName} Enterprise LLC`} (DE)
                   </p>
@@ -892,7 +892,7 @@ export default function AdminOnboardingPage() {
                     <div className="w-0.5 h-3" style={{ backgroundColor: '#F59E0B' }} />
                   </div>
                 </div>
-                <div className="p-3 rounded-lg" style={{ backgroundColor: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.2)' }}>
+                <div className="p-3 rounded-none" style={{ backgroundColor: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.2)' }}>
                   <p className="text-xs" style={{ color: '#FCD34D' }}>
                     <strong>Individual Members / Investors</strong> &mdash; Personal tax returns
                   </p>
@@ -900,7 +900,7 @@ export default function AdminOnboardingPage() {
               </div>
             </div>
 
-            <div className="p-4 bg-slate-50 rounded-lg">
+            <div className="p-4 bg-slate-50 rounded-none">
               <h4 className="text-sm font-medium text-slate-700 mb-3">What Gets Tracked</h4>
               <div className="grid grid-cols-2 gap-3 text-sm text-slate-600">
                 {[
@@ -914,7 +914,7 @@ export default function AdminOnboardingPage() {
                   '6-year mandatory transaction log',
                 ].map((item) => (
                   <div key={item} className="flex items-center gap-2">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00D4AA" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6a3df0" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
                     {item}
                   </div>
                 ))}
@@ -922,7 +922,7 @@ export default function AdminOnboardingPage() {
             </div>
 
             {/* Auto-generated documents */}
-            <div className="p-4 rounded-lg border border-[#E2E8F0]">
+            <div className="p-4 rounded-none border border-[#E2E8F0]">
               <h4 className="text-sm font-medium text-slate-700 mb-3">Documents Auto-Generated on Completion</h4>
               <div className="space-y-2">
                 {[
@@ -934,7 +934,7 @@ export default function AdminOnboardingPage() {
                   { name: 'Corporate Structure Certification', type: 'corporate_tree' },
                 ].map((doc) => (
                   <div key={doc.name} className="flex items-center gap-2 text-sm">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0052FF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6a3df0" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" />
                     </svg>
                     <span className="text-slate-700">{doc.name}</span>
@@ -943,7 +943,7 @@ export default function AdminOnboardingPage() {
               </div>
             </div>
 
-            <div className="p-4 rounded-lg border" style={{ backgroundColor: '#FFFBEB', borderColor: '#FDE68A' }}>
+            <div className="p-4 rounded-none border" style={{ backgroundColor: '#FFFBEB', borderColor: '#FDE68A' }}>
               <p className="text-sm" style={{ color: '#92400E' }}>
                 <strong>Compliance:</strong> Maintain 6-year mandatory transaction logs. Track fair market value at the time of mined/staked rewards. File corporation tax reports annually (Form 1065 for LLCs). Document all capital contributions and distributions with board resolutions.
               </p>
@@ -971,10 +971,10 @@ export default function AdminOnboardingPage() {
                 (currentStep === 0 && (!firstName || !lastName || !email || !clientType)) ||
                 (currentStep === 1 && !entityType)
               }
-              className="px-5 py-2.5 rounded-lg text-sm font-medium text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-              style={{ backgroundColor: '#0A1628' }}
+              className="px-5 py-2.5 rounded-none text-sm font-medium text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              style={{ backgroundColor: '#2d2b2b' }}
               onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#1E293B'; }}
-              onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = '#0A1628'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = '#2d2b2b'; }}
             >
               Next Stage &rarr;
             </button>
@@ -982,10 +982,10 @@ export default function AdminOnboardingPage() {
             <button
               onClick={handleSubmit}
               disabled={submitting || !accountingTool}
-              className="px-6 py-2.5 rounded-lg text-sm font-medium text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-              style={{ backgroundColor: '#00D4AA' }}
-              onMouseEnter={(e) => { if (!submitting) e.currentTarget.style.backgroundColor = '#00BF99'; }}
-              onMouseLeave={(e) => { if (!submitting) e.currentTarget.style.backgroundColor = '#00D4AA'; }}
+              className="px-6 py-2.5 rounded-none text-sm font-medium text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              style={{ backgroundColor: '#6a3df0' }}
+              onMouseEnter={(e) => { if (!submitting) e.currentTarget.style.backgroundColor = '#5a2fd6'; }}
+              onMouseLeave={(e) => { if (!submitting) e.currentTarget.style.backgroundColor = '#6a3df0'; }}
             >
               {submitting ? 'Deploying Two-Tier Structure...' : 'Complete Onboarding & Generate Documents'}
             </button>

@@ -16,6 +16,9 @@ const groups: NavGroup[] = [
   { label: 'Growth & settings', items: [{ href: '/admin/blog', label: 'Blog', icon: <BookOpen size={17} /> }, { href: '/admin/campaigns', label: 'Campaigns', icon: <Mail size={17} /> }, { href: '/admin/mentorship', label: 'Mentorship', icon: <BookOpen size={17} /> }, { href: '/admin/frontend-control', label: 'Frontend control', icon: <Settings2 size={17} /> }, { href: '/admin/roles', label: 'Roles & access', icon: <ShieldCheck size={17} /> }, { href: '/admin/bulk-ops', label: 'Bulk operations', icon: <Activity size={17} /> }, { href: '/admin/settings', label: 'Settings', icon: <Settings2 size={17} /> }] },
 ];
 
+const C = { ink: '#2d2b2b', accent: '#6a3df0', text: '#201e1d' };
+const FONT = "'Archivo', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif";
+
 function getAdminName() {
   if (typeof window === 'undefined') return 'Admin';
   try {
@@ -39,41 +42,95 @@ export default function AdminSidebar() {
     router.push('/admin/login');
   }
 
+  const adminName = getAdminName();
+
   const sidebarContent = (
-    <>
-      <div className="admin-brand-block">
-        <Link href="/admin/dashboard" className="admin-brand" onClick={() => setMobileOpen(false)}>
-          <span className="admin-brand-mark">BTE</span>
-          <span><b>Blockchain Trust</b><small>Admin operations</small></span>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', fontFamily: FONT }}>
+      <div style={{ padding: '24px 20px 16px' }}>
+        <Link href="/admin/dashboard" onClick={() => setMobileOpen(false)} style={{ display: 'flex', alignItems: 'center', gap: 12, textDecoration: 'none', color: '#fff' }}>
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none" style={{ flexShrink: 0 }}>
+            <rect x="1" y="1" width="30" height="30" stroke="#ffffff" strokeWidth="2" />
+            <rect x="10" y="10" width="12" height="12" fill={C.accent} />
+          </svg>
+          <div style={{ lineHeight: 1.15 }}>
+            <div style={{ fontWeight: 800, fontSize: 14, letterSpacing: '0.06em', textTransform: 'uppercase' }}>Blockchain Trust</div>
+            <div style={{ fontSize: 10, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.5)' }}>Admin operations</div>
+          </div>
         </Link>
-        <span className="admin-environment">CONTROL ROOM</span>
+        <div style={{ marginTop: 16, fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: C.accent }}>
+          Control room
+        </div>
       </div>
 
-      <nav className="admin-nav" aria-label="Admin navigation">
+      <nav style={{ flex: 1, overflowY: 'auto', padding: '0 12px' }} aria-label="Admin navigation">
         {groups.map((group) => (
-          <div className="admin-nav-group" key={group.label}>
-            <span className="admin-nav-label">{group.label}</span>
+          <div key={group.label} style={{ marginBottom: 20 }}>
+            <span style={{ display: 'block', padding: '0 8px', marginBottom: 6, fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)' }}>{group.label}</span>
             {group.items.map((item) => {
               const active = pathname === item.href || (item.href !== '/admin/dashboard' && pathname.startsWith(item.href));
-              return <Link key={item.href} href={item.href} className={`admin-nav-item ${active ? 'active' : ''}`} onClick={() => setMobileOpen(false)}><span className="admin-nav-icon">{item.icon}</span><span>{item.label}</span>{active && <ChevronRight size={14} className="admin-nav-arrow" />}</Link>;
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="bte-sidebar-item"
+                  onClick={() => setMobileOpen(false)}
+                  style={{
+                    display: 'flex', alignItems: 'center', gap: 10, padding: '9px 12px',
+                    fontSize: 13, fontWeight: active ? 600 : 400,
+                    color: active ? '#fff' : 'rgba(255,255,255,0.75)',
+                    background: active ? C.accent : 'transparent',
+                    textDecoration: 'none', marginBottom: 1,
+                  }}
+                >
+                  <span style={{ display: 'flex', alignItems: 'center', opacity: active ? 1 : 0.75 }}>{item.icon}</span>
+                  <span style={{ flex: 1 }}>{item.label}</span>
+                  {active && <ChevronRight size={14} />}
+                </Link>
+              );
             })}
           </div>
         ))}
       </nav>
 
-      <div className="admin-sidebar-footer">
-        <div className="admin-profile"><span className="admin-avatar">A</span><span><b>{getAdminName()}</b><small>Administrator</small></span></div>
-        <button className="admin-logout" onClick={handleLogout}><LogOut size={15} /> Sign out</button>
+      <div style={{ padding: '16px 20px', borderTop: '2px solid rgba(255,255,255,0.1)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
+          <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 32, height: 32, background: C.accent, color: '#fff', fontWeight: 700, fontSize: 13, textTransform: 'uppercase' }}>
+            {adminName.charAt(0)}
+          </span>
+          <div style={{ lineHeight: 1.3 }}>
+            <div style={{ fontSize: 13, fontWeight: 600, color: '#fff' }}>{adminName}</div>
+            <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.45)' }}>Administrator</div>
+          </div>
+        </div>
+        <button className="bte-sidebar-logout" onClick={handleLogout} style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'none', border: 'none', color: 'rgba(255,255,255,0.6)', fontSize: 12, fontWeight: 600, fontFamily: FONT, cursor: 'pointer', padding: '6px 0' }}>
+          <LogOut size={15} /> Sign out
+        </button>
       </div>
-    </>
+    </div>
   );
+
+  const sidebarBase: React.CSSProperties = { position: 'fixed', top: 0, left: 0, width: 260, height: '100vh', background: C.ink, color: '#fff', zIndex: 100, overflowY: 'auto' };
 
   return (
     <>
-      <button className="admin-mobile-toggle" onClick={() => setMobileOpen(!mobileOpen)} aria-label="Toggle admin navigation">{mobileOpen ? <X size={20} /> : <Menu size={20} />}</button>
-      {mobileOpen && <div className="admin-mobile-overlay" onClick={() => setMobileOpen(false)} />}
-      <aside className={`admin-sidebar admin-sidebar-mobile ${mobileOpen ? 'open' : ''}`}>{sidebarContent}</aside>
-      <aside className="admin-sidebar admin-sidebar-desktop">{sidebarContent}</aside>
+      <style>{`
+        .bte-sidebar-item:hover { background: rgba(255,255,255,0.08) !important; }
+        .bte-sidebar-logout:hover { color: #fff !important; }
+        .bte-sidebar-mobile { display: none; }
+        .bte-sidebar-desktop { display: block; }
+        .bte-mobile-toggle { display: none !important; }
+        @media (max-width: 860px) {
+          .bte-sidebar-desktop { display: none !important; }
+          .bte-sidebar-mobile.open { display: block !important; }
+          .bte-mobile-toggle { display: flex !important; }
+        }
+      `}</style>
+      <button className="bte-mobile-toggle" onClick={() => setMobileOpen(!mobileOpen)} aria-label="Toggle admin navigation" style={{ position: 'fixed', top: 12, left: 12, zIndex: 200, alignItems: 'center', justifyContent: 'center', width: 40, height: 40, background: C.ink, color: '#fff', border: 'none', cursor: 'pointer' }}>
+        {mobileOpen ? <X size={20} /> : <Menu size={20} />}
+      </button>
+      {mobileOpen && <div onClick={() => setMobileOpen(false)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 99 }} />}
+      <aside className={`bte-sidebar-mobile ${mobileOpen ? 'open' : ''}`} style={sidebarBase}>{sidebarContent}</aside>
+      <aside className="bte-sidebar-desktop" style={sidebarBase}>{sidebarContent}</aside>
     </>
   );
 }

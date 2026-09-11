@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap');
 
 @import "tailwindcss";
 @source "../**/*.{ts,tsx}";
@@ -923,18 +923,35 @@ html:not([data-theme="dark"]) .terminal-shell ::-webkit-scrollbar-thumb { backgr
 
 
 /* -------------------------------------------------------------------------- */
-/* BTE human-centered purple system                                           */
+/* BTE Modernist Design System                                                */
 /* -------------------------------------------------------------------------- */
 :root {
-  --bte-ink: #181126;
+  --color-bg: #f3f2f2;
+  --color-surface: #eae9e9;
+  --color-text: #201e1d;
+  --color-accent: #6a3df0;
+  --color-ink: #2d2b2b;
+  --radius: 0px;
+  --color-accent-100: #f1ecff;
+  --color-accent-200: #e0d4ff;
+  --color-accent-300: #c7b3ff;
+  --color-accent-400: #a687ff;
+  --color-accent-500: #6a3df0;
+  --color-accent-600: #5a2fd6;
+  --color-accent-700: #4423ad;
+  --color-accent-800: #331a7d;
+  --color-accent-900: #1f1052;
+  --font-heading: 'Archivo', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-body: 'Archivo', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --bte-ink: var(--color-ink);
   --bte-muted: #746d85;
-  --bte-purple: #6a45e8;
-  --bte-purple-deep: #4821b8;
-  --bte-lilac: #eee9ff;
-  --bte-lilac-strong: #d8caff;
+  --bte-purple: var(--color-accent);
+  --bte-purple-deep: var(--color-accent-600);
+  --bte-lilac: var(--color-accent-100);
+  --bte-lilac-strong: var(--color-accent-200);
   --bte-card: #ffffff;
-  --bte-line: #e9e4f2;
-  --bte-page: #fbfaff;
+  --bte-line: var(--color-surface);
+  --bte-page: var(--color-bg);
 }
 
 .human-landing { background: var(--bte-page); color: var(--bte-ink); font-family: 'Manrope', system-ui, sans-serif; }

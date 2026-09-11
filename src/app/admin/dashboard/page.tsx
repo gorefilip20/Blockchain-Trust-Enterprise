@@ -28,47 +28,25 @@ interface Stats {
   paymentsByNetwork: Array<{ target_network: string; count: number }>;
 }
 
+const C = { bg: '#f3f2f2', surface: '#eae9e9', text: '#201e1d', accent: '#6a3df0', accentHover: '#5a2fd6', ink: '#2d2b2b', accentLight: '#f1ecff' };
+const FONT = "'Archivo', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif";
+
 const typeLabels: Record<string, string> = {
-  hnw_investor: 'HNW Investor',
-  web3_founder: 'Web3 Founder',
-  dao_member: 'DAO Member',
-  crypto_miner: 'Crypto Miner',
-  staking_operator: 'Staking Operator',
+  hnw_investor: 'HNW Investor', web3_founder: 'Web3 Founder', dao_member: 'DAO Member',
+  crypto_miner: 'Crypto Miner', staking_operator: 'Staking Operator',
 };
 
-const statusColors: Record<string, string> = {
-  lead: 'bg-slate-100 text-slate-700',
-  onboarding: 'bg-blue-100 text-blue-700',
-  active: 'bg-green-100 text-green-700',
-  inactive: 'bg-red-100 text-red-700',
-};
+const treasuryAssets = [
+  { symbol: 'BTC', name: 'Bitcoin', price: '$78,700', change: '+1.2%' },
+  { symbol: 'ETH', name: 'Ethereum', price: '$2,490', change: '+2.4%' },
+  { symbol: 'SOL', name: 'Solana', price: '$103.00', change: '+3.1%' },
+  { symbol: 'XRP', name: 'Ripple', price: '$1.40', change: '+0.8%' },
+  { symbol: 'AVAX', name: 'Avalanche', price: '$18.20', change: '-1.2%' },
+  { symbol: 'USDC', name: 'USD Coin', price: '$1.00', change: '0.0%' },
+];
 
-const activityIcons: Record<string, React.ReactNode> = {
-  client: (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-      <circle cx="9" cy="7" r="4" />
-    </svg>
-  ),
-  entity: (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="4" y="2" width="16" height="20" rx="2" />
-      <line x1="8" y1="6" x2="16" y2="6" />
-    </svg>
-  ),
-  document: (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-      <polyline points="14 2 14 8 20 8" />
-    </svg>
-  ),
-  workflow: (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <polyline points="9 11 12 14 22 4" />
-      <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
-    </svg>
-  ),
-};
+const thStyle: React.CSSProperties = { textAlign: 'left', padding: '10px 16px', fontSize: 11, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', color: 'rgba(32,30,29,0.5)', borderBottom: `2px solid ${C.surface}` };
+const tdStyle: React.CSSProperties = { padding: '12px 16px', fontSize: 13, borderBottom: `1px solid ${C.surface}` };
 
 export default function AdminDashboardPage() {
   const [stats, setStats] = useState<Stats | null>(null);
@@ -76,262 +54,156 @@ export default function AdminDashboardPage() {
   useEffect(() => {
     const token = localStorage.getItem('bte-admin-token');
     fetch('/api/stats', { headers: { Authorization: `Bearer ${token || ''}` } })
-      .then((response) => response.ok ? response.json() : null)
-      .then((payload) => { if (payload) setStats(payload); });
+      .then((r) => r.ok ? r.json() : null)
+      .then((p) => { if (p) setStats(p); });
   }, []);
 
   if (!stats) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="flex items-center gap-3">
-          <svg className="animate-spin h-5 w-5" style={{ color: '#6A45E8' }} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-          </svg>
-          <span className="text-slate-400 text-sm">Loading dashboard...</span>
-        </div>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: 256, fontFamily: FONT }}>
+        <span style={{ fontSize: 13, color: 'rgba(32,30,29,0.5)' }}>Loading dashboard...</span>
       </div>
     );
   }
 
-  const today = new Date().toLocaleDateString('en-US', {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
+  const today = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
   const statCards = [
-    {
-      label: 'Total Clients',
-      value: stats.totalClients,
-      sub: `${stats.activeClients} active`,
-      borderColor: '#6A45E8',
-      iconBg: 'rgba(106,69,232,0.1)',
-      iconColor: '#6A45E8',
-      icon: (
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-          <circle cx="9" cy="7" r="4" />
-          <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
-          <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-        </svg>
-      ),
-    },
-    {
-      label: 'Entities Formed',
-      value: stats.totalEntities,
-      sub: `${stats.parentEntities} parent · ${stats.subsidiaryEntities} subsidiary`,
-      borderColor: '#8B6BEA',
-      iconBg: 'rgba(139,107,234,0.12)',
-      iconColor: '#7250D0',
-      icon: (
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <rect x="4" y="2" width="16" height="20" rx="2" />
-          <line x1="8" y1="6" x2="16" y2="6" />
-          <line x1="8" y1="10" x2="16" y2="10" />
-          <line x1="8" y1="14" x2="12" y2="14" />
-        </svg>
-      ),
-    },
-    {
-      label: 'Legal Documents',
-      value: stats.totalDocuments,
-      sub: `${stats.documentsByStatus?.find((d) => d.status === 'generated')?.count || 0} generated`,
-      borderColor: '#A15CF4',
-      iconBg: 'rgba(161,92,244,0.12)',
-      iconColor: '#8A45D8',
-      icon: (
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-          <polyline points="14 2 14 8 20 8" />
-          <line x1="16" y1="13" x2="8" y2="13" />
-          <line x1="16" y1="17" x2="8" y2="17" />
-        </svg>
-      ),
-    },
-    {
-      label: 'Treasury & Vaults',
-      value: stats.totalTreasuryAccounts + stats.totalVaults,
-      sub: `$${(stats.totalTreasuryValue || 0).toLocaleString()} · ${stats.totalVaults} vaults`,
-      borderColor: '#D483E8',
-      iconBg: 'rgba(212,131,232,0.14)',
-      iconColor: '#B15EC8',
-      icon: (
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <rect x="2" y="4" width="20" height="16" rx="2" />
-          <path d="M2 10h20" />
-          <path d="M6 14h.01" />
-          <path d="M10 14h4" />
-        </svg>
-      ),
-    },
+    { label: 'Active clients', value: stats.totalClients, sub: `${stats.activeClients} active` },
+    { label: 'Entities', value: stats.totalEntities, sub: `${stats.parentEntities} parent · ${stats.subsidiaryEntities} subsidiary` },
+    { label: 'Treasury AUM', value: `$${(stats.totalTreasuryValue || 0).toLocaleString()}`, sub: `${stats.totalTreasuryAccounts} accounts · ${stats.totalVaults} vaults` },
+    { label: 'Pending onboarding', value: stats.clientsByStatus?.find(s => s.status === 'onboarding')?.count || 0, sub: `${stats.totalDocuments} documents` },
   ];
 
-  const pipelineColors = ['#6A45E8', '#8B6BEA', '#A15CF4', '#D483E8', '#B795FF', '#7C63D7'];
-
   return (
-    <div>
+    <div style={{ fontFamily: FONT, color: C.text }}>
       {/* Header */}
-      <div className="flex items-center justify-between mb-8">
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 32 }}>
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Dashboard</h1>
-          <p className="text-slate-500 text-sm mt-1">{today}</p>
+          <h1 style={{ fontSize: 24, fontWeight: 800, margin: 0 }}>Dashboard</h1>
+          <p style={{ fontSize: 13, color: 'rgba(32,30,29,0.5)', marginTop: 4 }}>{today}</p>
         </div>
-        <Link
-          href="/admin/onboarding"
-          className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-white text-sm font-medium transition-colors"
-          style={{ backgroundColor: '#6A45E8' }}
-          onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#4821B8'; }}
-          onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = '#6A45E8'; }}
-        >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <circle cx="12" cy="12" r="10" />
-            <line x1="12" y1="8" x2="12" y2="16" />
-            <line x1="8" y1="12" x2="16" y2="12" />
-          </svg>
-          New Client
+        <Link href="/admin/onboarding" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: C.accent, color: '#fff', padding: '10px 20px', fontSize: 13, fontWeight: 700, letterSpacing: '0.03em', textTransform: 'uppercase', textDecoration: 'none', textAlign: 'left' }}>
+          + New client
         </Link>
       </div>
 
-      {/* Stat Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      {/* Stat cards on divider grid */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 2, background: C.surface, marginBottom: 32 }}>
         {statCards.map((card) => (
-          <div
-            key={card.label}
-            className="bg-white rounded-xl p-5 hover:shadow-md transition-shadow"
-            style={{ borderLeft: `4px solid ${card.borderColor}`, border: `1px solid #E2E8F0`, borderLeftWidth: '4px', borderLeftColor: card.borderColor }}
-          >
-            <div className="flex items-center justify-between mb-3">
-              <div
-                className="w-10 h-10 rounded-lg flex items-center justify-center"
-                style={{ backgroundColor: card.iconBg, color: card.iconColor }}
-              >
-                {card.icon}
-              </div>
-              <span className="text-3xl font-bold text-slate-900">{card.value}</span>
-            </div>
-            <div className="font-semibold text-slate-700 text-sm">{card.label}</div>
-            <div className="text-xs text-slate-500 mt-0.5">{card.sub}</div>
+          <div key={card.label} style={{ background: '#fff', padding: '24px 20px' }}>
+            <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', color: 'rgba(32,30,29,0.5)', marginBottom: 8 }}>{card.label}</div>
+            <div style={{ fontSize: 32, fontWeight: 800, color: C.text }}>{card.value}</div>
+            <div style={{ fontSize: 12, color: 'rgba(32,30,29,0.5)', marginTop: 4 }}>{card.sub}</div>
           </div>
         ))}
       </div>
 
-      {/* Entity Tier Breakdown */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-        <div className="bg-white rounded-xl border border-[#E2E8F0] p-5">
-          <div className="flex items-center gap-3 mb-3">
-            <div className="w-9 h-9 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'rgba(139,107,234,0.12)', color: '#7250D0' }}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="2" width="16" height="20" rx="2" /><line x1="8" y1="6" x2="16" y2="6" /><line x1="8" y1="10" x2="16" y2="10" /></svg>
-            </div>
-            <div>
-              <div className="text-sm font-semibold text-slate-900">Parent Entities (Delaware)</div>
-              <div className="text-xs text-slate-500">Multi-member fundraising hubs</div>
-            </div>
-          </div>
-          <div className="text-3xl font-bold text-slate-900">{stats.parentEntities}</div>
-          <div className="mt-2 flex items-center gap-2">
-            <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ backgroundColor: 'rgba(139,107,234,0.12)', color: '#7250D0' }}>Partnership (1065)</span>
-            <span className="text-xs text-slate-400">Tax classification</span>
-          </div>
-        </div>
-        <div className="bg-white rounded-xl border border-[#E2E8F0] p-5">
-          <div className="flex items-center gap-3 mb-3">
-            <div className="w-9 h-9 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'rgba(106,69,232,0.1)', color: '#6A45E8' }}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
-            </div>
-            <div>
-              <div className="text-sm font-semibold text-slate-900">Subsidiary Entities (Wyoming)</div>
-              <div className="text-xs text-slate-500">Single-member anonymous asset vaults</div>
-            </div>
-          </div>
-          <div className="text-3xl font-bold text-slate-900">{stats.subsidiaryEntities}</div>
-          <div className="mt-2 flex items-center gap-2">
-            <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ backgroundColor: 'rgba(106,69,232,0.1)', color: '#5D3CC0' }}>Disregarded Entity</span>
-            <span className="text-xs text-slate-400">Flow-through to parent</span>
-          </div>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* 6-Stage Workflow Pipeline */}
-        <div className="lg:col-span-2 bg-white rounded-xl border border-[#E2E8F0] p-6">
-          <h2 className="font-semibold text-slate-900 mb-1">6-Stage Onboarding Pipeline</h2>
-          <p className="text-xs text-slate-500 mb-4">Two-tier parent-subsidiary formation workflow</p>
-          <div className="space-y-4">
-            {stats.workflowProgress.map((step, i) => {
-              const pct = step.total > 0 ? (step.completed / step.total) * 100 : 0;
-              const color = pipelineColors[i % pipelineColors.length];
-              return (
-                <div key={step.step_name}>
-                  <div className="flex items-center justify-between text-sm mb-1.5">
-                    <span className="text-slate-700">
-                      <span className="inline-flex items-center justify-center w-5 h-5 rounded-full text-[10px] font-bold text-white mr-2" style={{ backgroundColor: color }}>{i + 1}</span>
+      {/* 2-up: pipeline + treasury snapshot */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2, background: C.surface, marginBottom: 32 }}>
+        {/* Onboarding pipeline */}
+        <div style={{ background: '#fff', padding: 24 }}>
+          <h2 style={{ fontSize: 16, fontWeight: 800, margin: '0 0 4px' }}>Onboarding pipeline</h2>
+          <p style={{ fontSize: 12, color: 'rgba(32,30,29,0.5)', margin: '0 0 20px' }}>6-stage workflow progress</p>
+          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <thead>
+              <tr>
+                <th style={thStyle}>Step</th>
+                <th style={thStyle}>Progress</th>
+                <th style={{ ...thStyle, textAlign: 'right' }}>Count</th>
+              </tr>
+            </thead>
+            <tbody>
+              {stats.workflowProgress.map((step, i) => {
+                const pct = step.total > 0 ? (step.completed / step.total) * 100 : 0;
+                return (
+                  <tr key={step.step_name}>
+                    <td style={tdStyle}>
+                      <span style={{ fontSize: 12, fontWeight: 700, color: C.accent, marginRight: 8 }}>{String(i + 1).padStart(2, '0')}</span>
                       {step.step_name}
-                    </span>
-                    <span className="text-slate-500 font-medium">{step.completed}/{step.total}</span>
-                  </div>
-                  <div className="w-full bg-slate-100 rounded-full h-2.5 ml-7">
-                    <div
-                      className="h-2.5 rounded-full transition-all duration-500"
-                      style={{ width: `${pct}%`, backgroundColor: color }}
-                    />
-                  </div>
-                </div>
-              );
-            })}
-            {stats.workflowProgress.length === 0 && (
-              <div className="text-sm text-slate-400 py-4 text-center">No active workflows. Start by onboarding a client.</div>
-            )}
-          </div>
+                    </td>
+                    <td style={tdStyle}>
+                      <div style={{ width: '100%', height: 4, background: C.surface }}>
+                        <div style={{ width: `${pct}%`, height: 4, background: C.accent }} />
+                      </div>
+                    </td>
+                    <td style={{ ...tdStyle, textAlign: 'right', fontWeight: 600 }}>{step.completed}/{step.total}</td>
+                  </tr>
+                );
+              })}
+              {stats.workflowProgress.length === 0 && (
+                <tr><td colSpan={3} style={{ ...tdStyle, textAlign: 'center', color: 'rgba(32,30,29,0.4)' }}>No active workflows</td></tr>
+              )}
+            </tbody>
+          </table>
         </div>
 
-        {/* Client Breakdown */}
-        <div className="bg-white rounded-xl border border-[#E2E8F0] p-6">
-          <h2 className="font-semibold text-slate-900 mb-4">Clients by Type</h2>
-          <div className="space-y-3">
-            {stats.clientsByType.map((item) => (
-              <div key={item.client_type} className="flex items-center justify-between">
-                <span className="text-sm text-slate-700">{typeLabels[item.client_type] || item.client_type}</span>
-                <span
-                  className="text-sm font-medium px-2.5 py-0.5 rounded-full"
-                  style={{ backgroundColor: 'rgba(106,69,232,0.1)', color: '#5D3CC0' }}
-                >
-                  {item.count}
-                </span>
+        {/* Treasury snapshot */}
+        <div style={{ background: C.ink, padding: 24, color: '#fff' }}>
+          <h2 style={{ fontSize: 16, fontWeight: 800, margin: '0 0 4px' }}>Treasury snapshot</h2>
+          <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', margin: '0 0 20px' }}>Illustrative prices · Sept 9 2026</p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+            {treasuryAssets.map((asset) => (
+              <div key={asset.symbol} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 0', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+                <div>
+                  <span style={{ fontWeight: 700, fontSize: 14 }}>{asset.symbol}</span>
+                  <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', marginLeft: 8 }}>{asset.name}</span>
+                </div>
+                <div style={{ textAlign: 'right' }}>
+                  <span style={{ fontWeight: 600, fontSize: 14 }}>{asset.price}</span>
+                  <span style={{ fontSize: 12, marginLeft: 10, color: asset.change.startsWith('-') ? '#ff6b6b' : asset.change === '0.0%' ? 'rgba(255,255,255,0.5)' : '#4ade80' }}>{asset.change}</span>
+                </div>
               </div>
             ))}
-            {stats.clientsByType.length === 0 && (
-              <div className="text-sm text-slate-400">No clients yet</div>
-            )}
           </div>
+        </div>
+      </div>
 
-          <div className="mt-6 pt-6 border-t border-slate-100">
-            <h3 className="text-sm font-medium text-slate-500 mb-3">By Status</h3>
-            <div className="flex flex-wrap gap-2">
+      {/* Client breakdown table */}
+      <div style={{ background: '#fff', border: `2px solid ${C.surface}` }}>
+        <div style={{ padding: '20px 24px', borderBottom: `2px solid ${C.surface}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <h2 style={{ fontSize: 16, fontWeight: 800, margin: 0 }}>Client breakdown</h2>
+          <Link href="/admin/clients" style={{ fontSize: 12, fontWeight: 600, color: C.accent, textDecoration: 'none' }}>View all →</Link>
+        </div>
+        <div style={{ overflowX: 'auto' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <thead>
+              <tr>
+                <th style={thStyle}>Type</th>
+                <th style={{ ...thStyle, textAlign: 'right' }}>Count</th>
+              </tr>
+            </thead>
+            <tbody>
+              {stats.clientsByType.map((item) => (
+                <tr key={item.client_type}>
+                  <td style={tdStyle}>{typeLabels[item.client_type] || item.client_type}</td>
+                  <td style={{ ...tdStyle, textAlign: 'right', fontWeight: 700 }}>{item.count}</td>
+                </tr>
+              ))}
+              {stats.clientsByType.length === 0 && (
+                <tr><td colSpan={2} style={{ ...tdStyle, textAlign: 'center', color: 'rgba(32,30,29,0.4)' }}>No clients yet</td></tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Status + Document rows */}
+        <div style={{ padding: '16px 24px', borderTop: `2px solid ${C.surface}`, display: 'flex', gap: 24, flexWrap: 'wrap' }}>
+          <div>
+            <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', color: 'rgba(32,30,29,0.5)' }}>By status</span>
+            <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
               {stats.clientsByStatus.map((item) => (
-                <span
-                  key={item.status}
-                  className={`text-xs font-medium px-2.5 py-1 rounded-full ${statusColors[item.status] || 'bg-slate-100 text-slate-700'}`}
-                >
+                <span key={item.status} style={{ fontSize: 12, fontWeight: 600, padding: '4px 10px', border: `2px solid ${C.surface}`, textTransform: 'capitalize' }}>
                   {item.status} ({item.count})
                 </span>
               ))}
             </div>
           </div>
-
-          <div className="mt-6 pt-6 border-t border-slate-100">
-            <h3 className="text-sm font-medium text-slate-500 mb-3">Document Status</h3>
-            <div className="flex flex-wrap gap-2">
+          <div>
+            <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', color: 'rgba(32,30,29,0.5)' }}>Documents</span>
+            <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
               {stats.documentsByStatus?.map((item) => (
-                <span
-                  key={item.status}
-                  className="text-xs font-medium px-2.5 py-1 rounded-full"
-                  style={{
-                    backgroundColor: item.status === 'generated' ? '#DBEAFE' : item.status === 'signed' ? '#DCFCE7' : item.status === 'verified' ? '#D1FAE5' : '#F1F5F9',
-                    color: item.status === 'generated' ? '#1D4ED8' : item.status === 'signed' ? '#15803D' : item.status === 'verified' ? '#065F46' : '#475569',
-                  }}
-                >
+                <span key={item.status} style={{ fontSize: 12, fontWeight: 600, padding: '4px 10px', border: `2px solid ${C.surface}`, textTransform: 'capitalize' }}>
                   {item.status} ({item.count})
                 </span>
               ))}
@@ -340,95 +212,84 @@ export default function AdminDashboardPage() {
         </div>
       </div>
 
-      {/* Payment Verification Status */}
+      {/* Payment verification */}
       {(stats.totalPayments > 0 || stats.pendingPayments > 0) && (
-        <div className="mt-6 bg-white rounded-xl border border-[#E2E8F0] p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="font-semibold text-slate-900">Payment Verification Engine</h2>
-            <Link href="/admin/payments" className="text-xs font-medium px-3 py-1.5 rounded-lg transition-colors" style={{ backgroundColor: 'rgba(139,107,234,0.12)', color: '#7250D0' }}>View All</Link>
+        <div style={{ marginTop: 32, background: '#fff', border: `2px solid ${C.surface}` }}>
+          <div style={{ padding: '20px 24px', borderBottom: `2px solid ${C.surface}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <h2 style={{ fontSize: 16, fontWeight: 800, margin: 0 }}>Payment verification</h2>
+            <Link href="/admin/payments" style={{ fontSize: 12, fontWeight: 600, color: C.accent, textDecoration: 'none' }}>View all →</Link>
           </div>
-          <div className="grid grid-cols-3 gap-4">
-            <div className="p-3 rounded-lg bg-slate-50">
-              <div className="text-xs text-slate-500">Total</div>
-              <div className="text-xl font-bold text-slate-900">{stats.totalPayments}</div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 2, background: C.surface }}>
+            <div style={{ background: '#fff', padding: 20 }}>
+              <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', color: 'rgba(32,30,29,0.5)' }}>Total</div>
+              <div style={{ fontSize: 28, fontWeight: 800, marginTop: 4 }}>{stats.totalPayments}</div>
             </div>
-            <div className="p-3 rounded-lg" style={{ backgroundColor: 'rgba(245,158,11,0.08)' }}>
-              <div className="text-xs" style={{ color: '#B45309' }}>Pending</div>
-              <div className="text-xl font-bold" style={{ color: '#B45309' }}>{stats.pendingPayments}</div>
+            <div style={{ background: '#fff', padding: 20 }}>
+              <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#B45309' }}>Pending</div>
+              <div style={{ fontSize: 28, fontWeight: 800, marginTop: 4, color: '#B45309' }}>{stats.pendingPayments}</div>
             </div>
-            <div className="p-3 rounded-lg" style={{ backgroundColor: 'rgba(21,128,61,0.08)' }}>
-              <div className="text-xs" style={{ color: '#15803D' }}>Confirmed</div>
-              <div className="text-xl font-bold" style={{ color: '#15803D' }}>{stats.confirmedPayments}</div>
+            <div style={{ background: '#fff', padding: 20 }}>
+              <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#15803D' }}>Confirmed</div>
+              <div style={{ fontSize: 28, fontWeight: 800, marginTop: 4, color: '#15803D' }}>{stats.confirmedPayments}</div>
             </div>
           </div>
           {stats.paymentsByNetwork && stats.paymentsByNetwork.length > 0 && (
-            <div className="mt-3 flex gap-2">
+            <div style={{ padding: '12px 24px', display: 'flex', gap: 8 }}>
               {stats.paymentsByNetwork.map((n) => (
-                <span key={n.target_network} className="text-xs px-2 py-0.5 rounded-full font-medium" style={{
-                  backgroundColor: n.target_network === 'BEP20' ? '#FEF3C7' : n.target_network === 'TRC20' ? '#FEE2E2' : '#DBEAFE',
-                  color: n.target_network === 'BEP20' ? '#B45309' : n.target_network === 'TRC20' ? '#B91C1C' : '#1D4ED8',
-                }}>{n.target_network}: {n.count}</span>
+                <span key={n.target_network} style={{ fontSize: 12, fontWeight: 600, padding: '4px 10px', border: `2px solid ${C.surface}` }}>{n.target_network}: {n.count}</span>
               ))}
             </div>
           )}
         </div>
       )}
 
-      {/* Recent Activity */}
-      <div className="mt-6 bg-white rounded-xl border border-[#E2E8F0] p-6">
-        <h2 className="font-semibold text-slate-900 mb-4">Recent Activity</h2>
+      {/* Recent activity */}
+      <div style={{ marginTop: 32, background: '#fff', border: `2px solid ${C.surface}` }}>
+        <div style={{ padding: '20px 24px', borderBottom: `2px solid ${C.surface}` }}>
+          <h2 style={{ fontSize: 16, fontWeight: 800, margin: 0 }}>Recent activity</h2>
+        </div>
         {stats.recentActivity.length === 0 ? (
-          <p className="text-slate-400 text-sm">No recent activity. Start by adding a new client.</p>
+          <p style={{ padding: 24, fontSize: 13, color: 'rgba(32,30,29,0.4)' }}>No recent activity. Start by adding a new client.</p>
         ) : (
-          <div className="space-y-3">
+          <div>
             {stats.recentActivity.map((item, i) => (
-              <div key={i} className="flex items-center justify-between py-2.5 border-b border-slate-50 last:border-0">
-                <div className="flex items-center gap-3">
-                  <span
-                    className="w-8 h-8 rounded-lg flex items-center justify-center"
-                    style={{ backgroundColor: 'rgba(106,69,232,0.1)', color: '#6A45E8' }}
-                  >
-                    {activityIcons[item.type] || activityIcons.client}
-                  </span>
-                  <div>
-                    <div className="text-sm font-medium text-slate-900">{item.description}</div>
-                    <div className="text-xs text-slate-500">{item.type === 'client' ? 'Client' : item.type === 'entity' ? 'Entity' : item.type === 'document' ? 'Document' : item.type}</div>
-                  </div>
+              <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 24px', borderBottom: i < stats.recentActivity.length - 1 ? `1px solid ${C.surface}` : 'none' }}>
+                <div>
+                  <div style={{ fontSize: 13, fontWeight: 600 }}>{item.description}</div>
+                  <div style={{ fontSize: 11, color: 'rgba(32,30,29,0.5)', textTransform: 'capitalize' }}>{item.type}</div>
                 </div>
-                <span className="text-xs text-slate-400">{new Date(item.created_at).toLocaleDateString()}</span>
+                <span style={{ fontSize: 12, color: 'rgba(32,30,29,0.4)' }}>{new Date(item.created_at).toLocaleDateString()}</span>
               </div>
             ))}
           </div>
         )}
       </div>
 
-      {/* Quick Actions */}
-      <div className="mt-6">
-        <h2 className="font-semibold text-slate-900 mb-4">Quick Actions</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* Quick actions */}
+      <div style={{ marginTop: 32 }}>
+        <h2 style={{ fontSize: 16, fontWeight: 800, margin: '0 0 16px' }}>Quick actions</h2>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 2, background: C.surface }}>
           {[
-            { label: 'New Client', desc: 'Start 6-stage onboarding wizard', href: '/admin/onboarding', color: '#6A45E8' },
-            { label: 'Payments', desc: 'Multi-chain verification', href: '/admin/payments', color: '#8B6BEA' },
-            { label: 'Documents', desc: 'Agreements & filings', href: '/admin/documents', color: '#A15CF4' },
-            { label: 'Treasury', desc: 'Accounts, vaults & wallets', href: '/admin/treasury', color: '#D483E8' },
+            { label: 'New Client', desc: 'Start 6-stage onboarding', href: '/admin/onboarding' },
+            { label: 'Payments', desc: 'Multi-chain verification', href: '/admin/payments' },
+            { label: 'Documents', desc: 'Agreements & filings', href: '/admin/documents' },
+            { label: 'Treasury', desc: 'Accounts, vaults & wallets', href: '/admin/treasury' },
           ].map((action) => (
-            <Link
-              key={action.label}
-              href={action.href}
-              className="bg-white rounded-xl border border-[#E2E8F0] p-5 hover:shadow-md transition-shadow group"
-            >
-              <div className="flex items-center gap-3 mb-2">
-                <div
-                  className="w-3 h-3 rounded-full"
-                  style={{ backgroundColor: action.color }}
-                />
-                <span className="font-semibold text-slate-900 group-hover:text-slate-700">{action.label}</span>
-              </div>
-              <p className="text-sm text-slate-500">{action.desc}</p>
+            <Link key={action.label} href={action.href} style={{ background: '#fff', padding: 20, textDecoration: 'none', color: C.text }}>
+              <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 4 }}>{action.label}</div>
+              <div style={{ fontSize: 12, color: 'rgba(32,30,29,0.5)' }}>{action.desc}</div>
+              <span style={{ display: 'inline-block', marginTop: 12, fontSize: 12, fontWeight: 600, color: C.accent }}>Open →</span>
             </Link>
           ))}
         </div>
       </div>
+
+      <style>{`
+        @media (max-width: 860px) {
+          div[style*="grid-template-columns: repeat(4"] { grid-template-columns: repeat(2, 1fr) !important; }
+          div[style*="grid-template-columns: 1fr 1fr"] { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
     </div>
   );
 }
