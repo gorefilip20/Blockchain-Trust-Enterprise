@@ -46,6 +46,16 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         @media (max-width: 860px) {
           .bte-admin-main { margin-left: 0 !important; }
           .bte-admin-topbar { padding-left: 60px !important; }
+          .bte-admin-wrap { padding: 16px !important; }
+          .bte-admin-topbar-right { display: none !important; }
+        }
+        /* Mobile-friendly admin tables */
+        .bte-admin-wrap table { font-size: 12px; }
+        .bte-admin-wrap th, .bte-admin-wrap td { padding: 10px 12px !important; white-space: nowrap; }
+        @media (max-width: 640px) {
+          .bte-admin-wrap table { font-size: 11px; }
+          .bte-admin-wrap th, .bte-admin-wrap td { padding: 8px !important; }
+          .bte-admin-wrap h1 { font-size: 20px !important; }
         }
       `}</style>
       <div style={{ display: 'flex', minHeight: '100vh', fontFamily: FONT, background: C.bg, color: C.text }}>
@@ -58,16 +68,16 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <strong style={{ color: C.text }}>{pageName}</strong>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 12, color: 'rgba(32,30,29,0.6)' }}>
+              <span className="bte-admin-topbar-right" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 12, color: 'rgba(32,30,29,0.6)' }}>
                 <i style={{ display: 'inline-block', width: 7, height: 7, borderRadius: '50%', background: '#2f9e58' }} />
                 All systems operational
               </span>
-              <Link href="/" className="bte-admin-viewsite" style={{ fontSize: 12, fontWeight: 600, color: C.text, textDecoration: 'none', border: `2px solid ${C.text}`, padding: '6px 14px', letterSpacing: '0.03em', transition: 'all 0.15s' }}>
+              <Link href="/" className="bte-admin-viewsite bte-admin-topbar-right" style={{ fontSize: 12, fontWeight: 600, color: C.text, textDecoration: 'none', border: `2px solid ${C.text}`, padding: '6px 14px', letterSpacing: '0.03em', transition: 'all 0.15s' }}>
                 View public site
               </Link>
             </div>
           </header>
-          <div style={{ padding: 32 }}>{children}</div>
+          <div className="bte-admin-wrap" style={{ padding: 32 }}>{children}</div>
         </main>
       </div>
     </AdminGuard>

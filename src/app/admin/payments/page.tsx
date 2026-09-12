@@ -20,18 +20,20 @@ interface Payment {
   verified_at: string | null;
 }
 
-const networkStyles: Record<string, { bg: string; text: string; label: string }> = {
-  BEP20: { bg: '#FEF3C7', text: '#B45309', label: 'BSC (BEP20)' },
-  TRC20: { bg: '#FEE2E2', text: '#B91C1C', label: 'TRON (TRC20)' },
-  ERC20: { bg: '#DBEAFE', text: '#1D4ED8', label: 'Ethereum (ERC20)' },
+const C = { bg: '#f3f2f2', surface: '#eae9e9', text: '#201e1d', accent: '#6a3df0', accentLight: '#f1ecff', ink: '#2d2b2b' };
+
+const networkStyles: Record<string, { bg: string; color: string; label: string }> = {
+  BEP20: { bg: '#fef3c7', color: '#b45309', label: 'BSC (BEP20)' },
+  TRC20: { bg: '#fee2e2', color: '#b91c1c', label: 'TRON (TRC20)' },
+  ERC20: { bg: '#dbeafe', color: '#1d4ed8', label: 'ETH (ERC20)' },
 };
 
-const statusStyles: Record<string, { bg: string; text: string; label: string }> = {
-  pending: { bg: '#F1F5F9', text: '#64748B', label: 'Pending TX' },
-  processing_verification: { bg: '#DBEAFE', text: '#1D4ED8', label: 'Verifying' },
-  confirmed_active: { bg: '#DCFCE7', text: '#15803D', label: 'Confirmed' },
-  failed: { bg: '#FEE2E2', text: '#B91C1C', label: 'Failed' },
-  expired: { bg: '#F1F5F9', text: '#475569', label: 'Expired' },
+const statusStyles: Record<string, { bg: string; color: string; label: string }> = {
+  pending: { bg: 'rgba(32,30,29,0.06)', color: 'rgba(32,30,29,0.5)', label: 'Pending TX' },
+  processing_verification: { bg: '#dbeafe', color: '#1d4ed8', label: 'Verifying' },
+  confirmed_active: { bg: '#dcfce7', color: '#15803d', label: 'Confirmed' },
+  failed: { bg: '#fee2e2', color: '#b91c1c', label: 'Failed' },
+  expired: { bg: 'rgba(32,30,29,0.06)', color: 'rgba(32,30,29,0.5)', label: 'Expired' },
 };
 
 const stageLabels: Record<string, string> = {
@@ -72,116 +74,107 @@ export default function AdminPaymentsPage() {
   const confirmed = payments.filter((p) => p.status === 'confirmed_active');
   const failed = payments.filter((p) => p.status === 'failed');
 
-  const summaryCards = [
-    { label: 'Total Payments', value: payments.length.toString(), color: '#0052FF' },
-    { label: 'Pending Verification', value: pending.length.toString(), color: '#F59E0B' },
-    { label: 'Confirmed', value: confirmed.length.toString(), color: '#15803D' },
-    { label: 'Failed', value: failed.length.toString(), color: '#EF4444' },
-  ];
-
   function truncateHash(hash: string | null): string {
-    if (!hash) return '-';
+    if (!hash) return '—';
     return `${hash.slice(0, 8)}...${hash.slice(-6)}`;
   }
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-8">
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 28, flexWrap: 'wrap', gap: 12 }}>
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Payment Verification</h1>
-          <p className="text-slate-500 text-sm mt-1">Multi-chain on-chain transaction verification engine for BEP20, TRC20, and ERC20 payments.</p>
+          <h1 style={{ fontSize: 22, fontWeight: 800, margin: 0 }}>Payment Verification</h1>
+          <p style={{ color: 'rgba(32,30,29,0.5)', fontSize: 13, margin: '6px 0 0' }}>Multi-chain on-chain transaction verification engine for BEP20, TRC20, and ERC20 payments.</p>
         </div>
         <button
           onClick={runVerification}
           disabled={verifying}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-white text-sm font-medium transition-colors disabled:opacity-50"
-          style={{ backgroundColor: '#00D4AA' }}
+          style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 20px', background: C.accent, color: '#fff', border: 'none', fontSize: 12, fontWeight: 700, letterSpacing: '0.03em', cursor: verifying ? 'not-allowed' : 'pointer', opacity: verifying ? 0.5 : 1 }}
         >
           {verifying ? (
-            <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+            <svg style={{ animation: 'spin 1s linear infinite' }} width="14" height="14" viewBox="0 0 24 24" fill="none">
+              <circle style={{ opacity: 0.25 }} cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+              <path style={{ opacity: 0.75 }} fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
             </svg>
           ) : (
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <polyline points="23 4 23 10 17 10" /><polyline points="1 20 1 14 7 14" /><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
             </svg>
           )}
-          {verifying ? 'Running...' : 'Run Verification'}
+          {verifying ? 'RUNNING...' : 'RUN VERIFICATION'}
         </button>
       </div>
 
       {lastResult && (
-        <div className="mb-6 p-4 rounded-xl border border-[#E2E8F0] bg-white flex items-center gap-4">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#00D4AA" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 11 12 14 22 4" /><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" /></svg>
-          <span className="text-sm text-slate-700">
-            Last run: <span className="font-medium">{lastResult.processed}</span> processed,{' '}
-            <span className="font-medium" style={{ color: '#15803D' }}>{lastResult.verified}</span> verified,{' '}
-            <span className="font-medium" style={{ color: '#EF4444' }}>{lastResult.failed}</span> failed
+        <div style={{ marginBottom: 20, padding: '12px 16px', border: `2px solid ${C.surface}`, background: '#fff', display: 'flex', alignItems: 'center', gap: 10, fontSize: 13 }}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2f9e58" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 11 12 14 22 4" /><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" /></svg>
+          <span>
+            Last run: <strong>{lastResult.processed}</strong> processed,{' '}
+            <strong style={{ color: '#15803d' }}>{lastResult.verified}</strong> verified,{' '}
+            <strong style={{ color: '#ef4444' }}>{lastResult.failed}</strong> failed
           </span>
         </div>
       )}
 
-      <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-8">
-        {summaryCards.map((card) => (
-          <div key={card.label} className="bg-white rounded-xl p-5" style={{ border: '1px solid #E2E8F0', borderLeft: `4px solid ${card.color}` }}>
-            <div className="text-sm text-slate-500">{card.label}</div>
-            <div className="text-2xl font-bold text-slate-900 mt-1">{card.value}</div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(155px, 1fr))', gap: 8, marginBottom: 28 }}>
+        {[
+          { label: 'Total Payments', value: payments.length.toString(), color: C.accent },
+          { label: 'Pending Verification', value: pending.length.toString(), color: '#e0a800' },
+          { label: 'Confirmed', value: confirmed.length.toString(), color: '#15803d' },
+          { label: 'Failed', value: failed.length.toString(), color: '#ef4444' },
+        ].map((card) => (
+          <div key={card.label} style={{ background: '#fff', border: `2px solid ${C.surface}`, padding: '16px 18px' }}>
+            <div style={{ fontSize: 11, color: 'rgba(32,30,29,0.5)', fontWeight: 600 }}>{card.label}</div>
+            <div style={{ fontSize: 24, fontWeight: 800, color: card.color, marginTop: 4 }}>{card.value}</div>
           </div>
         ))}
       </div>
 
-      <div className="bg-white rounded-xl border border-[#E2E8F0] overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full">
+      <div style={{ background: '#fff', border: `2px solid ${C.surface}`, overflow: 'hidden' }}>
+        <div style={{ overflowX: 'auto' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12 }}>
             <thead>
-              <tr className="border-b border-slate-100 bg-slate-50">
-                <th className="text-left px-5 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Client</th>
-                <th className="text-left px-5 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Network</th>
-                <th className="text-left px-5 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">TX Hash</th>
-                <th className="text-left px-5 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Expected</th>
-                <th className="text-left px-5 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Verified</th>
-                <th className="text-left px-5 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Status</th>
-                <th className="text-left px-5 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Stage</th>
-                <th className="text-left px-5 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Retries</th>
-                <th className="text-left px-5 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Block</th>
+              <tr style={{ borderBottom: `2px solid ${C.surface}` }}>
+                {['Client', 'Network', 'TX Hash', 'Expected', 'Verified', 'Status', 'Stage', 'Retries', 'Block'].map(h => (
+                  <th key={h} style={{ textAlign: 'left', padding: '10px 12px', fontSize: 10, fontWeight: 700, color: 'rgba(32,30,29,0.5)', letterSpacing: '0.05em', textTransform: 'uppercase', whiteSpace: 'nowrap' }}>{h}</th>
+                ))}
               </tr>
             </thead>
             <tbody>
               {payments.map((p) => {
-                const ns = networkStyles[p.target_network] || { bg: '#F1F5F9', text: '#475569', label: p.target_network };
-                const ss = statusStyles[p.status] || { bg: '#F1F5F9', text: '#475569', label: p.status };
+                const ns = networkStyles[p.target_network] || { bg: 'rgba(32,30,29,0.06)', color: 'rgba(32,30,29,0.5)', label: p.target_network };
+                const ss = statusStyles[p.status] || { bg: 'rgba(32,30,29,0.06)', color: 'rgba(32,30,29,0.5)', label: p.status };
                 return (
-                  <tr key={p.id} className="border-b border-slate-50 hover:bg-slate-50/50 transition-colors">
-                    <td className="px-5 py-4">
-                      <div className="font-medium text-slate-900 text-sm">{p.client_name || '-'}</div>
+                  <tr key={p.id} style={{ borderBottom: `1px solid ${C.surface}` }}>
+                    <td style={{ padding: '10px 12px' }}>
+                      <div style={{ fontWeight: 600, fontSize: 12 }}>{p.client_name || '—'}</div>
                     </td>
-                    <td className="px-5 py-4">
-                      <span className="text-xs font-medium px-2 py-0.5 rounded-full" style={{ backgroundColor: ns.bg, color: ns.text }}>{ns.label}</span>
+                    <td style={{ padding: '10px 12px' }}>
+                      <span style={{ fontSize: 9, fontWeight: 700, padding: '2px 6px', background: ns.bg, color: ns.color, letterSpacing: '0.04em' }}>{ns.label}</span>
                     </td>
-                    <td className="px-5 py-4">
-                      <span className="font-mono text-xs text-slate-600">{truncateHash(p.submitted_tx_hash)}</span>
+                    <td style={{ padding: '10px 12px' }}>
+                      <span style={{ fontFamily: "'DM Mono', monospace", fontSize: 11, color: C.ink }}>{truncateHash(p.submitted_tx_hash)}</span>
                     </td>
-                    <td className="px-5 py-4 text-sm text-slate-700">${p.expected_amount_usd.toLocaleString()}</td>
-                    <td className="px-5 py-4 text-sm">
+                    <td style={{ padding: '10px 12px', color: C.ink }}>${p.expected_amount_usd.toLocaleString()}</td>
+                    <td style={{ padding: '10px 12px' }}>
                       {p.verified_amount_tokens != null ? (
-                        <span style={{ color: '#15803D' }} className="font-medium">{p.verified_amount_tokens.toLocaleString()} USDT</span>
+                        <span style={{ color: '#15803d', fontWeight: 600 }}>{p.verified_amount_tokens.toLocaleString()} USDT</span>
                       ) : (
-                        <span className="text-slate-400">-</span>
+                        <span style={{ color: 'rgba(32,30,29,0.3)' }}>—</span>
                       )}
                     </td>
-                    <td className="px-5 py-4">
-                      <span className="text-xs font-medium px-2.5 py-1 rounded-full" style={{ backgroundColor: ss.bg, color: ss.text }}>{ss.label}</span>
+                    <td style={{ padding: '10px 12px' }}>
+                      <span style={{ fontSize: 9, fontWeight: 700, padding: '2px 8px', background: ss.bg, color: ss.color, letterSpacing: '0.04em' }}>{ss.label.toUpperCase()}</span>
                     </td>
-                    <td className="px-5 py-4 text-xs text-slate-500">{stageLabels[p.processing_stage] || p.processing_stage}</td>
-                    <td className="px-5 py-4 text-xs text-slate-500">{p.rpc_retry_attempts}/5</td>
-                    <td className="px-5 py-4 text-xs font-mono text-slate-500">{p.transaction_block_number || '-'}</td>
+                    <td style={{ padding: '10px 12px', fontSize: 11, color: 'rgba(32,30,29,0.5)' }}>{stageLabels[p.processing_stage] || p.processing_stage}</td>
+                    <td style={{ padding: '10px 12px', fontSize: 11, color: 'rgba(32,30,29,0.5)' }}>{p.rpc_retry_attempts}/5</td>
+                    <td style={{ padding: '10px 12px', fontSize: 11, fontFamily: "'DM Mono', monospace", color: 'rgba(32,30,29,0.5)' }}>{p.transaction_block_number || '—'}</td>
                   </tr>
                 );
               })}
               {payments.length === 0 && (
                 <tr>
-                  <td colSpan={9} className="px-5 py-12 text-center text-slate-400">No payment records yet.</td>
+                  <td colSpan={9} style={{ padding: '48px 16px', textAlign: 'center', color: 'rgba(32,30,29,0.4)' }}>No payment records yet.</td>
                 </tr>
               )}
             </tbody>
@@ -189,27 +182,27 @@ export default function AdminPaymentsPage() {
         </div>
       </div>
 
-      <div className="mt-8 bg-white rounded-xl border border-[#E2E8F0] p-6">
-        <h2 className="font-semibold text-slate-900 mb-3">Verification Engine</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div className="p-4 rounded-lg" style={{ backgroundColor: 'rgba(254,243,199,0.5)', border: '1px solid #FDE68A' }}>
-            <div className="text-sm font-medium mb-1" style={{ color: '#B45309' }}>BEP20 (BNB Smart Chain)</div>
-            <div className="text-xs text-slate-600">RPC: bsc-dataseed1.binance.org</div>
-            <div className="text-xs text-slate-600">Token: USDT (18 decimals)</div>
+      <div style={{ marginTop: 28, background: '#fff', border: `2px solid ${C.surface}`, padding: 24 }}>
+        <h2 style={{ fontWeight: 700, fontSize: 14, marginBottom: 14 }}>Verification Engine</h2>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 8 }}>
+          <div style={{ padding: 14, background: '#fef3c720', border: '2px solid #fde68a' }}>
+            <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 4, color: '#b45309' }}>BEP20 (BNB Smart Chain)</div>
+            <div style={{ fontSize: 11, color: C.ink }}>RPC: bsc-dataseed1.binance.org</div>
+            <div style={{ fontSize: 11, color: C.ink }}>Token: USDT (18 decimals)</div>
           </div>
-          <div className="p-4 rounded-lg" style={{ backgroundColor: 'rgba(254,226,226,0.5)', border: '1px solid #FECACA' }}>
-            <div className="text-sm font-medium mb-1" style={{ color: '#B91C1C' }}>TRC20 (TRON)</div>
-            <div className="text-xs text-slate-600">API: api.trongrid.io</div>
-            <div className="text-xs text-slate-600">Token: USDT (6 decimals)</div>
+          <div style={{ padding: 14, background: '#fee2e220', border: '2px solid #fecaca' }}>
+            <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 4, color: '#b91c1c' }}>TRC20 (TRON)</div>
+            <div style={{ fontSize: 11, color: C.ink }}>API: api.trongrid.io</div>
+            <div style={{ fontSize: 11, color: C.ink }}>Token: USDT (6 decimals)</div>
           </div>
-          <div className="p-4 rounded-lg" style={{ backgroundColor: 'rgba(219,234,254,0.5)', border: '1px solid #BFDBFE' }}>
-            <div className="text-sm font-medium mb-1" style={{ color: '#1D4ED8' }}>ERC20 (Ethereum)</div>
-            <div className="text-xs text-slate-600">RPC: eth.llamarpc.com</div>
-            <div className="text-xs text-slate-600">Token: USDT (18 decimals)</div>
+          <div style={{ padding: 14, background: '#dbeafe20', border: '2px solid #bfdbfe' }}>
+            <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 4, color: '#1d4ed8' }}>ERC20 (Ethereum)</div>
+            <div style={{ fontSize: 11, color: C.ink }}>RPC: eth.llamarpc.com</div>
+            <div style={{ fontSize: 11, color: C.ink }}>Token: USDT (18 decimals)</div>
           </div>
         </div>
-        <div className="mt-4 text-xs text-slate-500">
-          Worker: <code className="px-1.5 py-0.5 bg-slate-100 rounded text-slate-600">npx tsx scripts/verify-worker.ts</code> — polls every 30s, max 5 retries, 1% amount tolerance.
+        <div style={{ marginTop: 12, fontSize: 11, color: 'rgba(32,30,29,0.5)' }}>
+          Worker: <code style={{ padding: '2px 6px', background: C.bg, fontFamily: "'DM Mono', monospace", fontSize: 10 }}>npx tsx scripts/verify-worker.ts</code> — polls every 30s, max 5 retries, 1% amount tolerance.
         </div>
       </div>
     </div>

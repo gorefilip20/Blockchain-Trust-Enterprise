@@ -77,7 +77,13 @@ export async function PATCH(req: NextRequest) {
     const body = await req.json().catch(() => null);
     if (!body) return NextResponse.json({ error: 'Invalid request.' }, { status: 400 });
     const db = getDb();
-    if (body.type === 'message') db.prepare("UPDATE admin_messages SET status = ?, assigned_to = ?, updated_at = datetime('now') WHERE id = ?").run(body.status, body.assignedTo || null, body.id);
+    if (body.type === 'message') {
+      if (body.reply) {
+        db.prepare("UPDATE admin_messages SET admin_reply = ?, admin_reply_at = datetime('now'), status = ?, assigned_to = ?, updated_at = datetime('now') WHERE id = ?").run(body.reply, body.status || 'resolved', body.assignedTo || null, body.id);
+      } else {
+        db.prepare("UPDATE admin_messages SET status = ?, assigned_to = ?, updated_at = datetime('now') WHERE id = ?").run(body.status, body.assignedTo || null, body.id);
+      }
+    }
     if (body.type === 'strategy') db.prepare("UPDATE copy_strategies SET name = ?, risk_level = ?, status = ?, description = ?, updated_at = datetime('now') WHERE id = ?").run(body.name, body.riskLevel, body.status, body.description, body.id);
     return NextResponse.json({ success: true });
   } catch (err) {

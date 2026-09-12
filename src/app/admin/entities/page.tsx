@@ -22,23 +22,25 @@ interface Entity {
   client_name: string;
 }
 
+const C = { bg: '#f3f2f2', surface: '#eae9e9', text: '#201e1d', accent: '#6a3df0', accentLight: '#f1ecff', ink: '#2d2b2b' };
+
 const typeLabels: Record<string, string> = {
   holding_llc: 'Holding LLC',
   operating_llc: 'Operating LLC',
   dao_llc: 'DAO LLC',
 };
 
-const tierLabels: Record<string, { label: string; bg: string; text: string }> = {
-  parent: { label: 'Parent', bg: 'rgba(0,82,255,0.1)', text: '#0052FF' },
-  subsidiary: { label: 'Subsidiary', bg: 'rgba(0,212,170,0.1)', text: '#00A080' },
+const tierLabels: Record<string, { label: string; color: string }> = {
+  parent: { label: 'Parent', color: C.accent },
+  subsidiary: { label: 'Subsidiary', color: '#2f9e58' },
 };
 
-const statusStyles: Record<string, { bg: string; text: string }> = {
-  pending: { bg: '#F1F5F9', text: '#64748B' },
-  filed: { bg: '#DBEAFE', text: '#1D4ED8' },
-  approved: { bg: '#FEF3C7', text: '#B45309' },
-  active: { bg: '#DCFCE7', text: '#15803D' },
-  dissolved: { bg: '#FEE2E2', text: '#B91C1C' },
+const statusStyles: Record<string, { bg: string; color: string }> = {
+  pending: { bg: 'rgba(32,30,29,0.06)', color: 'rgba(32,30,29,0.5)' },
+  filed: { bg: '#dbeafe', color: '#1d4ed8' },
+  approved: { bg: '#fef3c7', color: '#b45309' },
+  active: { bg: '#dcfce7', color: '#15803d' },
+  dissolved: { bg: '#fee2e2', color: '#b91c1c' },
 };
 
 export default function AdminEntitiesPage() {
@@ -63,39 +65,37 @@ export default function AdminEntitiesPage() {
 
   return (
     <div>
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-slate-900">Corporate Entities</h1>
-        <p className="text-slate-500 text-sm mt-1">Two-tier parent-subsidiary entity structures and filing status.</p>
+      <div style={{ marginBottom: 32 }}>
+        <h1 style={{ fontSize: 22, fontWeight: 800, margin: 0 }}>Corporate Entities</h1>
+        <p style={{ color: 'rgba(32,30,29,0.5)', fontSize: 13, margin: '6px 0 0' }}>Two-tier parent-subsidiary entity structures and filing status.</p>
       </div>
 
-      {/* Summary */}
-      <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-8">
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(155px, 1fr))', gap: 8, marginBottom: 28 }}>
         {[
-          { label: 'Total Entities', value: entities.length.toString(), color: '#0052FF' },
-          { label: 'Parent (Delaware)', value: parentEntities.length.toString(), color: '#0052FF' },
-          { label: 'Subsidiary (Wyoming)', value: subsidiaryEntities.length.toString(), color: '#00D4AA' },
+          { label: 'Total Entities', value: entities.length.toString(), color: C.accent },
+          { label: 'Parent (Delaware)', value: parentEntities.length.toString(), color: C.accent },
+          { label: 'Subsidiary (Wyoming)', value: subsidiaryEntities.length.toString(), color: '#2f9e58' },
           { label: 'Active', value: entities.filter((e) => e.status === 'active').length.toString(), color: '#15803D' },
         ].map((card) => (
-          <div key={card.label} className="bg-white rounded-xl p-5" style={{ border: '1px solid #E2E8F0', borderLeft: `4px solid ${card.color}` }}>
-            <div className="text-sm text-slate-500">{card.label}</div>
-            <div className="text-2xl font-bold text-slate-900 mt-1">{card.value}</div>
+          <div key={card.label} style={{ background: '#fff', border: `2px solid ${C.surface}`, padding: '16px 18px' }}>
+            <div style={{ fontSize: 11, color: 'rgba(32,30,29,0.5)', fontWeight: 600 }}>{card.label}</div>
+            <div style={{ fontSize: 24, fontWeight: 800, color: card.color, marginTop: 4 }}>{card.value}</div>
           </div>
         ))}
       </div>
 
-      {/* Filters */}
-      <div className="flex flex-col sm:flex-row gap-3 mb-6">
-        <div className="relative flex-1 max-w-md">
-          <svg className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, marginBottom: 20, alignItems: 'center' }}>
+        <div style={{ position: 'relative', flex: 1, minWidth: 200, maxWidth: 360 }}>
+          <svg style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', color: 'rgba(32,30,29,0.3)' }} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>
           <input
             type="text" placeholder="Search entities..." value={search} onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-3 py-2.5 border border-[#E2E8F0] rounded-lg text-sm focus:ring-2 focus:ring-[#00D4AA] outline-none"
+            style={{ width: '100%', paddingLeft: 32, paddingRight: 10, padding: '9px 10px 9px 32px', border: `2px solid ${C.surface}`, background: '#fff', fontSize: 13, color: C.text, outline: 'none' }}
           />
         </div>
-        <div className="flex gap-2">
+        <div style={{ display: 'flex', gap: 0, border: `2px solid ${C.surface}` }}>
           {['all', 'parent', 'subsidiary'].map((tier) => (
-            <button key={tier} onClick={() => setTierFilter(tier)} className="px-3 py-2 rounded-lg text-sm font-medium transition-colors"
-              style={tierFilter === tier ? { backgroundColor: '#0A1628', color: '#FFFFFF' } : { backgroundColor: '#F1F5F9', color: '#64748B' }}
+            <button key={tier} onClick={() => setTierFilter(tier)}
+              style={{ padding: '8px 14px', border: 'none', fontSize: 12, fontWeight: 700, cursor: 'pointer', background: tierFilter === tier ? C.text : 'transparent', color: tierFilter === tier ? C.bg : 'rgba(32,30,29,0.5)' }}
             >
               {tier === 'all' ? 'All' : tier === 'parent' ? 'Parents' : 'Subsidiaries'}
             </button>
@@ -103,102 +103,98 @@ export default function AdminEntitiesPage() {
         </div>
       </div>
 
-      {/* Corporate Tree View */}
       {parentEntities.length > 0 && tierFilter === 'all' && !search && (
-        <div className="mb-8 space-y-4">
-          <h2 className="font-semibold text-slate-900">Corporate Trees</h2>
-          {parentEntities.map((parent) => {
-            const children = entities.filter((e) => e.parent_entity_id === parent.id);
-            const pss = statusStyles[parent.status] || { bg: '#F1F5F9', text: '#475569' };
-            return (
-              <div key={parent.id} className="bg-white rounded-xl border border-[#E2E8F0] p-5">
-                <div className="flex items-center gap-3 mb-3">
-                  <span className="w-9 h-9 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'rgba(0,82,255,0.1)', color: '#0052FF' }}>
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="2" width="16" height="20" rx="2" /><line x1="8" y1="6" x2="16" y2="6" /><line x1="8" y1="10" x2="16" y2="10" /></svg>
-                  </span>
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <span className="font-semibold text-slate-900">{parent.entity_name}</span>
-                      <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ backgroundColor: tierLabels.parent.bg, color: tierLabels.parent.text }}>Parent</span>
-                      <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ backgroundColor: pss.bg, color: pss.text }}>{parent.status}</span>
+        <div style={{ marginBottom: 28 }}>
+          <h2 style={{ fontWeight: 700, fontSize: 14, marginBottom: 12 }}>Corporate Trees</h2>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            {parentEntities.map((parent) => {
+              const children = entities.filter((e) => e.parent_entity_id === parent.id);
+              const pss = statusStyles[parent.status] || { bg: 'rgba(32,30,29,0.06)', color: 'rgba(32,30,29,0.5)' };
+              return (
+                <div key={parent.id} style={{ background: '#fff', border: `2px solid ${C.surface}`, padding: '16px 18px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: children.length > 0 ? 12 : 0, flexWrap: 'wrap' }}>
+                    <div style={{ width: 32, height: 32, background: C.accentLight, display: 'flex', alignItems: 'center', justifyContent: 'center', color: C.accent }}>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="2" width="16" height="20" rx="0" /><line x1="8" y1="6" x2="16" y2="6" /><line x1="8" y1="10" x2="16" y2="10" /></svg>
                     </div>
-                    <div className="text-xs text-slate-500">{parent.jurisdiction} &middot; {parent.member_type === 'multi_member' ? 'Multi-Member' : 'Single-Member'} &middot; {parent.client_name}</div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+                        <span style={{ fontWeight: 700, fontSize: 13 }}>{parent.entity_name}</span>
+                        <span style={{ fontSize: 9, padding: '2px 6px', fontWeight: 700, background: C.accentLight, color: C.accent, letterSpacing: '0.04em' }}>PARENT</span>
+                        <span style={{ fontSize: 9, padding: '2px 6px', fontWeight: 700, background: pss.bg, color: pss.color, letterSpacing: '0.04em' }}>{parent.status.toUpperCase()}</span>
+                      </div>
+                      <div style={{ fontSize: 11, color: 'rgba(32,30,29,0.4)', marginTop: 2 }}>{parent.jurisdiction} &middot; {parent.member_type === 'multi_member' ? 'Multi-Member' : 'Single-Member'} &middot; {parent.client_name}</div>
+                    </div>
                   </div>
-                </div>
-                {children.length > 0 && (
-                  <div className="ml-8 border-l-2 pl-4 space-y-2" style={{ borderColor: '#00D4AA' }}>
-                    {children.map((child) => {
-                      const css = statusStyles[child.status] || { bg: '#F1F5F9', text: '#475569' };
-                      return (
-                        <div key={child.id} className="flex items-center gap-3 p-3 rounded-lg bg-slate-50">
-                          <span className="w-7 h-7 rounded flex items-center justify-center" style={{ backgroundColor: 'rgba(0,212,170,0.1)', color: '#00D4AA' }}>
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
-                          </span>
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2 flex-wrap">
-                              <span className="font-medium text-sm text-slate-900">{child.entity_name}</span>
-                              <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ backgroundColor: tierLabels.subsidiary.bg, color: tierLabels.subsidiary.text }}>Subsidiary</span>
-                              <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ backgroundColor: css.bg, color: css.text }}>{child.status}</span>
-                              {child.privacy_shield === 1 && (
-                                <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ backgroundColor: '#F3E8FF', color: '#7C3AED' }}>Privacy Shield</span>
-                              )}
+                  {children.length > 0 && (
+                    <div style={{ marginLeft: 24, borderLeft: `2px solid ${C.accent}`, paddingLeft: 14 }}>
+                      {children.map((child) => {
+                        const css = statusStyles[child.status] || { bg: 'rgba(32,30,29,0.06)', color: 'rgba(32,30,29,0.5)' };
+                        return (
+                          <div key={child.id} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 10px', background: C.bg, marginBottom: 4, flexWrap: 'wrap' }}>
+                            <div style={{ width: 26, height: 26, background: '#dcfce7', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#2f9e58' }}>
+                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="0" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
                             </div>
-                            <div className="text-xs text-slate-500">{child.jurisdiction} &middot; Single-Member &middot; Disregarded Entity</div>
+                            <div style={{ flex: 1, minWidth: 0 }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+                                <span style={{ fontWeight: 600, fontSize: 12 }}>{child.entity_name}</span>
+                                <span style={{ fontSize: 9, padding: '2px 6px', fontWeight: 700, background: '#dcfce7', color: '#2f9e58', letterSpacing: '0.04em' }}>SUB</span>
+                                <span style={{ fontSize: 9, padding: '2px 6px', fontWeight: 700, background: css.bg, color: css.color, letterSpacing: '0.04em' }}>{child.status.toUpperCase()}</span>
+                                {child.privacy_shield === 1 && (
+                                  <span style={{ fontSize: 9, padding: '2px 6px', fontWeight: 700, background: C.accentLight, color: C.accent, letterSpacing: '0.04em' }}>SHIELD</span>
+                                )}
+                              </div>
+                              <div style={{ fontSize: 10, color: 'rgba(32,30,29,0.4)' }}>{child.jurisdiction} &middot; Single-Member &middot; Disregarded Entity</div>
+                            </div>
                           </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
-            );
-          })}
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
         </div>
       )}
 
-      {/* Table */}
-      <div className="bg-white rounded-xl border border-[#E2E8F0] overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full">
+      <div style={{ background: '#fff', border: `2px solid ${C.surface}`, overflow: 'hidden' }}>
+        <div style={{ overflowX: 'auto' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12 }}>
             <thead>
-              <tr className="border-b border-slate-100 bg-slate-50">
-                <th className="text-left px-5 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Entity</th>
-                <th className="text-left px-5 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Tier</th>
-                <th className="text-left px-5 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Type</th>
-                <th className="text-left px-5 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Jurisdiction</th>
-                <th className="text-left px-5 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Client</th>
-                <th className="text-left px-5 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Status</th>
-                <th className="text-left px-5 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Privacy</th>
+              <tr style={{ borderBottom: `2px solid ${C.surface}` }}>
+                {['Entity', 'Tier', 'Type', 'Jurisdiction', 'Client', 'Status', 'Privacy'].map(h => (
+                  <th key={h} style={{ textAlign: 'left', padding: '10px 12px', fontSize: 10, fontWeight: 700, color: 'rgba(32,30,29,0.5)', letterSpacing: '0.05em', textTransform: 'uppercase', whiteSpace: 'nowrap' }}>{h}</th>
+                ))}
               </tr>
             </thead>
             <tbody>
               {filtered.map((entity) => {
-                const ss = statusStyles[entity.status] || { bg: '#F1F5F9', text: '#475569' };
-                const tier = tierLabels[entity.tier_type] || { label: entity.tier_type, bg: '#F1F5F9', text: '#475569' };
+                const ss = statusStyles[entity.status] || { bg: 'rgba(32,30,29,0.06)', color: 'rgba(32,30,29,0.5)' };
+                const tier = tierLabels[entity.tier_type] || { label: entity.tier_type, color: 'rgba(32,30,29,0.5)' };
                 return (
-                  <tr key={entity.id} className="border-b border-slate-50 hover:bg-slate-50/50 transition-colors">
-                    <td className="px-5 py-4">
-                      <div className="font-medium text-slate-900 text-sm">{entity.entity_name}</div>
-                      {entity.parent_entity_name && <div className="text-xs text-slate-500">Owned by: {entity.parent_entity_name}</div>}
-                      {entity.ein && <div className="text-xs text-slate-500">EIN: {entity.ein}</div>}
+                  <tr key={entity.id} style={{ borderBottom: `1px solid ${C.surface}` }}>
+                    <td style={{ padding: '10px 12px' }}>
+                      <div style={{ fontWeight: 600, fontSize: 12 }}>{entity.entity_name}</div>
+                      {entity.parent_entity_name && <div style={{ fontSize: 10, color: 'rgba(32,30,29,0.4)' }}>Owned by: {entity.parent_entity_name}</div>}
+                      {entity.ein && <div style={{ fontSize: 10, color: 'rgba(32,30,29,0.4)' }}>EIN: {entity.ein}</div>}
                     </td>
-                    <td className="px-5 py-4">
-                      <span className="text-xs font-medium px-2 py-0.5 rounded-full" style={{ backgroundColor: tier.bg, color: tier.text }}>{tier.label}</span>
+                    <td style={{ padding: '10px 12px' }}>
+                      <span style={{ fontSize: 9, fontWeight: 700, padding: '2px 6px', background: `${tier.color}14`, color: tier.color, letterSpacing: '0.04em' }}>{tier.label.toUpperCase()}</span>
                     </td>
-                    <td className="px-5 py-4 text-sm text-slate-700">{typeLabels[entity.entity_type] || entity.entity_type}</td>
-                    <td className="px-5 py-4 text-sm text-slate-700">{entity.jurisdiction}</td>
-                    <td className="px-5 py-4 text-sm text-slate-700">{entity.client_name}</td>
-                    <td className="px-5 py-4">
-                      <span className="text-xs font-medium px-2.5 py-1 rounded-full" style={{ backgroundColor: ss.bg, color: ss.text }}>{entity.status}</span>
+                    <td style={{ padding: '10px 12px', color: C.ink }}>{typeLabels[entity.entity_type] || entity.entity_type}</td>
+                    <td style={{ padding: '10px 12px', color: C.ink }}>{entity.jurisdiction}</td>
+                    <td style={{ padding: '10px 12px', color: C.ink }}>{entity.client_name}</td>
+                    <td style={{ padding: '10px 12px' }}>
+                      <span style={{ fontSize: 9, fontWeight: 700, padding: '2px 8px', background: ss.bg, color: ss.color, letterSpacing: '0.04em' }}>{entity.status.toUpperCase()}</span>
                     </td>
-                    <td className="px-5 py-4">
+                    <td style={{ padding: '10px 12px' }}>
                       {entity.privacy_shield ? (
-                        <span className="flex items-center gap-1 text-sm" style={{ color: '#00D4AA' }}>
-                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
+                        <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 11, color: C.accent }}>
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="0" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
                           Shielded
                         </span>
                       ) : (
-                        <span className="text-xs text-slate-400">-</span>
+                        <span style={{ fontSize: 11, color: 'rgba(32,30,29,0.3)' }}>—</span>
                       )}
                     </td>
                   </tr>
@@ -206,7 +202,7 @@ export default function AdminEntitiesPage() {
               })}
               {filtered.length === 0 && (
                 <tr>
-                  <td colSpan={7} className="px-5 py-12 text-center text-slate-400">
+                  <td colSpan={7} style={{ padding: '48px 16px', textAlign: 'center', color: 'rgba(32,30,29,0.4)' }}>
                     {entities.length === 0 ? 'No entities created yet.' : 'No matching entities.'}
                   </td>
                 </tr>
