@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
       db.prepare('INSERT INTO app_users (id, full_name, email, password_hash) VALUES (?, ?, ?, ?)').run(id, fullName, String(email).toLowerCase(), hash);
       if (paymentReference) { try { db.prepare('UPDATE app_users SET registration_fee_reference = ? WHERE id = ?').run(paymentReference, id); } catch {} }
       const notifStmt = db.prepare('INSERT OR IGNORE INTO notifications (id, user_id, type, title, message, is_read, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)');
-      notifStmt.run(uuidv4(), id, 'system', 'Welcome to BTE', 'Your BTE account has been created successfully! A $150 registration fee is required to fully activate your account. Submit your payment reference and an administrator will verify and activate your account.', 0, new Date().toISOString());
+      notifStmt.run(uuidv4(), id, 'system', 'Welcome to BTE', 'Your BTE account has been created successfully. Open your dashboard to review the $150 registration payment instructions and submit your transaction hash when ready.', 0, new Date().toISOString());
       if (paymentReference) {
         const txId = uuidv4();
         db.prepare('INSERT INTO user_transactions (id, user_id, type, amount, description, payment_reference, status) VALUES (?, ?, ?, ?, ?, ?, ?)').run(txId, id, 'registration_fee', 150, 'Account registration fee', paymentReference, 'pending');

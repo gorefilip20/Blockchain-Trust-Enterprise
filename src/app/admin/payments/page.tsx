@@ -20,6 +20,8 @@ interface Payment {
   verified_at: string | null;
 }
 
+interface RegistrationUser { id: string; full_name: string; email: string; registration_fee_paid: number; registration_fee_reference: string | null; created_at: string; }
+
 const C = { bg: '#f3f2f2', surface: '#eae9e9', text: '#201e1d', accent: '#6a3df0', accentLight: '#f1ecff', ink: '#2d2b2b' };
 
 const networkStyles: Record<string, { bg: string; color: string; label: string }> = {
@@ -47,10 +49,19 @@ export default function AdminPaymentsPage() {
   const [payments, setPayments] = useState<Payment[]>([]);
   const [verifying, setVerifying] = useState(false);
   const [lastResult, setLastResult] = useState<{ processed: number; verified: number; failed: number } | null>(null);
+  const [registrationUsers, setRegistrationUsers] = useState<RegistrationUser[]>([]);
 
   const loadPayments = useCallback(() => {
+    const token = localStorage.getItem('bte-admin-token');
     fetch('/api/payments').then((r) => r.json()).then(setPayments);
+    fetch('/api/admin/users', { headers: { Authorization: `Bearer ${token}` } }).then((r) => r.ok ? r.json() : null).then((d) => setRegistrationUsers((d?.users || []).filter((u: RegistrationUser) => !u.registration_fee_paid && u.registration_fee_reference)));
   }, []);
+
+  async function approveRegistration(user: RegistrationUser) {
+    const token = localStorage.getItem('bte-admin-token');
+    await fetch('/api/admin/users', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }, body: JSON.stringify({ action: 'approve-registration-fee', userId: user.id, paymentReference: user.registration_fee_reference }) });
+    loadPayments();
+  }
 
   useEffect(() => {
     loadPayments();
@@ -115,6 +126,11 @@ export default function AdminPaymentsPage() {
           </span>
         </div>
       )}
+
+      <section style={{ marginBottom: 28, background: '#fff', border: `2px solid ${C.surface}`, padding: 20 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, marginBottom: 12 }}><div><h2 style={{ fontSize: 15, margin: 0 }}>BTE registration payments</h2><p style={{ margin: '5px 0 0', color: 'rgba(32,30,29,0.5)', fontSize: 11 }}>Review $150 payment references submitted from user dashboards.</p></div><span style={{ color: C.accent, fontWeight: 800, fontSize: 20 }}>{registrationUsers.length}</span></div>
+        <div style={{ overflowX: 'auto' }}><table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12 }}><thead><tr style={{ borderBottom: `2px solid ${C.surface}`, textAlign: 'left' }}>{['User', 'Reference', 'Registered', 'Action'].map(h => <th key={h} style={{ padding: '9px 10px', color: 'rgba(32,30,29,0.5)', fontSize: 10, textTransform: 'uppercase' }}>{h}</th>)}</tr></thead><tbody>{registrationUsers.map(user => <tr key={user.id} style={{ borderBottom: `1px solid ${C.surface}` }}><td style={{ padding: 10 }}><strong>{user.full_name}</strong><div style={{ color: 'rgba(32,30,29,0.5)', fontSize: 10 }}>{user.email}</div></td><td style={{ padding: 10, maxWidth: 260, wordBreak: 'break-all', fontFamily: "'DM Mono', monospace", fontSize: 10 }}>{user.registration_fee_reference}</td><td style={{ padding: 10, color: 'rgba(32,30,29,0.5)' }}>{new Date(user.created_at).toLocaleDateString()}</td><td style={{ padding: 10 }}><button onClick={() => approveRegistration(user)} style={{ background: C.accent, color: '#fff', border: 0, padding: '7px 10px', fontSize: 10, fontWeight: 800, cursor: 'pointer' }}>Approve $150</button></td></tr>)}{registrationUsers.length === 0 && <tr><td colSpan={4} style={{ padding: 24, color: 'rgba(32,30,29,0.45)', textAlign: 'center' }}>No dashboard registration payments awaiting review.</td></tr>}</tbody></table></div>
+      </section>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(155px, 1fr))', gap: 8, marginBottom: 28 }}>
         {[

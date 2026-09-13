@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { BookOpen, Users, TrendingUp, Star, ChevronDown, ChevronUp, Send, Award, BarChart3, Target, Shield, Zap, MessageCircle, FileText, Video, Lock, Copy, Check, Wallet, DollarSign, Eye, X } from 'lucide-react';
+import { BookOpen, Users, TrendingUp, Star, ChevronDown, ChevronUp, Send, Award, BarChart3, Target, Shield, Zap, MessageCircle, FileText, Video, Play, Lock, Copy, Check, Wallet, DollarSign, Eye, X } from 'lucide-react';
 
 interface Strategy {
   id: string; title: string; trader_name: string; category: string; markets: string;
@@ -87,6 +87,30 @@ function CopyButton({ text }: { text: string }) {
   );
 }
 
+const mentorVideoIds: Record<string, string> = { Kane: 'HNuRp9Z1bMs', Brando: 'Nziws-GG3uQ', Ariel: 'Nq-p7Bu1YT0' };
+
+function MentorVideoModal({ mentor, onClose, paid }: { mentor: Mentor; onClose: () => void; paid: boolean }) {
+  const [locked, setLocked] = useState(false);
+  const videoId = mentorVideoIds[mentor.name] || 'HNuRp9Z1bMs';
+  useEffect(() => {
+    if (paid) return;
+    const timer = window.setTimeout(() => setLocked(true), 60_000);
+    return () => window.clearTimeout(timer);
+  }, [paid]);
+  return (
+    <div className="mentor-video-overlay" onClick={onClose}>
+      <div className="mentor-video-modal" onClick={e => e.stopPropagation()}>
+        <button className="pdf-preview-close" onClick={onClose}><X size={18} /></button>
+        <div className="mentor-video-frame">
+          <iframe src={`https://www.youtube-nocookie.com/embed/${videoId}?rel=0`} title={`${mentor.name} strategy video`} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
+          {locked && <div className="mentor-video-paywall"><Lock size={28} /><h3>Your preview has ended</h3><p>Complete the $150 registration payment from your dashboard to continue watching full mentor videos and unlock the complete BTE workspace.</p><a href="/account/dashboard"><Shield size={14} /> Open payment dashboard</a></div>}
+        </div>
+        <div className="mentor-video-caption"><span className="catalog-kicker">VIDEO PLAYBOOK</span><h2>{mentor.specialty}</h2><p>with <strong>{mentor.name}</strong> · {mentor.youtube_channel || 'BTE mentor'}</p></div>
+      </div>
+    </div>
+  );
+}
+
 function PdfPreviewModal({ mentor, onClose, hasAccess }: { mentor: Mentor; onClose: () => void; hasAccess: boolean }) {
   const slug = mentor.guide_pdf?.replace('/guides/', '').replace('.pdf', '') || '';
   const preview = guidePreview[slug];
@@ -158,6 +182,8 @@ export default function MentorshipPage() {
   const [submitting, setSubmitting] = useState(false);
   const [filter, setFilter] = useState('All');
   const [previewMentor, setPreviewMentor] = useState<Mentor | null>(null);
+  const [videoMentor, setVideoMentor] = useState<Mentor | null>(null);
+  const [registrationPaid, setRegistrationPaid] = useState(false);
 
   const hasStudentAccess = studentAccess?.notion_access_enabled === 1;
 
@@ -168,6 +194,7 @@ export default function MentorshipPage() {
       setWallets(d.wallets || []);
     });
     const token = localStorage.getItem('bte-user-token');
+    if (token) fetch('/api/user?section=dashboard', { headers: { Authorization: `Bearer ${token}` } }).then(r => r.ok ? r.json() : null).then(d => setRegistrationPaid(Boolean(d?.profile?.registration_fee_paid))).catch(() => undefined);
     if (token) fetch('/api/mentorship?section=student', { headers: { Authorization: `Bearer ${token}` } }).then(r => r.ok ? r.json() : null).then(d => d && setStudentAccess(d.subscription ? { ...d.subscription, notionUrl: d.notionUrl } : null));
   }, []);
 
@@ -375,6 +402,7 @@ export default function MentorshipPage() {
                     <span><Star size={12} /> {m.rating}/5</span>
                   </div>
                   <div className="mentor-markets"><Target size={12} /> {m.markets}</div>
+                  <button className="mentor-video-btn" onClick={() => setVideoMentor(m)}><Video size={14} /> Watch mentor video <Play size={12} fill="currentColor" /></button>
                   {m.guide_pdf && (
                     <button className="mentor-guide-btn" onClick={() => setPreviewMentor(m)}>
                       <Eye size={14} />
@@ -444,6 +472,7 @@ export default function MentorshipPage() {
       {previewMentor && (
         <PdfPreviewModal mentor={previewMentor} onClose={() => setPreviewMentor(null)} hasAccess={hasStudentAccess} />
       )}
+      {videoMentor && <MentorVideoModal mentor={videoMentor} onClose={() => setVideoMentor(null)} paid={registrationPaid} />}
     </main>
   );
 }
