@@ -707,12 +707,12 @@ function initializeDatabase(db: SqliteDatabase) {
       ('strat-intraday-liquidity', 'Intraday Liquidity Volatility Model', 'JadeCap', 'Day Trading', 'Futures, Forex',
        'A precision-based intraday strategy teaching how to trade liquidity grabs, fair value gaps, and session raids. JadeCap shares a 7-figure playbook focused on institutional liquidity concepts applied to intraday timeframes for futures and forex.',
        '["Intraday liquidity grabs","Fair value gap entries","Session raid setups","Institutional flow analysis","Volatility-based position sizing","Precision entry timing"]',
-       'Advanced', 'https://www.chartfanatics.com/playbook/intraday-liquidity-volatility-model');
+       'Advanced', 'https://www.chartfanatics.com/playbook/intraday-liquidity-volatility-model'),
 
-      ('strat-trencher-memecoin', 'Narrative + Liquidity Memecoin Playbook', '@TrencherMatt', 'Memecoin', 'Crypto', 'A risk-first framework for evaluating memecoin narratives, liquidity, holder concentration, and invalidation levels before entering a volatile token.', '["Narrative strength","Liquidity checks","Holder concentration","Entry invalidation","Position sizing","Exit planning"]', 'Advanced', 'https://www.youtube.com/@TrencherMatt'),
-      ('strat-orangie-memecoin', 'On-Chain Memecoin Research', '@OrangieWEB3', 'Memecoin', 'Crypto', 'An educational on-chain research workflow for screening memecoins, checking liquidity and wallets, and separating actionable information from hype.', '["On-chain screening","Liquidity verification","Wallet behavior","Scam-risk checks","Catalyst mapping","Risk controls"]', 'Advanced', 'https://www.youtube.com/@OrangieWEB3'),
-      ('strat-cryptogorilla-memecoin', 'Memecoin Momentum & Risk', '@CryptoGorilla', 'Memecoin', 'Crypto', 'A momentum-focused memecoin playbook built around market structure, volume confirmation, disciplined entries, and predefined risk.', '["Momentum structure","Volume confirmation","Entry timing","Stop placement","Volatility awareness","Trade journaling"]', 'Advanced', 'https://www.youtube.com/@CryptoGorilla'),
-      ('strat-vladify-memecoin', 'Memecoin Execution Playbook', '@itsvladify', 'Memecoin', 'Crypto', 'A practical framework for planning memecoin trades with liquidity awareness, execution discipline, and a clear plan for invalidation and exits.', '["Trade planning","Liquidity awareness","Execution discipline","Invalidation","Profit-taking","Capital preservation"]', 'Advanced', 'https://www.youtube.com/@itsvladify');
+      ('strat-trencher-memecoin', 'Narrative + Liquidity Memecoin Playbook', '@TrencherMatt', 'Memecoin', 'Crypto', 'A risk-first framework for evaluating memecoin narratives, liquidity, holder concentration, and invalidation levels before entering a volatile token.', '["Narrative strength","Liquidity checks","Holder concentration","Entry invalidation","Position sizing","Exit planning"]', 'Advanced', 'https://www.youtube.com/watch?v=u3dvYR9JR6I'),
+      ('strat-orangie-memecoin', 'On-Chain Memecoin Research', '@OrangieWEB3', 'Memecoin', 'Crypto', 'An educational on-chain research workflow for screening memecoins, checking liquidity and wallets, and separating actionable information from hype.', '["On-chain screening","Liquidity verification","Wallet behavior","Scam-risk checks","Catalyst mapping","Risk controls"]', 'Advanced', 'https://www.youtube.com/watch?v=dVxtJGybGfI'),
+      ('strat-cryptogorilla-memecoin', 'Memecoin Momentum & Risk', '@CryptoGorilla', 'Memecoin', 'Crypto', 'A momentum-focused memecoin playbook built around market structure, volume confirmation, disciplined entries, and predefined risk.', '["Momentum structure","Volume confirmation","Entry timing","Stop placement","Volatility awareness","Trade journaling"]', 'Advanced', 'https://www.youtube.com/watch?v=3YRJ4Jblzvg'),
+      ('strat-vladify-memecoin', 'Memecoin Execution Playbook', '@itsvladify', 'Memecoin', 'Crypto', 'A practical framework for planning memecoin trades with liquidity awareness, execution discipline, and a clear plan for invalidation and exits.', '["Trade planning","Liquidity awareness","Execution discipline","Invalidation","Profit-taking","Capital preservation"]', 'Advanced', 'https://www.youtube.com/watch?v=85qG_F9X0w');
 
     -- Seed demo mentors
     INSERT OR IGNORE INTO mentors (id, name, email, specialty, bio, experience_years, markets, fee_paid, telegram_handle, status, total_students, rating, youtube_channel, guide_pdf, youtube_video_id)
@@ -756,6 +756,22 @@ function initializeDatabase(db: SqliteDatabase) {
       ('notif-demo-4', 'demo-user', 'document_ready', 'Operating Agreement ready', 'Your Operating Agreement document has been generated and is available for download.', 1, datetime('now', '-1 day')),
       ('notif-demo-5', 'demo-user', 'payment_confirmed', 'Payment confirmed', 'Your $499.00 formation package payment via BEP20 has been confirmed on-chain.', 1, datetime('now', '-2 days')),
       ('notif-demo-6', 'demo-user', 'system', 'Security review complete', 'Your account security review has been completed. No issues found.', 1, datetime('now', '-3 days'));
+  `);
+
+  // Backfill memecoin strategies and creator video IDs for existing installations.
+  db.exec(`
+    INSERT OR IGNORE INTO trading_strategies (id, title, trader_name, category, markets, description, key_concepts, difficulty, source_url) VALUES
+      ('strat-trencher-memecoin', 'Narrative + Liquidity Memecoin Playbook', '@TrencherMatt', 'Memecoin', 'Crypto', 'A risk-first framework for evaluating memecoin narratives, liquidity, holder concentration, and invalidation levels before entering a volatile token.', '["Narrative strength","Liquidity checks","Holder concentration","Entry invalidation","Position sizing","Exit planning"]', 'Advanced', 'https://www.youtube.com/watch?v=u3dvYR9JR6I'),
+      ('strat-orangie-memecoin', 'On-Chain Memecoin Research', '@OrangieWEB3', 'Memecoin', 'Crypto', 'An educational on-chain research workflow for screening memecoins, checking liquidity and wallets, and separating actionable information from hype.', '["On-chain screening","Liquidity verification","Wallet behavior","Scam-risk checks","Catalyst mapping","Risk controls"]', 'Advanced', 'https://www.youtube.com/watch?v=dVxtJGybGfI'),
+      ('strat-cryptogorilla-memecoin', 'Memecoin Momentum & Risk', '@CryptoGorilla', 'Memecoin', 'Crypto', 'A momentum-focused memecoin playbook built around market structure, volume confirmation, disciplined entries, and predefined risk.', '["Momentum structure","Volume confirmation","Entry timing","Stop placement","Volatility awareness","Trade journaling"]', 'Advanced', 'https://www.youtube.com/watch?v=3YRJ4Jblzvg'),
+      ('strat-vladify-memecoin', 'Memecoin Execution Playbook', '@itsvladify', 'Memecoin', 'Crypto', 'A practical framework for planning memecoin trades with liquidity awareness, execution discipline, and a clear plan for invalidation and exits.', '["Trade planning","Liquidity awareness","Execution discipline","Invalidation","Profit-taking","Capital preservation"]', 'Advanced', 'https://www.youtube.com/watch?v=85qG_F9X0w');
+    UPDATE mentors SET youtube_video_id = CASE name
+      WHEN '@TrencherMatt' THEN 'u3dvYR9JR6I'
+      WHEN '@OrangieWEB3' THEN 'dVxtJGybGfI'
+      WHEN '@CryptoGorilla' THEN '3YRJ4Jblzvg'
+      WHEN '@itsvladify' THEN '85qG_F9X0w'
+      ELSE youtube_video_id END
+      WHERE name IN ('@TrencherMatt','@OrangieWEB3','@CryptoGorilla','@itsvladify');
   `);
 }
 
