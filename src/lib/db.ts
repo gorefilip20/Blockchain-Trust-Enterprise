@@ -28,6 +28,10 @@ function initializeDatabase(db: SqliteDatabase) {
   const safeAlter = (sql: string) => { try { db.exec(sql); } catch {} };
   safeAlter('ALTER TABLE app_users ADD COLUMN registration_fee_paid INTEGER DEFAULT 0');
   safeAlter('ALTER TABLE app_users ADD COLUMN registration_fee_reference TEXT');
+  safeAlter('ALTER TABLE app_users ADD COLUMN email_verified INTEGER DEFAULT 0');
+  safeAlter('ALTER TABLE app_users ADD COLUMN verification_token TEXT');
+  safeAlter('ALTER TABLE app_users ADD COLUMN reset_token TEXT');
+  safeAlter('ALTER TABLE app_users ADD COLUMN reset_expires_at TEXT');
   safeAlter('ALTER TABLE mentors ADD COLUMN fee_amount_override REAL');
   safeAlter('ALTER TABLE mentors ADD COLUMN youtube_channel TEXT');
   safeAlter('ALTER TABLE mentors ADD COLUMN guide_pdf TEXT');

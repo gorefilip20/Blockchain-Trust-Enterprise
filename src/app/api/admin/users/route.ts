@@ -22,7 +22,7 @@ export async function GET(req: NextRequest) {
   const userId = req.nextUrl.searchParams.get('userId');
 
   if (userId) {
-    const user = db.prepare('SELECT id, full_name, email, status, registration_fee_paid, registration_fee_reference, created_at, last_login_at FROM app_users WHERE id = ?').get(userId);
+    const user = db.prepare('SELECT id, full_name, email, status, email_verified, registration_fee_paid, registration_fee_reference, created_at, last_login_at FROM app_users WHERE id = ?').get(userId);
     if (!user) return NextResponse.json({ error: 'User not found.' }, { status: 404 });
     const balance = db.prepare('SELECT * FROM user_balances WHERE user_id = ?').get(userId);
     const transactions = db.prepare('SELECT * FROM user_transactions WHERE user_id = ? ORDER BY created_at DESC LIMIT 50').all(userId);
@@ -37,7 +37,7 @@ export async function GET(req: NextRequest) {
   }
 
   const users = db.prepare(`
-    SELECT u.id, u.full_name, u.email, u.status, u.registration_fee_paid, u.created_at, u.last_login_at,
+    SELECT u.id, u.full_name, u.email, u.status, u.email_verified, u.registration_fee_paid, u.registration_fee_reference, u.created_at, u.last_login_at,
       COALESCE(b.available_balance, 0) as balance
     FROM app_users u
     LEFT JOIN user_balances b ON b.user_id = u.id

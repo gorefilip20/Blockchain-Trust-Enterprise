@@ -5,6 +5,15 @@ import jwt from 'jsonwebtoken';
 import { v4 as uuidv4 } from 'uuid';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'bte-platform-secret-key-2024';
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+
+async function sendEmail(to: string, subject: string, html: string) {
+  if (!process.env.RESEND_API_KEY) return false;
+  try {
+    const response = await fetch('https://api.resend.com/emails', { method: 'POST', headers: { Authorization: `Bearer ${process.env.RESEND_API_KEY}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ from: process.env.RESEND_FROM || 'Blockchain Trust <onboarding@resend.dev>', to: [to], subject, html }) });
+    return response.ok;
+  } catch { return false; }
+}
 function admin(req: NextRequest) {
   const header = req.headers.get('authorization');
   if (!header?.startsWith('Bearer ')) return false;
@@ -27,7 +36,8 @@ export async function POST(req: NextRequest) {
       if (existing) return NextResponse.json({ error: 'An account with this email already exists.' }, { status: 409 });
       const id = uuidv4();
       const hash = bcrypt.hashSync(password, 10);
-      db.prepare('INSERT INTO app_users (id, full_name, email, password_hash) VALUES (?, ?, ?, ?)').run(id, fullName, String(email).toLowerCase(), hash);
+      const verificationToken = uuidv4();
+      db.prepare('INSERT INTO app_users (id, full_name, email, password_hash, verification_token) VALUES (?, ?, ?, ?, ?)').run(id, fullName, String(email).toLowerCase(), hash, verificationToken);
       if (paymentReference) { try { db.prepare('UPDATE app_users SET registration_fee_reference = ? WHERE id = ?').run(paymentReference, id); } catch {} }
       const notifStmt = db.prepare('INSERT OR IGNORE INTO notifications (id, user_id, type, title, message, is_read, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)');
       notifStmt.run(uuidv4(), id, 'system', 'Welcome to BTE', 'Your BTE account has been created successfully. Open your dashboard to review the $150 registration payment instructions and submit your transaction hash when ready.', 0, new Date().toISOString());
@@ -36,7 +46,31 @@ export async function POST(req: NextRequest) {
         db.prepare('INSERT INTO user_transactions (id, user_id, type, amount, description, payment_reference, status) VALUES (?, ?, ?, ?, ?, ?, ?)').run(txId, id, 'registration_fee', 150, 'Account registration fee', paymentReference, 'pending');
       }
       const token = jwt.sign({ userId: id, email: String(email).toLowerCase(), name: fullName }, JWT_SECRET, { expiresIn: '24h' });
-      return NextResponse.json({ success: true, token, user: { id, fullName, email: String(email).toLowerCase() }, registrationFee: { amount: 150, status: paymentReference ? 'pending_verification' : 'awaiting_payment' } }, { status: 201 });
+      const verifyUrl = `${APP_URL}/account?verify=${verificationToken}`;
+      const emailSent = await sendEmail(String(email).toLowerCase(), 'Verify your BTE email', `<p>Welcome to Blockchain Trust Enterprise, ${fullName}.</p><p>Confirm your email address to keep your account details current.</p><p><a href="${verifyUrl}">Verify my email</a></p>`);
+      return NextResponse.json({ success: true, token, emailSent, user: { id, fullName, email: String(email).toLowerCase() }, registrationFee: { amount: 150, status: 'awaiting_payment' } }, { status: 201 });
+    }
+    if (body.action === 'verify-email') {
+      const account = db.prepare('SELECT id FROM app_users WHERE verification_token = ?').get(body.token) as { id: string } | undefined;
+      if (!account) return NextResponse.json({ error: 'This verification link is invalid or has already been used.' }, { status: 400 });
+      db.prepare('UPDATE app_users SET email_verified = 1, verification_token = NULL WHERE id = ?').run(account.id);
+      return NextResponse.json({ success: true });
+    }
+    if (body.action === 'forgot-password') {
+      const email = String(body.email || '').toLowerCase();
+      const account = db.prepare('SELECT id, full_name, email FROM app_users WHERE email = ?').get(email) as { id: string; full_name: string; email: string } | undefined;
+      if (account) {
+        const token = uuidv4(); db.prepare("UPDATE app_users SET reset_token = ?, reset_expires_at = datetime('now', '+1 hour') WHERE id = ?").run(token, account.id);
+        await sendEmail(account.email, 'Reset your BTE password', `<p>Hi ${account.full_name},</p><p><a href="${APP_URL}/account?reset=${token}">Reset your password</a></p><p>This link expires in one hour.</p>`);
+      }
+      return NextResponse.json({ success: true, message: 'If an account exists for that email, a reset link has been sent.' });
+    }
+    if (body.action === 'reset-password') {
+      if (!body.token || !body.password || String(body.password).length < 8) return NextResponse.json({ error: 'A valid reset link and password of at least 8 characters are required.' }, { status: 400 });
+      const account = db.prepare("SELECT id FROM app_users WHERE reset_token = ? AND reset_expires_at > datetime('now')").get(body.token) as { id: string } | undefined;
+      if (!account) return NextResponse.json({ error: 'This reset link is invalid or expired.' }, { status: 400 });
+      db.prepare('UPDATE app_users SET password_hash = ?, reset_token = NULL, reset_expires_at = NULL WHERE id = ?').run(bcrypt.hashSync(body.password, 10), account.id);
+      return NextResponse.json({ success: true });
     }
     if (body.action === 'login') {
       const { email, password } = body;

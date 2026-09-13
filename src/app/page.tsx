@@ -16,8 +16,9 @@ const fallbackStrategies: Strategy[] = [
   { id: 'psychology', title: 'Trading Psychology Masterclass', trader_name: 'Jared Tendler', category: 'Mindset', markets: 'All Markets', description: 'A grounded approach to consistency, emotional control, and building habits that survive real market pressure.', difficulty: 'Beginner', key_concepts: '[]' },
 ];
 
-const categories = ['All', 'Stocks', 'Options', 'Futures', 'Forex', 'Crypto', 'Swing Trading', 'Day Trading', 'Mindset'];
+const categories = ['All', 'Stocks', 'Options', 'Futures', 'Forex', 'Crypto', 'Memecoin', 'Swing Trading', 'Day Trading', 'Mindset'];
 const coverColors = ['cover-lilac', 'cover-plum', 'cover-sky', 'cover-rose', 'cover-lavender', 'cover-sand'];
+const strategyVideoIds: Record<string, string> = { 'Ariel Hernandez': 'Nq-p7Bu1YT0', 'Brando Elite': 'Nziws-GG3uQ', 'CryptoBanter': 'HNuRp9Z1bMs', 'Marco Trades': 'HNuRp9Z1bMs', 'Umar Ashraf': 'Nq-p7Bu1YT0' };
 
 function initials(name: string) { return name.split(' ').map((part) => part[0]).join('').slice(0, 2).toUpperCase(); }
 
@@ -67,7 +68,7 @@ export default function HomePage() {
       <section className="catalog-cta"><div><p className="catalog-kicker">READY WHEN YOU ARE</p><h2>Start with curiosity.<br /><em>Build with intention.</em></h2></div><Link href="/account" className="catalog-primary large">Create your free account <ArrowRight size={17} /></Link></section>
       <footer className="catalog-footer"><Link href="/" className="catalog-logo"><span className="catalog-logo-mark">B</span><span>Blockchain Trust <small>Enterprise</small></span></Link><span>Education first. Always.</span><div><Link href="/mentorship">Mentorship</Link><Link href="/account">Account</Link><Link href="/contact">Contact</Link></div></footer>
 
-      {selected && <div className="strategy-modal-backdrop" onClick={() => setSelected(null)}><div className="strategy-modal" onClick={(e) => e.stopPropagation()}><button className="modal-close" onClick={() => setSelected(null)}><X size={19} /></button><div className="modal-video"><Play size={26} fill="currentColor" /><span>Strategy preview</span></div><p className="catalog-kicker">{selected.category} · {selected.markets}</p><h2>{selected.title}</h2><p className="modal-byline">with <strong>{selected.trader_name}</strong></p><p>{selected.description}</p><div className="modal-actions"><Link href="/mentorship" className="catalog-primary">Open full playbook <ArrowRight size={15} /></Link><Link href="/account" className="catalog-secondary">Create account</Link></div></div></div>}
+      {selected && <div className="strategy-modal-backdrop" onClick={() => setSelected(null)}><div className="strategy-modal" onClick={(e) => e.stopPropagation()}><button className="modal-close" onClick={() => setSelected(null)}><X size={19} /></button><div className="modal-video modal-video-embed"><iframe src={`https://www.youtube-nocookie.com/embed/${strategyVideoIds[selected.trader_name] || 'HNuRp9Z1bMs'}?rel=0`} title={`${selected.title} video`} allow="accelerometer; autoplay; encrypted-media; picture-in-picture" allowFullScreen /></div><p className="catalog-kicker">{selected.category} · {selected.markets}</p><h2>{selected.title}</h2><p className="modal-byline">with <strong>{selected.trader_name}</strong></p><p>{selected.description}</p><div className="modal-actions"><Link href="/mentorship" className="catalog-primary">Open full playbook <ArrowRight size={15} /></Link><Link href="/account" className="catalog-secondary">Create account</Link></div></div></div>}
     </main>
   );
 }

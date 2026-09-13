@@ -25,6 +25,8 @@ import {
   Wallet,
   Zap,
   AlertCircle,
+  Menu,
+  X,
 } from 'lucide-react';
 import NotificationPanel from '@/components/NotificationPanel';
 import ThemeToggle from '@/components/ThemeToggle';
@@ -258,6 +260,7 @@ export default function DashboardPage() {
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeSection, setActiveSection] = useState('overview');
+  const [menuOpen, setMenuOpen] = useState(false);
   const [workspaceNotice, setWorkspaceNotice] = useState('');
   const router = useRouter();
   const { t, locale, setLocale } = useTranslation();
@@ -326,7 +329,8 @@ export default function DashboardPage() {
       <main style={{ minHeight: '100vh', fontFamily: FONT, color: C.text, background: C.bg }}>
         {/* Nav */}
         <nav className="bte-dash-topnav" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 48px', height: 64, borderBottom: `2px solid ${C.surface}` }}>
-          <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', color: C.text }}>
+          <button className="bte-dashboard-menu-button" onClick={() => setMenuOpen(!menuOpen)} aria-label="Open dashboard menu">{menuOpen ? <X size={21} /> : <Menu size={21} />}</button>
+          <Link href="/account/dashboard" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', color: C.text }}>
             <LogoMark />
             <div style={{ lineHeight: 1.15 }}>
               <div style={{ fontWeight: 800, fontSize: 13, letterSpacing: '0.06em', textTransform: 'uppercase' }}>Blockchain Trust</div>
@@ -347,6 +351,7 @@ export default function DashboardPage() {
             <button onClick={handleSignOut} style={{ padding: '6px 12px', border: `2px solid ${C.surface}`, background: 'transparent', fontSize: 11, fontWeight: 600, fontFamily: FONT, color: 'rgba(32,30,29,0.6)', cursor: 'pointer' }}>Sign out</button>
           </div>
         </nav>
+        {menuOpen && <div className="bte-dashboard-menu-panel"><div className="bte-dashboard-menu-title">Workspace</div>{sectionTabs.map(tab => <button key={tab.key} onClick={() => { setActiveSection(tab.key); setMenuOpen(false); }}><tab.icon size={15} /> {tab.label}</button>)}<Link href="/mentorship"><UsersRound size={15} /> Mentors & videos</Link><button onClick={handleSignOut}><ShieldCheck size={15} /> Sign out</button></div>}
 
         {/* Hero */}
         <section className="bte-dash-hero" style={{ padding: '32px 48px 24px', maxWidth: 1200, margin: '0 auto' }}>
