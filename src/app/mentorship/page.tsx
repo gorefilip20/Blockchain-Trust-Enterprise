@@ -90,7 +90,7 @@ function CopyButton({ text }: { text: string }) {
 const mentorVideoIds: Record<string, string> = {
   'Trader Mayne': 'OB5kMepCTTQ', Ariel: 'Uug7ZKpdkVE', 'Chart Fanatics': 'yW6c0K8uGvw',
   'The Traveling Trader': 'ZXqn2l0RMKg', 'NBB Trader': 'NKtBB8VLPi0', Brando: 'lcBNWiCn1Uo', JadeCap: 'Wqzz0sklMMA',
-  '@TrencherMatt': '3YRJ4Jblzvg', '@OrangieWEB3': 'snLPN-KKHrg', '@CryptoGorilla': '6HrZ_uQ-sBg', '@itsvladify': '85qG_F9X0w'
+  '@TrencherMatt': 'u3dvYR9JR6I', '@OrangieWEB3': 'dVxtJGybGfI', '@CryptoGorilla': '3YRJ4Jblzvg', '@itsvladify': '85qG_F9X0w'
 };
 
 function MentorVideoModal({ mentor, onClose, paid }: { mentor: Mentor; onClose: () => void; paid: boolean }) {
@@ -110,7 +110,7 @@ function MentorVideoModal({ mentor, onClose, paid }: { mentor: Mentor; onClose: 
           {videoId && <iframe src={`https://www.youtube-nocookie.com/embed/${videoId}?rel=0`} title={`${mentor.name} strategy video`} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />}
           {locked && <div className="mentor-video-paywall"><Lock size={28} /><h3>Your preview has ended</h3><p>Complete the $150 registration payment from your dashboard to continue watching full mentor videos and unlock the complete BTE workspace.</p><a href="/account/dashboard"><Shield size={14} /> Open payment dashboard</a></div>}
         </div>
-        <div className="mentor-video-caption"><span className="catalog-kicker">VIDEO PLAYBOOK</span><h2>{mentor.specialty}</h2><p>with <strong>{mentor.name}</strong> · {mentor.youtube_channel || 'BTE mentor'}</p></div>
+        <div className="mentor-video-caption"><span className="catalog-kicker">VIDEO PLAYBOOK · PLAYS HERE</span><h2>{mentor.specialty}</h2><p>with <strong>{mentor.name}</strong> · {mentor.youtube_channel || 'BTE mentor'}</p></div>
       </div>
     </div>
   );
@@ -186,6 +186,7 @@ export default function MentorshipPage() {
   const [result, setResult] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [filter, setFilter] = useState('All');
+  const [search, setSearch] = useState('');
   const [previewMentor, setPreviewMentor] = useState<Mentor | null>(null);
   const [videoMentor, setVideoMentor] = useState<Mentor | null>(null);
   const [registrationPaid, setRegistrationPaid] = useState(false);
@@ -204,7 +205,12 @@ export default function MentorshipPage() {
   }, []);
 
   const categories = ['All', ...Array.from(new Set(strategies.map(s => s.category)))];
-  const filtered = filter === 'All' ? strategies : strategies.filter(s => s.category === filter);
+  const normalizedSearch = search.trim().toLowerCase();
+  const filtered = strategies.filter(s => {
+    const matchesFilter = filter === 'All' || s.category === filter;
+    const haystack = `${s.title} ${s.trader_name} ${s.description} ${s.markets}`.toLowerCase();
+    return matchesFilter && (!normalizedSearch || haystack.includes(normalizedSearch));
+  });
 
   async function handleStudentRegistration(e: React.FormEvent) {
     e.preventDefault(); setStudentResult(null);
@@ -272,6 +278,9 @@ export default function MentorshipPage() {
 
         {tab === 'strategies' && (
           <section className="mentorship-section">
+            <div className="strategy-search-wrap">
+              <input className="strategy-search" value={search} onChange={e => setSearch(e.target.value)} placeholder="Search strategies or mentors" aria-label="Search strategies or mentors" />
+            </div>
             <div className="strategy-filters">
               {categories.map(c => (
                 <button key={c} className={filter === c ? 'sf-active' : ''} onClick={() => setFilter(c)}>{c}</button>
