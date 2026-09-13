@@ -138,7 +138,7 @@ export default function AdminLoginPage() {
               {/* top row */}
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 28 }}>
                 <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: 12, letterSpacing: '0.06em', textTransform: 'uppercase', fontWeight: 600, color: COLORS.text }}>
-                  <i style={{ display: 'inline-block', width: 8, height: 8, borderRadius: '50%', background: '#2f9e58' }} />
+                  <i style={{ display: 'inline-block', width: 8, height: 8, borderRadius: '50%', background: '#6d43d8' }} />
                   Secure sign in
                 </span>
                 <span style={{ fontSize: 12, fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace', letterSpacing: '0.04em', color: 'rgba(32,30,29,0.5)' }}>

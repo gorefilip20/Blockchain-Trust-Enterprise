@@ -572,7 +572,7 @@ export default function AdminOnboardingPage() {
                     onChange={(e) => setSubsidiaryName(e.target.value)}
                     onFocus={updateEntityNames}
                     placeholder={`${firstName || 'Name'} ${lastName || ''} Holdings LLC`}
-                    className="w-full bg-transparent text-white text-sm px-0 py-1 border-b border-emerald-900 focus:border-emerald-400 outline-none placeholder:text-slate-600"
+                    className="w-full bg-transparent text-white text-sm px-0 py-1 border-b border-purple-900 focus:border-purple-400 outline-none placeholder:text-slate-600"
                   />
                   <p className="text-xs mt-2" style={{ color: '#64748B' }}>Holds multi-sig wallets, exchange KYB accounts, anonymous filing</p>
                 </div>

@@ -55,7 +55,7 @@ const GROWTH_DATA = [
 
 // Simulated revenue breakdown
 const REVENUE_SEGMENTS = [
-  { label: 'Formation Packages', value: 62, color: '#0fa987' },
+  { label: 'Formation Packages', value: 62, color: '#6d43d8' },
   { label: 'Annual Compliance', value: 18, color: '#3b82f6' },
   { label: 'Treasury Services', value: 12, color: '#f59e0b' },
   { label: 'Consulting', value: 8, color: '#8b5cf6' },
@@ -144,7 +144,7 @@ export default function AnalyticsPage() {
           { icon: <BarChart3 size={18} />, label: 'Total Strategies', value: kpis.totalStrategies, color: '#8b5cf6' },
           { icon: <MessageCircle size={18} />, label: 'Open Messages', value: kpis.openMessages, color: '#f59e0b' },
           { icon: <Building2 size={18} />, label: 'Active Entities', value: kpis.activeEntities, color: '#10b981' },
-          { icon: <DollarSign size={18} />, label: 'Revenue', value: `$${(kpis.revenue || 24500).toLocaleString()}`, color: '#0fa987' },
+          { icon: <DollarSign size={18} />, label: 'Revenue', value: `$${(kpis.revenue || 24500).toLocaleString()}`, color: '#6d43d8' },
           { icon: <TrendingUp size={18} />, label: 'Conversion', value: `${kpis.conversionRate || 34}%`, color: '#ec4899' },
         ].map((kpi, i) => (
           <div key={i} className="admin-kpi" style={{ padding: '16px' }}>
@@ -177,24 +177,24 @@ export default function AnalyticsPage() {
               const x = i * (chartW / GROWTH_DATA.length) + 20;
               return (
                 <g key={i}>
-                  <rect x={x} y={chartH - 20 - barH} width={barW} height={barH} rx="4" fill="#0fa987" opacity="0.2" />
+                  <rect x={x} y={chartH - 20 - barH} width={barW} height={barH} rx="4" fill="#6d43d8" opacity="0.2" />
                   <rect x={x} y={chartH - 20 - barH} width={barW} height={barH} rx="4" fill="url(#barGrad)" />
                   <text x={x + barW / 2} y={chartH + 10} textAnchor="middle" fontSize="10" fill="#8aa0ac">{d.month}</text>
-                  <text x={x + barW / 2} y={chartH - 26 - barH} textAnchor="middle" fontSize="9" fill="#0fa987" fontWeight="600">{d.users}</text>
+                  <text x={x + barW / 2} y={chartH - 26 - barH} textAnchor="middle" fontSize="9" fill="#6d43d8" fontWeight="600">{d.users}</text>
                 </g>
               );
             })}
             {/* Trend line */}
-            <polyline points={userPoints} fill="none" stroke="#078d73" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+            <polyline points={userPoints} fill="none" stroke="#6d43d8" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
             {GROWTH_DATA.map((d, i) => {
               const x = (i / (GROWTH_DATA.length - 1)) * (chartW - 40) + 20;
               const y = chartH - 20 - ((d.users / maxUsers) * (chartH - 40));
-              return <circle key={i} cx={x} cy={y} r="3.5" fill="#fff" stroke="#078d73" strokeWidth="2" />;
+              return <circle key={i} cx={x} cy={y} r="3.5" fill="#fff" stroke="#6d43d8" strokeWidth="2" />;
             })}
             <defs>
               <linearGradient id="barGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#0fa987" stopOpacity="0.4" />
-                <stop offset="100%" stopColor="#0fa987" stopOpacity="0.1" />
+                <stop offset="0%" stopColor="#6d43d8" stopOpacity="0.4" />
+                <stop offset="100%" stopColor="#6d43d8" stopOpacity="0.1" />
               </linearGradient>
             </defs>
           </svg>

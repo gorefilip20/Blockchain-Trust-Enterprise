@@ -177,7 +177,7 @@ export default function LeaderboardPage() {
                     <td className={is30dPositive ? 'admin-positive' : 'admin-negative'}>{entry.return_30d}</td>
                     <td className={is90dPositive ? 'admin-positive' : 'admin-negative'}>{entry.return_90d}</td>
                     <td className="admin-negative">{entry.max_drawdown}</td>
-                    <td style={{ color: entry.sharpe_ratio >= 1 ? '#078d73' : '#456271' }}>{entry.sharpe_ratio}</td>
+                    <td style={{ color: entry.sharpe_ratio >= 1 ? '#6d43d8' : '#456271' }}>{entry.sharpe_ratio}</td>
                     <td>{entry.followers.toLocaleString()}</td>
                     <td>${(entry.aum / 1_000_000).toFixed(1)}M</td>
                   </tr>

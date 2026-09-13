@@ -31,7 +31,7 @@ export default function Testimonials() {
             <div className="testimonial-card" key={t.name}>
               <div className="testimonial-stars">
                 {Array.from({ length: 5 }).map((_, i) => (
-                  <Star key={i} size={13} fill={i < t.rating ? '#0fa987' : 'none'} color={i < t.rating ? '#0fa987' : '#bdd0d8'} />
+                  <Star key={i} size={13} fill={i < t.rating ? '#6d43d8' : 'none'} color={i < t.rating ? '#6d43d8' : '#bdd0d8'} />
                 ))}
               </div>
               <p className="testimonial-quote">&ldquo;{t.quote}&rdquo;</p>

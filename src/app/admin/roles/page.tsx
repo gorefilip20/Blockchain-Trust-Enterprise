@@ -330,7 +330,7 @@ export default function RolesPage() {
                       <small>{admin.id}</small>
                     </td>
                     <td>
-                      <span style={{ padding: '3px 8px', borderRadius: '5px', fontSize: '9px', fontWeight: 600, background: '#0fa98718', color: '#0fa987' }}>
+                      <span style={{ padding: '3px 8px', borderRadius: '5px', fontSize: '9px', fontWeight: 600, background: '#6d43d818', color: '#6d43d8' }}>
                         {admin.legacy_role}
                       </span>
                     </td>
@@ -358,7 +358,7 @@ export default function RolesPage() {
                               onClick={() => isAssigned ? unassignRole(admin.id, role.id) : assignRole(admin.id, role.id)}
                               style={{
                                 fontSize: '9px', padding: '4px 7px',
-                                color: isAssigned ? '#ef4444' : '#078d73',
+                                color: isAssigned ? '#ef4444' : '#6d43d8',
                                 background: isAssigned ? '#fef2f2' : '#effaf7',
                                 borderColor: isAssigned ? '#fecaca' : '#c4e9df',
                               }}

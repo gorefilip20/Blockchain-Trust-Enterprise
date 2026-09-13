@@ -25,10 +25,10 @@ interface Stats {
 const C = { bg: '#f3f2f2', surface: '#eae9e9', text: '#201e1d', accent: '#6a3df0', accentLight: '#f1ecff', ink: '#2d2b2b' };
 
 const statusColors: Record<string, string> = {
-  pending: '#e0a800', approved: '#3b82f6', active: '#2f9e58', suspended: '#ef4444', rejected: '#6b7280',
+  pending: '#e0a800', approved: '#3b82f6', active: '#6d43d8', suspended: '#ef4444', rejected: '#6b7280',
 };
 
-const difficultyColor: Record<string, string> = { Beginner: '#3b82f6', Intermediate: '#2f9e58', Advanced: '#e0a800' };
+const difficultyColor: Record<string, string> = { Beginner: '#3b82f6', Intermediate: '#6d43d8', Advanced: '#e0a800' };
 
 export default function AdminMentorshipPage() {
   const [mentors, setMentors] = useState<Mentor[]>([]);
@@ -91,10 +91,10 @@ export default function AdminMentorshipPage() {
       {stats && (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(155px, 1fr))', gap: 8, marginBottom: 24 }}>
           <SC icon={<Users size={18} />} label="Total Mentors" value={String(stats.total_mentors)} color="#3b82f6" />
-          <SC icon={<CheckCircle2 size={18} />} label="Active" value={String(stats.active_mentors)} color="#2f9e58" />
+          <SC icon={<CheckCircle2 size={18} />} label="Active" value={String(stats.active_mentors)} color="#6d43d8" />
           <SC icon={<Clock size={18} />} label="Pending" value={String(stats.pending_mentors)} color="#e0a800" />
           <SC icon={<DollarSign size={18} />} label="Fees Collected" value={`$${(stats.total_fees_collected || 0).toLocaleString()}`} color={C.accent} />
-          <SC icon={<BookOpen size={18} />} label="Strategies" value={String(stats.total_strategies)} color="#2f9e58" />
+          <SC icon={<BookOpen size={18} />} label="Strategies" value={String(stats.total_strategies)} color="#6d43d8" />
         </div>
       )}
 
@@ -147,7 +147,7 @@ export default function AdminMentorshipPage() {
                     <td style={{ padding: '10px', color: C.ink }}>{m.specialty}</td>
                     <td style={{ padding: '10px', color: C.ink, fontSize: 11 }}>{m.markets}</td>
                     <td style={{ padding: '10px' }}>
-                      <span style={{ color: m.fee_paid ? '#2f9e58' : '#ef4444', fontWeight: 600, fontSize: 11 }}>
+                      <span style={{ color: m.fee_paid ? '#6d43d8' : '#ef4444', fontWeight: 600, fontSize: 11 }}>
                         {m.fee_paid ? 'Paid' : 'Unpaid'} (${m.fee_amount})
                       </span>
                     </td>
@@ -165,7 +165,7 @@ export default function AdminMentorshipPage() {
                       <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
                         {m.status === 'pending' && (
                           <>
-                            <Btn color="#2f9e58" onClick={() => updateMentor(m.id, 'approved')}>Approve</Btn>
+                            <Btn color="#6d43d8" onClick={() => updateMentor(m.id, 'approved')}>Approve</Btn>
                             <Btn color="#ef4444" onClick={() => updateMentor(m.id, 'rejected')}>Reject</Btn>
                           </>
                         )}
@@ -173,13 +173,13 @@ export default function AdminMentorshipPage() {
                           <Btn color="#3b82f6" onClick={() => updateMentor(m.id, 'active', true)}>Mark Paid & Activate</Btn>
                         )}
                         {m.status === 'approved' && m.fee_paid === 1 && (
-                          <Btn color="#2f9e58" onClick={() => updateMentor(m.id, 'active')}>Activate</Btn>
+                          <Btn color="#6d43d8" onClick={() => updateMentor(m.id, 'active')}>Activate</Btn>
                         )}
                         {m.status === 'active' && (
                           <Btn color="#e0a800" onClick={() => updateMentor(m.id, 'suspended')}>Suspend</Btn>
                         )}
                         {m.status === 'suspended' && (
-                          <Btn color="#2f9e58" onClick={() => updateMentor(m.id, 'active')}>Reactivate</Btn>
+                          <Btn color="#6d43d8" onClick={() => updateMentor(m.id, 'active')}>Reactivate</Btn>
                         )}
                       </div>
                     </td>
@@ -210,11 +210,11 @@ export default function AdminMentorshipPage() {
               <tr key={s.id} style={{ borderBottom: `1px solid ${C.surface}` }}>
                 <td style={{ padding: '10px' }}><div style={{ fontWeight: 600, color: C.text }}>{s.full_name}</div><div style={{ fontSize: 10, color: 'rgba(32,30,29,0.4)' }}>{s.email}</div></td>
                 <td style={{ padding: '10px', fontSize: 10, color: C.ink, maxWidth: 180, wordBreak: 'break-all' }}>{s.payment_reference || '—'}</td>
-                <td style={{ padding: '10px' }}><span style={{ color: s.payment_status === 'paid' ? '#2f9e58' : '#e0a800', fontWeight: 600 }}>{s.payment_status}</span></td>
-                <td style={{ padding: '10px' }}><span style={{ color: s.approval_status === 'approved' ? '#2f9e58' : s.approval_status === 'rejected' ? '#ef4444' : '#e0a800', fontWeight: 600 }}>{s.approval_status}</span></td>
-                <td style={{ padding: '10px' }}><span style={{ color: s.notion_access_enabled ? '#2f9e58' : 'rgba(32,30,29,0.4)', fontWeight: 600 }}>{s.notion_access_enabled ? 'Unlocked' : 'Locked'}</span></td>
+                <td style={{ padding: '10px' }}><span style={{ color: s.payment_status === 'paid' ? '#6d43d8' : '#e0a800', fontWeight: 600 }}>{s.payment_status}</span></td>
+                <td style={{ padding: '10px' }}><span style={{ color: s.approval_status === 'approved' ? '#6d43d8' : s.approval_status === 'rejected' ? '#ef4444' : '#e0a800', fontWeight: 600 }}>{s.approval_status}</span></td>
+                <td style={{ padding: '10px' }}><span style={{ color: s.notion_access_enabled ? '#6d43d8' : 'rgba(32,30,29,0.4)', fontWeight: 600 }}>{s.notion_access_enabled ? 'Unlocked' : 'Locked'}</span></td>
                 <td style={{ padding: '10px' }}><div style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
-                  <Btn color="#2f9e58" onClick={() => updateSubscription(s.id, 'paid', 'approved')}>Paid & Approve</Btn>
+                  <Btn color="#6d43d8" onClick={() => updateSubscription(s.id, 'paid', 'approved')}>Paid & Approve</Btn>
                   <Btn color="#ef4444" onClick={() => updateSubscription(s.id, s.payment_status, 'rejected')}>Reject</Btn>
                   {s.approval_status === 'approved' && <Btn color="#e0a800" onClick={() => updateSubscription(s.id, s.payment_status, 'suspended')}>Suspend</Btn>}
                 </div></td>
@@ -249,13 +249,13 @@ export default function AdminMentorshipPage() {
                     <span style={{ color: difficultyColor[s.difficulty] || 'rgba(32,30,29,0.5)', fontWeight: 600 }}>{s.difficulty}</span>
                   </td>
                   <td style={{ padding: '10px' }}>
-                    <span style={{ display: 'inline-block', padding: '3px 8px', fontSize: 10, fontWeight: 700, background: s.status === 'active' ? '#2f9e5818' : '#ef444418', color: s.status === 'active' ? '#2f9e58' : '#ef4444', letterSpacing: '0.04em' }}>{s.status.toUpperCase()}</span>
+                    <span style={{ display: 'inline-block', padding: '3px 8px', fontSize: 10, fontWeight: 700, background: s.status === 'active' ? '#6d43d818' : '#ef444418', color: s.status === 'active' ? '#6d43d8' : '#ef4444', letterSpacing: '0.04em' }}>{s.status.toUpperCase()}</span>
                   </td>
                   <td style={{ padding: '10px' }}>
                     {s.status === 'active' ? (
                       <Btn color="#e0a800" onClick={() => updateStrategy(s.id, 'inactive')}>Disable</Btn>
                     ) : (
-                      <Btn color="#2f9e58" onClick={() => updateStrategy(s.id, 'active')}>Enable</Btn>
+                      <Btn color="#6d43d8" onClick={() => updateStrategy(s.id, 'active')}>Enable</Btn>
                     )}
                   </td>
                 </tr>

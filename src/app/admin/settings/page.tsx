@@ -104,7 +104,7 @@ export default function AdminSettingsPage() {
       </div>
 
       {message && (
-        <div style={{ marginBottom: 20, padding: '10px 14px', border: '2px solid #2f9e58', background: '#eafbf0', fontSize: 13, color: '#1a6e3a' }}>
+        <div style={{ marginBottom: 20, padding: '10px 14px', border: '2px solid #6d43d8', background: '#f1eaff', fontSize: 13, color: '#5a379f' }}>
           {message}
         </div>
       )}
@@ -175,7 +175,7 @@ export default function AdminSettingsPage() {
                     {w.blockchain_network}
                   </span>
                   <code style={{ fontSize: 11, color: C.ink, fontFamily: "'DM Mono', monospace", flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{w.receiving_address}</code>
-                  <span style={{ fontSize: 10, fontWeight: 700, padding: '2px 8px', background: '#eafbf0', color: '#1a6e3a' }}>Active</span>
+                  <span style={{ fontSize: 10, fontWeight: 700, padding: '2px 8px', background: '#f1eaff', color: '#5a379f' }}>Active</span>
                 </div>
               );
             })}

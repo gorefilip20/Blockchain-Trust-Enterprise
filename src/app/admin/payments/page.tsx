@@ -33,7 +33,7 @@ const networkStyles: Record<string, { bg: string; color: string; label: string }
 const statusStyles: Record<string, { bg: string; color: string; label: string }> = {
   pending: { bg: 'rgba(32,30,29,0.06)', color: 'rgba(32,30,29,0.5)', label: 'Pending TX' },
   processing_verification: { bg: '#dbeafe', color: '#1d4ed8', label: 'Verifying' },
-  confirmed_active: { bg: '#dcfce7', color: '#15803d', label: 'Confirmed' },
+  confirmed_active: { bg: '#dcfce7', color: '#6d43d8', label: 'Confirmed' },
   failed: { bg: '#fee2e2', color: '#b91c1c', label: 'Failed' },
   expired: { bg: 'rgba(32,30,29,0.06)', color: 'rgba(32,30,29,0.5)', label: 'Expired' },
 };
@@ -118,10 +118,10 @@ export default function AdminPaymentsPage() {
 
       {lastResult && (
         <div style={{ marginBottom: 20, padding: '12px 16px', border: `2px solid ${C.surface}`, background: '#fff', display: 'flex', alignItems: 'center', gap: 10, fontSize: 13 }}>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2f9e58" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 11 12 14 22 4" /><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" /></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6d43d8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 11 12 14 22 4" /><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" /></svg>
           <span>
             Last run: <strong>{lastResult.processed}</strong> processed,{' '}
-            <strong style={{ color: '#15803d' }}>{lastResult.verified}</strong> verified,{' '}
+            <strong style={{ color: '#6d43d8' }}>{lastResult.verified}</strong> verified,{' '}
             <strong style={{ color: '#ef4444' }}>{lastResult.failed}</strong> failed
           </span>
         </div>
@@ -136,7 +136,7 @@ export default function AdminPaymentsPage() {
         {[
           { label: 'Total Payments', value: payments.length.toString(), color: C.accent },
           { label: 'Pending Verification', value: pending.length.toString(), color: '#e0a800' },
-          { label: 'Confirmed', value: confirmed.length.toString(), color: '#15803d' },
+          { label: 'Confirmed', value: confirmed.length.toString(), color: '#6d43d8' },
           { label: 'Failed', value: failed.length.toString(), color: '#ef4444' },
         ].map((card) => (
           <div key={card.label} style={{ background: '#fff', border: `2px solid ${C.surface}`, padding: '16px 18px' }}>
@@ -174,7 +174,7 @@ export default function AdminPaymentsPage() {
                     <td style={{ padding: '10px 12px', color: C.ink }}>${p.expected_amount_usd.toLocaleString()}</td>
                     <td style={{ padding: '10px 12px' }}>
                       {p.verified_amount_tokens != null ? (
-                        <span style={{ color: '#15803d', fontWeight: 600 }}>{p.verified_amount_tokens.toLocaleString()} USDT</span>
+                        <span style={{ color: '#6d43d8', fontWeight: 600 }}>{p.verified_amount_tokens.toLocaleString()} USDT</span>
                       ) : (
                         <span style={{ color: 'rgba(32,30,29,0.3)' }}>—</span>
                       )}

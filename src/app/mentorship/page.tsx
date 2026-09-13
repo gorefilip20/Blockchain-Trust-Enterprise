@@ -10,14 +10,14 @@ interface Strategy {
 interface Mentor {
   id: string; name: string; specialty: string; bio: string; experience_years: number;
   markets: string; telegram_handle: string; total_students: number; rating: number;
-  youtube_channel?: string; guide_pdf?: string;
+  youtube_channel?: string; guide_pdf?: string; youtube_video_id?: string;
 }
 interface WalletInfo {
   blockchain_network: string;
   receiving_address: string;
 }
 
-const difficultyColor: Record<string, string> = { Beginner: '#3b82f6', Intermediate: '#0fa987', Advanced: '#e0a800' };
+const difficultyColor: Record<string, string> = { Beginner: '#3b82f6', Intermediate: '#6d43d8', Advanced: '#e0a800' };
 const categoryIcon: Record<string, React.ReactNode> = {
   'Swing Trading': <TrendingUp size={16} />, 'Day Trading': <Zap size={16} />,
 };
@@ -87,11 +87,15 @@ function CopyButton({ text }: { text: string }) {
   );
 }
 
-const mentorVideoIds: Record<string, string> = { Kane: 'HNuRp9Z1bMs', Brando: 'Nziws-GG3uQ', Ariel: 'Nq-p7Bu1YT0' };
+const mentorVideoIds: Record<string, string> = {
+  'Trader Mayne': 'OB5kMepCTTQ', Ariel: 'Uug7ZKpdkVE', 'Chart Fanatics': 'yW6c0K8uGvw',
+  'The Traveling Trader': 'ZXqn2l0RMKg', 'NBB Trader': 'NKtBB8VLPi0', Brando: 'lcBNWiCn1Uo', JadeCap: 'Wqzz0sklMMA',
+  '@TrencherMatt': '3YRJ4Jblzvg', '@OrangieWEB3': 'snLPN-KKHrg', '@CryptoGorilla': '6HrZ_uQ-sBg', '@itsvladify': '85qG_F9X0w'
+};
 
 function MentorVideoModal({ mentor, onClose, paid }: { mentor: Mentor; onClose: () => void; paid: boolean }) {
   const [locked, setLocked] = useState(false);
-  const videoId = mentorVideoIds[mentor.name] || 'HNuRp9Z1bMs';
+  const videoId = mentor.youtube_video_id || mentorVideoIds[mentor.name];
   useEffect(() => {
     if (paid) return;
     const timer = window.setTimeout(() => setLocked(true), 60_000);
@@ -102,7 +106,8 @@ function MentorVideoModal({ mentor, onClose, paid }: { mentor: Mentor; onClose: 
       <div className="mentor-video-modal" onClick={e => e.stopPropagation()}>
         <button className="pdf-preview-close" onClick={onClose}><X size={18} /></button>
         <div className="mentor-video-frame">
-          <iframe src={`https://www.youtube-nocookie.com/embed/${videoId}?rel=0`} title={`${mentor.name} strategy video`} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
+          {!videoId && <div className="mentor-video-unavailable"><Video size={28} /><h3>Video being verified</h3><p>This mentor’s educational video is being reviewed and will be available shortly.</p></div>}
+          {videoId && <iframe src={`https://www.youtube-nocookie.com/embed/${videoId}?rel=0`} title={`${mentor.name} strategy video`} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />}
           {locked && <div className="mentor-video-paywall"><Lock size={28} /><h3>Your preview has ended</h3><p>Complete the $150 registration payment from your dashboard to continue watching full mentor videos and unlock the complete BTE workspace.</p><a href="/account/dashboard"><Shield size={14} /> Open payment dashboard</a></div>}
         </div>
         <div className="mentor-video-caption"><span className="catalog-kicker">VIDEO PLAYBOOK</span><h2>{mentor.specialty}</h2><p>with <strong>{mentor.name}</strong> · {mentor.youtube_channel || 'BTE mentor'}</p></div>
@@ -297,6 +302,7 @@ export default function MentorshipPage() {
                         {concepts.map(c => <li key={c}><Shield size={12} />{c}</li>)}
                       </ul>
                     )}
+                    {mentorVideoIds[s.trader_name] && <button className="strategy-video-btn" onClick={() => setVideoMentor({ id: s.id, name: s.trader_name, specialty: s.title, bio: s.description, experience_years: 0, markets: s.markets, telegram_handle: '', total_students: 0, rating: 0, youtube_channel: s.trader_name, youtube_video_id: mentorVideoIds[s.trader_name] })}><Video size={14} /> Watch {s.trader_name} video <Play size={12} fill="currentColor" /></button>}
                     <div className="strategy-footer">
                       <span className="strategy-source">Source: {s.source}</span>
                       <span className="strategy-free-badge">FREE</span>

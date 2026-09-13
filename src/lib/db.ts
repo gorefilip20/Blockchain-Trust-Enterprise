@@ -35,6 +35,7 @@ function initializeDatabase(db: SqliteDatabase) {
   safeAlter('ALTER TABLE mentors ADD COLUMN fee_amount_override REAL');
   safeAlter('ALTER TABLE mentors ADD COLUMN youtube_channel TEXT');
   safeAlter('ALTER TABLE mentors ADD COLUMN guide_pdf TEXT');
+  safeAlter('ALTER TABLE mentors ADD COLUMN youtube_video_id TEXT');
   safeAlter('ALTER TABLE admin_messages ADD COLUMN admin_reply TEXT');
   safeAlter('ALTER TABLE admin_messages ADD COLUMN admin_reply_at TEXT');
 
@@ -651,6 +652,7 @@ function initializeDatabase(db: SqliteDatabase) {
       rating REAL DEFAULT 0,
       youtube_channel TEXT,
       guide_pdf TEXT,
+      youtube_video_id TEXT,
       fee_amount_override REAL,
       created_at TEXT DEFAULT (datetime('now')),
       updated_at TEXT DEFAULT (datetime('now'))
@@ -707,19 +709,43 @@ function initializeDatabase(db: SqliteDatabase) {
        '["Intraday liquidity grabs","Fair value gap entries","Session raid setups","Institutional flow analysis","Volatility-based position sizing","Precision entry timing"]',
        'Advanced', 'https://www.chartfanatics.com/playbook/intraday-liquidity-volatility-model');
 
+      ('strat-trencher-memecoin', 'Narrative + Liquidity Memecoin Playbook', '@TrencherMatt', 'Memecoin', 'Crypto', 'A risk-first framework for evaluating memecoin narratives, liquidity, holder concentration, and invalidation levels before entering a volatile token.', '["Narrative strength","Liquidity checks","Holder concentration","Entry invalidation","Position sizing","Exit planning"]', 'Advanced', 'https://www.youtube.com/@TrencherMatt'),
+      ('strat-orangie-memecoin', 'On-Chain Memecoin Research', '@OrangieWEB3', 'Memecoin', 'Crypto', 'An educational on-chain research workflow for screening memecoins, checking liquidity and wallets, and separating actionable information from hype.', '["On-chain screening","Liquidity verification","Wallet behavior","Scam-risk checks","Catalyst mapping","Risk controls"]', 'Advanced', 'https://www.youtube.com/@OrangieWEB3'),
+      ('strat-cryptogorilla-memecoin', 'Memecoin Momentum & Risk', '@CryptoGorilla', 'Memecoin', 'Crypto', 'A momentum-focused memecoin playbook built around market structure, volume confirmation, disciplined entries, and predefined risk.', '["Momentum structure","Volume confirmation","Entry timing","Stop placement","Volatility awareness","Trade journaling"]', 'Advanced', 'https://www.youtube.com/@CryptoGorilla'),
+      ('strat-vladify-memecoin', 'Memecoin Execution Playbook', '@itsvladify', 'Memecoin', 'Crypto', 'A practical framework for planning memecoin trades with liquidity awareness, execution discipline, and a clear plan for invalidation and exits.', '["Trade planning","Liquidity awareness","Execution discipline","Invalidation","Profit-taking","Capital preservation"]', 'Advanced', 'https://www.youtube.com/@itsvladify');
+
     -- Seed demo mentors
-    INSERT OR IGNORE INTO mentors (id, name, email, specialty, bio, experience_years, markets, fee_paid, telegram_handle, status, total_students, rating, youtube_channel, guide_pdf)
+    INSERT OR IGNORE INTO mentors (id, name, email, specialty, bio, experience_years, markets, fee_paid, telegram_handle, status, total_students, rating, youtube_channel, guide_pdf, youtube_video_id)
     VALUES
-      ('mentor-1', 'Kane', 'kane@chartfanatics.com', 'Prop Firm Trading', 'Prop firm trader with $2.3M+ payouts. Held the record for largest single payout and made $1.4M in one month trading a focused, repeatable strategy emphasizing patience and consistent gains.', 8, 'Futures, Forex', 1, '@kane_trades', 'active', 342, 4.9, 'Chart Fanatics', '/guides/mentor-kane-prop-firm-playbook.pdf'),
-      ('mentor-2', 'Brando', 'brando@chartfanatics.com', 'Options Swing Trading', 'Turned $6K into over $10,000,000 trading. Made $1M+ in a single month using the Size for Zero method. Only takes trades using a strict playbook that anyone can learn.', 10, 'Options, Stocks', 1, '@brando_options', 'active', 567, 4.8, 'Chart Fanatics', '/guides/mentor-brando-options-masterclass.pdf'),
-      ('mentor-3', 'Ariel', 'ariel@chartfanatics.com', 'Stock Swing Trading', 'Teaches a repeatable swing trading system designed to eliminate FOMO and scale with confidence. Uses the same setups, entries, and execution rules in every real trade.', 6, 'Stocks', 1, '@ariel_swings', 'active', 218, 4.7, 'Chart Fanatics', '/guides/mentor-ariel-swing-system.pdf'),
-      ('mentor-4', 'Rayner Teo', 'rayner@tradingwithrayner.com', 'Price Action & Trend Following', 'One of the most-followed trading educators with 2M+ YouTube subscribers. Teaches systematic price action, trend following, and risk management strategies that work across all timeframes.', 12, 'Forex, Stocks', 1, '@rayaborntrade', 'active', 1240, 4.9, 'Rayner Teo', '/guides/mentor-rayner-price-action-guide.pdf'),
-      ('mentor-5', 'Ross Cameron', 'ross@warriortrading.com', 'Small-Cap Day Trading', 'Founder of Warrior Trading. Turned $583 into $10M+ day trading small-cap momentum stocks. Teaches gap-and-go, VWAP, and momentum breakout strategies with strict risk rules.', 14, 'Stocks', 1, '@warrior_ross', 'active', 2150, 4.8, 'Warrior Trading', '/guides/mentor-ross-daytrading-blueprint.pdf'),
-      ('mentor-6', 'Crypto Banter', 'team@cryptobanter.com', 'Crypto Market Analysis', 'The largest live crypto trading show on YouTube. Ran Sheldon and team deliver daily macro analysis, altcoin picks, and DeFi alpha for retail and advanced crypto traders worldwide.', 7, 'Crypto', 1, '@cryptobanter', 'active', 890, 4.7, 'Crypto Banter', '/guides/mentor-cryptobanter-crypto-playbook.pdf'),
-      ('mentor-7', 'Humbled Trader', 'shay@humbledtrader.com', 'Risk-First Day Trading', 'Former marketing professional turned full-time trader. Known for honest, no-hype education on day trading reality. Teaches small-cap scalping, risk management, and emotional discipline.', 6, 'Stocks, Options', 1, '@humbledtrader', 'active', 780, 4.8, 'Humbled Trader', '/guides/mentor-humbled-risk-management.pdf'),
-      ('mentor-8', 'The Trading Channel', 'steven@ttchannel.com', 'Technical Analysis Systems', 'Steven Hart teaches systematic technical analysis and backtested trading strategies. Focuses on supply-demand zones, order flow, and multi-timeframe confluence with data-driven results.', 9, 'Forex, Futures', 1, '@ttchannel', 'active', 620, 4.7, 'The Trading Channel', '/guides/mentor-ttchannel-technical-systems.pdf'),
-      ('mentor-9', 'Umar Ashraf', 'umar@umarashraf.com', 'Momentum Swing Trading', 'Self-taught trader who grew a small account into millions trading momentum stocks. Teaches breakout patterns, sector rotation, and scaling into winners with proper position sizing.', 8, 'Stocks, Options', 1, '@umarashraf', 'active', 950, 4.8, 'Umar Ashraf', '/guides/mentor-umar-momentum-swings.pdf'),
-      ('mentor-10', 'Crypto Face', 'face@cryptoface.com', 'Crypto Leverage Trading', 'Professional crypto trader known for high-conviction leveraged trades on BTC and ETH. Teaches order flow reading, liquidation maps, and risk-adjusted leverage strategies for advanced traders.', 5, 'Crypto', 1, '@cryptoface', 'active', 430, 4.6, 'Crypto Face', '/guides/mentor-cryptoface-leverage-guide.pdf');
+      ('mentor-1', 'Kane', 'kane@chartfanatics.com', 'Prop Firm Trading', 'Prop firm trader with $2.3M+ payouts. Held the record for largest single payout and made $1.4M in one month trading a focused, repeatable strategy emphasizing patience and consistent gains.', 8, 'Futures, Forex', 1, '@kane_trades', 'active', 342, 4.9, 'Chart Fanatics', '/guides/mentor-kane-prop-firm-playbook.pdf', 'OB5kMepCTTQ'),
+      ('mentor-2', 'Brando', 'brando@chartfanatics.com', 'Options Swing Trading', 'Turned $6K into over $10,000,000 trading. Made $1M+ in a single month using the Size for Zero method. Only takes trades using a strict playbook that anyone can learn.', 10, 'Options, Stocks', 1, '@brando_options', 'active', 567, 4.8, 'Chart Fanatics', '/guides/mentor-brando-options-masterclass.pdf', 'lcBNWiCn1Uo'),
+      ('mentor-3', 'Ariel', 'ariel@chartfanatics.com', 'Stock Swing Trading', 'Teaches a repeatable swing trading system designed to eliminate FOMO and scale with confidence. Uses the same setups, entries, and execution rules in every real trade.', 6, 'Stocks', 1, '@ariel_swings', 'active', 218, 4.7, 'Chart Fanatics', '/guides/mentor-ariel-swing-system.pdf', 'Uug7ZKpdkVE'),
+      ('mentor-4', 'Rayner Teo', 'rayner@tradingwithrayner.com', 'Price Action & Trend Following', 'One of the most-followed trading educators with 2M+ YouTube subscribers. Teaches systematic price action, trend following, and risk management strategies that work across all timeframes.', 12, 'Forex, Stocks', 1, '@rayaborntrade', 'active', 1240, 4.9, 'Rayner Teo', '/guides/mentor-rayner-price-action-guide.pdf', NULL),
+      ('mentor-5', 'Ross Cameron', 'ross@warriortrading.com', 'Small-Cap Day Trading', 'Founder of Warrior Trading. Turned $583 into $10M+ day trading small-cap momentum stocks. Teaches gap-and-go, VWAP, and momentum breakout strategies with strict risk rules.', 14, 'Stocks', 1, '@warrior_ross', 'active', 2150, 4.8, 'Warrior Trading', '/guides/mentor-ross-daytrading-blueprint.pdf', NULL),
+      ('mentor-6', 'Crypto Banter', 'team@cryptobanter.com', 'Crypto Market Analysis', 'The largest live crypto trading show on YouTube. Ran Sheldon and team deliver daily macro analysis, altcoin picks, and DeFi alpha for retail and advanced crypto traders worldwide.', 7, 'Crypto', 1, '@cryptobanter', 'active', 890, 4.7, 'Crypto Banter', '/guides/mentor-cryptobanter-crypto-playbook.pdf', NULL),
+      ('mentor-7', 'Humbled Trader', 'shay@humbledtrader.com', 'Risk-First Day Trading', 'Former marketing professional turned full-time trader. Known for honest, no-hype education on day trading reality. Teaches small-cap scalping, risk management, and emotional discipline.', 6, 'Stocks, Options', 1, '@humbledtrader', 'active', 780, 4.8, 'Humbled Trader', '/guides/mentor-humbled-risk-management.pdf', NULL),
+      ('mentor-8', 'The Trading Channel', 'steven@ttchannel.com', 'Technical Analysis Systems', 'Steven Hart teaches systematic technical analysis and backtested trading strategies. Focuses on supply-demand zones, order flow, and multi-timeframe confluence with data-driven results.', 9, 'Forex, Futures', 1, '@ttchannel', 'active', 620, 4.7, 'The Trading Channel', '/guides/mentor-ttchannel-technical-systems.pdf', NULL),
+      ('mentor-9', 'Umar Ashraf', 'umar@umarashraf.com', 'Momentum Swing Trading', 'Self-taught trader who grew a small account into millions trading momentum stocks. Teaches breakout patterns, sector rotation, and scaling into winners with proper position sizing.', 8, 'Stocks, Options', 1, '@umarashraf', 'active', 950, 4.8, 'Umar Ashraf', '/guides/mentor-umar-momentum-swings.pdf', NULL),
+      ('mentor-10', 'Crypto Face', 'face@cryptoface.com', 'Crypto Leverage Trading', 'Professional crypto trader known for high-conviction leveraged trades on BTC and ETH. Teaches order flow reading, liquidation maps, and risk-adjusted leverage strategies for advanced traders.', 5, 'Crypto', 1, '@cryptoface', 'active', 430, 4.6, 'Crypto Face', '/guides/mentor-cryptoface-leverage-guide.pdf', NULL),
+      ('mentor-trencher', '@TrencherMatt', 'trencher@bte.education', 'Memecoin Research & Risk', 'Teaches a research-first approach to memecoin narratives, liquidity, wallet concentration, and risk-defined execution.', 5, 'Crypto, Memecoin', 1, '@TrencherMatt', 'active', 0, 4.8, '@TrencherMatt', NULL, '3YRJ4Jblzvg'),
+      ('mentor-orangie', '@OrangieWEB3', 'orangie@bte.education', 'On-Chain Memecoin Research', 'Focuses on on-chain research, liquidity verification, wallet behavior, and identifying risk before trading volatile tokens.', 5, 'Crypto, Memecoin', 1, '@OrangieWEB3', 'active', 0, 4.8, '@OrangieWEB3', NULL, 'snLPN-KKHrg'),
+      ('mentor-cryptogorilla', '@CryptoGorilla', 'cryptogorilla@bte.education', 'Memecoin Momentum & Risk', 'Teaches momentum structure, volume confirmation, position sizing, and disciplined risk management for memecoin markets.', 5, 'Crypto, Memecoin', 1, '@CryptoGorilla', 'active', 0, 4.7, '@CryptoGorilla', NULL, '6HrZ_uQ-sBg'),
+      ('mentor-vladify', '@itsvladify', 'vladify@bte.education', 'Memecoin Execution', 'A practical memecoin trading framework covering liquidity awareness, execution discipline, invalidation, and exits.', 5, 'Crypto, Memecoin', 1, '@itsvladify', 'active', 0, 4.7, '@itsvladify', NULL, NULL);
+
+    UPDATE trading_strategies SET source_url = CASE trader_name
+      WHEN 'Trader Mayne' THEN 'https://www.youtube.com/watch?v=OB5kMepCTTQ'
+      WHEN 'Ariel' THEN 'https://www.youtube.com/watch?v=Uug7ZKpdkVE'
+      WHEN 'Chart Fanatics' THEN 'https://www.youtube.com/watch?v=yW6c0K8uGvw'
+      WHEN 'The Traveling Trader' THEN 'https://www.youtube.com/watch?v=ZXqn2l0RMKg'
+      WHEN 'NBB Trader' THEN 'https://www.youtube.com/watch?v=NKtBB8VLPi0'
+      WHEN 'Brando' THEN 'https://www.youtube.com/watch?v=lcBNWiCn1Uo'
+      WHEN 'JadeCap' THEN 'https://www.youtube.com/watch?v=Wqzz0sklMMA'
+      WHEN '@TrencherMatt' THEN 'https://www.youtube.com/watch?v=3YRJ4Jblzvg'
+      WHEN '@OrangieWEB3' THEN 'https://www.youtube.com/watch?v=snLPN-KKHrg'
+      WHEN '@CryptoGorilla' THEN 'https://www.youtube.com/watch?v=6HrZ_uQ-sBg'
+      WHEN '@itsvladify' THEN 'https://www.youtube.com/watch?v=85qG_F9X0w'
+      ELSE source_url END
+      WHERE trader_name IN ('Trader Mayne','Ariel','Chart Fanatics','The Traveling Trader','NBB Trader','Brando','JadeCap','@TrencherMatt','@OrangieWEB3','@CryptoGorilla','@itsvladify');
 
     -- Seed demo notifications (tied to any user that registers)
     INSERT OR IGNORE INTO notifications (id, user_id, type, title, message, is_read, created_at)

@@ -69,7 +69,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
               <span className="bte-admin-topbar-right" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 12, color: 'rgba(32,30,29,0.6)' }}>
-                <i style={{ display: 'inline-block', width: 7, height: 7, borderRadius: '50%', background: '#2f9e58' }} />
+                <i style={{ display: 'inline-block', width: 7, height: 7, borderRadius: '50%', background: '#6d43d8' }} />
                 All systems operational
               </span>
               <Link href="/" className="bte-admin-viewsite bte-admin-topbar-right" style={{ fontSize: 12, fontWeight: 600, color: C.text, textDecoration: 'none', border: `2px solid ${C.text}`, padding: '6px 14px', letterSpacing: '0.03em', transition: 'all 0.15s' }}>

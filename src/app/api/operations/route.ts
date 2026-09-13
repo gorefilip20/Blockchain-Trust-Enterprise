@@ -45,10 +45,12 @@ export async function POST(req: NextRequest) {
         const txId = uuidv4();
         db.prepare('INSERT INTO user_transactions (id, user_id, type, amount, description, payment_reference, status) VALUES (?, ?, ?, ?, ?, ?, ?)').run(txId, id, 'registration_fee', 150, 'Account registration fee', paymentReference, 'pending');
       }
-      const token = jwt.sign({ userId: id, email: String(email).toLowerCase(), name: fullName }, JWT_SECRET, { expiresIn: '24h' });
+      const token = jwt.sign({ userId: id, email: String(email).toLowerCase(), name: fullName }, JWT_SECRET, { expiresIn: '30d' });
       const verifyUrl = `${APP_URL}/account?verify=${verificationToken}`;
       const emailSent = await sendEmail(String(email).toLowerCase(), 'Verify your BTE email', `<p>Welcome to Blockchain Trust Enterprise, ${fullName}.</p><p>Confirm your email address to keep your account details current.</p><p><a href="${verifyUrl}">Verify my email</a></p>`);
-      return NextResponse.json({ success: true, token, emailSent, user: { id, fullName, email: String(email).toLowerCase() }, registrationFee: { amount: 150, status: 'awaiting_payment' } }, { status: 201 });
+      const response = NextResponse.json({ success: true, token, emailSent, user: { id, fullName, email: String(email).toLowerCase() }, registrationFee: { amount: 150, status: 'awaiting_payment' } }, { status: 201 });
+      response.cookies.set('bte-session', token, { httpOnly: true, sameSite: 'lax', secure: process.env.NODE_ENV === 'production', maxAge: 60 * 60 * 24 * 30, path: '/' });
+      return response;
     }
     if (body.action === 'verify-email') {
       const account = db.prepare('SELECT id FROM app_users WHERE verification_token = ?').get(body.token) as { id: string } | undefined;
@@ -77,8 +79,10 @@ export async function POST(req: NextRequest) {
       const user = db.prepare('SELECT * FROM app_users WHERE email = ?').get(String(email || '').toLowerCase()) as { id: string; full_name: string; email: string; password_hash: string; status: string } | undefined;
       if (!user || !bcrypt.compareSync(password || '', user.password_hash)) return NextResponse.json({ error: 'Invalid email or password.' }, { status: 401 });
       db.prepare("UPDATE app_users SET last_login_at = datetime('now') WHERE id = ?").run(user.id);
-      const token = jwt.sign({ userId: user.id, email: user.email, name: user.full_name }, JWT_SECRET, { expiresIn: '24h' });
-      return NextResponse.json({ success: true, token, user: { id: user.id, fullName: user.full_name, email: user.email } });
+      const token = jwt.sign({ userId: user.id, email: user.email, name: user.full_name }, JWT_SECRET, { expiresIn: '30d' });
+      const response = NextResponse.json({ success: true, token, user: { id: user.id, fullName: user.full_name, email: user.email } });
+      response.cookies.set('bte-session', token, { httpOnly: true, sameSite: 'lax', secure: process.env.NODE_ENV === 'production', maxAge: 60 * 60 * 24 * 30, path: '/' });
+      return response;
     }
     if (body.action === 'message') {
       const { userId, userName, userEmail, category = 'Guidance', subject = 'BTE guidance request', message } = body;

@@ -32,14 +32,14 @@ const typeLabels: Record<string, string> = {
 
 const tierLabels: Record<string, { label: string; color: string }> = {
   parent: { label: 'Parent', color: C.accent },
-  subsidiary: { label: 'Subsidiary', color: '#2f9e58' },
+  subsidiary: { label: 'Subsidiary', color: '#6d43d8' },
 };
 
 const statusStyles: Record<string, { bg: string; color: string }> = {
   pending: { bg: 'rgba(32,30,29,0.06)', color: 'rgba(32,30,29,0.5)' },
   filed: { bg: '#dbeafe', color: '#1d4ed8' },
   approved: { bg: '#fef3c7', color: '#b45309' },
-  active: { bg: '#dcfce7', color: '#15803d' },
+  active: { bg: '#dcfce7', color: '#6d43d8' },
   dissolved: { bg: '#fee2e2', color: '#b91c1c' },
 };
 
@@ -74,7 +74,7 @@ export default function AdminEntitiesPage() {
         {[
           { label: 'Total Entities', value: entities.length.toString(), color: C.accent },
           { label: 'Parent (Delaware)', value: parentEntities.length.toString(), color: C.accent },
-          { label: 'Subsidiary (Wyoming)', value: subsidiaryEntities.length.toString(), color: '#2f9e58' },
+          { label: 'Subsidiary (Wyoming)', value: subsidiaryEntities.length.toString(), color: '#6d43d8' },
           { label: 'Active', value: entities.filter((e) => e.status === 'active').length.toString(), color: '#15803D' },
         ].map((card) => (
           <div key={card.label} style={{ background: '#fff', border: `2px solid ${C.surface}`, padding: '16px 18px' }}>
@@ -131,13 +131,13 @@ export default function AdminEntitiesPage() {
                         const css = statusStyles[child.status] || { bg: 'rgba(32,30,29,0.06)', color: 'rgba(32,30,29,0.5)' };
                         return (
                           <div key={child.id} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 10px', background: C.bg, marginBottom: 4, flexWrap: 'wrap' }}>
-                            <div style={{ width: 26, height: 26, background: '#dcfce7', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#2f9e58' }}>
+                            <div style={{ width: 26, height: 26, background: '#dcfce7', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#6d43d8' }}>
                               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="0" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
                             </div>
                             <div style={{ flex: 1, minWidth: 0 }}>
                               <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
                                 <span style={{ fontWeight: 600, fontSize: 12 }}>{child.entity_name}</span>
-                                <span style={{ fontSize: 9, padding: '2px 6px', fontWeight: 700, background: '#dcfce7', color: '#2f9e58', letterSpacing: '0.04em' }}>SUB</span>
+                                <span style={{ fontSize: 9, padding: '2px 6px', fontWeight: 700, background: '#dcfce7', color: '#6d43d8', letterSpacing: '0.04em' }}>SUB</span>
                                 <span style={{ fontSize: 9, padding: '2px 6px', fontWeight: 700, background: css.bg, color: css.color, letterSpacing: '0.04em' }}>{child.status.toUpperCase()}</span>
                                 {child.privacy_shield === 1 && (
                                   <span style={{ fontSize: 9, padding: '2px 6px', fontWeight: 700, background: C.accentLight, color: C.accent, letterSpacing: '0.04em' }}>SHIELD</span>

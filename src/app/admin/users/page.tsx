@@ -177,10 +177,10 @@ export default function AdminUsersPage() {
           </div>
         </div>
 
-        {feedback && <div style={{ padding: '10px 14px', marginBottom: 14, borderRadius: 8, background: 'rgba(43,214,165,.08)', border: '1px solid rgba(43,214,165,.2)', color: 'var(--mint)', fontSize: 12 }}>{feedback}</div>}
+        {feedback && <div style={{ padding: '10px 14px', marginBottom: 14, borderRadius: 8, background: 'rgba(43,214,165,.08)', border: '1px solid rgba(43,214,165,.2)', color: '#6d43d8', fontSize: 12 }}>{feedback}</div>}
 
         <div className="admin-stats-row">
-          <div className="admin-stat-card"><span>Available Balance</span><b style={{ color: 'var(--mint)' }}>{formatCurrency(b.available_balance)}</b></div>
+          <div className="admin-stat-card"><span>Available Balance</span><b style={{ color: '#6d43d8' }}>{formatCurrency(b.available_balance)}</b></div>
           <div className="admin-stat-card"><span>Total Deposited</span><b>{formatCurrency(b.total_deposited)}</b></div>
           <div className="admin-stat-card"><span>Interest Earned</span><b style={{ color: 'var(--gold)' }}>{formatCurrency(b.interest_earned)}</b></div>
           <div className="admin-stat-card"><span>Reg Fee</span><b>{u.registration_fee_paid ? <span className="badge-paid"><CheckCircle2 size={10} /> Paid</span> : <span className="badge-pending"><Clock size={10} /> Pending</span>}</b></div>
@@ -197,7 +197,7 @@ export default function AdminUsersPage() {
               <div key={tx.id} className="holdings-row" style={{ gridTemplateColumns: '1fr 1.4fr 1fr .8fr .8fr' }}>
                 <span style={{ fontSize: 10, color: 'var(--muted)' }}>{formatDate(tx.created_at)}</span>
                 <span><b>{tx.description}</b></span>
-                <span style={{ color: tx.type === 'withdrawal' ? 'var(--red)' : 'var(--mint)' }}>{tx.type === 'withdrawal' ? '-' : '+'}{formatCurrency(tx.amount)}</span>
+                <span style={{ color: tx.type === 'withdrawal' ? 'var(--red)' : '#6d43d8' }}>{tx.type === 'withdrawal' ? '-' : '+'}{formatCurrency(tx.amount)}</span>
                 <span style={{ fontSize: 10, color: 'var(--muted)', textTransform: 'capitalize' }}>{tx.type.replace('_', ' ')}</span>
                 <span style={{ fontSize: 10 }}>{tx.status === 'approved' ? <span className="badge-paid">Approved</span> : tx.status === 'pending' ? (
                   <span style={{ display: 'flex', gap: 4 }}>
@@ -292,12 +292,12 @@ export default function AdminUsersPage() {
         </div>
       </div>
 
-      {feedback && <div style={{ padding: '10px 14px', marginBottom: 14, borderRadius: 8, background: 'rgba(43,214,165,.08)', border: '1px solid rgba(43,214,165,.2)', color: 'var(--mint)', fontSize: 12 }}>{feedback}</div>}
+      {feedback && <div style={{ padding: '10px 14px', marginBottom: 14, borderRadius: 8, background: 'rgba(43,214,165,.08)', border: '1px solid rgba(43,214,165,.2)', color: '#6d43d8', fontSize: 12 }}>{feedback}</div>}
 
       {stats && (
         <div className="admin-stats-row">
           <div className="admin-stat-card"><span><Users size={14} /> Total Users</span><b>{stats.total_users}</b></div>
-          <div className="admin-stat-card"><span><UserCheck size={14} /> Fee Paid</span><b style={{ color: 'var(--mint)' }}>{stats.paid_users}</b></div>
+          <div className="admin-stat-card"><span><UserCheck size={14} /> Fee Paid</span><b style={{ color: '#6d43d8' }}>{stats.paid_users}</b></div>
           <div className="admin-stat-card"><span><Clock size={14} /> Fee Pending</span><b style={{ color: 'var(--gold)' }}>{stats.unpaid_users}</b></div>
           <div className="admin-stat-card"><span><Wallet size={14} /> Total Balances</span><b>{formatCurrency(stats.total_balances)}</b></div>
           <div className="admin-stat-card"><span><DollarSign size={14} /> Pending Txns</span><b>{stats.pending_transactions}</b></div>
@@ -330,7 +330,7 @@ export default function AdminUsersPage() {
                 </div>
               </div>
               <div className="admin-user-meta">
-                <span>Balance: <b style={{ color: 'var(--mint)' }}>{formatCurrency(u.balance)}</b></span>
+                <span>Balance: <b style={{ color: '#6d43d8' }}>{formatCurrency(u.balance)}</b></span>
                 <span>Status: <b style={{ textTransform: 'capitalize' }}>{u.status}</b></span>
                 <span>Joined: <b>{formatDate(u.created_at)}</b></span>
                 {u.last_login_at && <span>Last login: <b>{formatDate(u.last_login_at)}</b></span>}

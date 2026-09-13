@@ -31,8 +31,8 @@ const typeIcon: Record<string, typeof Bell> = {
 };
 
 const typeColor: Record<string, string> = {
-  price_alert: '#0fa987',
-  order_fill: '#0fa987',
+  price_alert: '#6d43d8',
+  order_fill: '#6d43d8',
   document_ready: '#456dca',
   payment_confirmed: '#b87b18',
   system: '#7f96a5',

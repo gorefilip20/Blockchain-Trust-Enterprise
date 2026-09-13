@@ -123,7 +123,7 @@ export default function PaymentsPage() {
                   <code className="wallet-address">{w.address}</code>
                   <button
                     className="wallet-copy-btn"
-                    style={{ background: copied === w.symbol ? '#0fa987' : w.color }}
+                    style={{ background: copied === w.symbol ? '#6d43d8' : w.color }}
                     onClick={() => copyAddress(w.address, w.symbol)}
                   >
                     {copied === w.symbol ? <><CheckCircle2 size={14} /> Copied</> : <><Copy size={14} /> Copy</>}

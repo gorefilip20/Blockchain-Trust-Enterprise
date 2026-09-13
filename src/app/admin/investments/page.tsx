@@ -15,7 +15,7 @@ interface Stats {
 }
 
 const statusColors: Record<string, string> = {
-  pending: '#e0a800', active: '#0fa987', matured: '#3b82f6', withdrawn: '#8b5cf6', cancelled: '#ef4444',
+  pending: '#e0a800', active: '#6d43d8', matured: '#3b82f6', withdrawn: '#8b5cf6', cancelled: '#ef4444',
 };
 
 export default function AdminInvestmentsPage() {
@@ -50,9 +50,9 @@ export default function AdminInvestmentsPage() {
 
       {stats && (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 14, marginBottom: 24 }}>
-          <StatCard icon={<DollarSign size={18} />} label="Total AUM" value={`$${(stats.total_aum || 0).toLocaleString()}`} color="#0fa987" />
+          <StatCard icon={<DollarSign size={18} />} label="Total AUM" value={`$${(stats.total_aum || 0).toLocaleString()}`} color="#6d43d8" />
           <StatCard icon={<Users size={18} />} label="Total Investments" value={String(stats.total_investments || 0)} color="#3b82f6" />
-          <StatCard icon={<CheckCircle2 size={18} />} label="Active" value={String(stats.active_count || 0)} color="#0fa987" />
+          <StatCard icon={<CheckCircle2 size={18} />} label="Active" value={String(stats.active_count || 0)} color="#6d43d8" />
           <StatCard icon={<Clock size={18} />} label="Pending Review" value={String(stats.pending_count || 0)} color="#e0a800" />
           <StatCard icon={<TrendingUp size={18} />} label="Avg Return" value={`${(stats.avg_return || 0).toFixed(1)}%`} color="#8b5cf6" />
         </div>
@@ -65,9 +65,9 @@ export default function AdminInvestmentsPage() {
             onClick={() => setFilter(s)}
             style={{
               padding: '6px 14px', borderRadius: 6, border: '1px solid', fontSize: 11, fontWeight: 600, cursor: 'pointer',
-              background: filter === s ? '#0fa987' : 'transparent',
+              background: filter === s ? '#6d43d8' : 'transparent',
               color: filter === s ? '#fff' : '#66808e',
-              borderColor: filter === s ? '#0fa987' : '#d3e1e8',
+              borderColor: filter === s ? '#6d43d8' : '#d3e1e8',
             }}
           >{s.charAt(0).toUpperCase() + s.slice(1)}</button>
         ))}
@@ -98,11 +98,11 @@ export default function AdminInvestmentsPage() {
                   <div style={{ fontSize: 10, color: '#8aa0ac' }}>{inv.risk_level} risk</div>
                 </td>
                 <td style={{ padding: '10px', fontWeight: 600, color: '#173247' }}>${inv.amount_usd.toLocaleString()}</td>
-                <td style={{ padding: '10px', fontWeight: 600, color: inv.current_value >= inv.amount_usd ? '#0fa987' : '#ef4444' }}>
+                <td style={{ padding: '10px', fontWeight: 600, color: inv.current_value >= inv.amount_usd ? '#6d43d8' : '#ef4444' }}>
                   ${inv.current_value.toLocaleString()}
                 </td>
                 <td style={{ padding: '10px' }}>
-                  <span style={{ color: inv.actual_return_pct >= 0 ? '#0fa987' : '#ef4444', fontWeight: 600 }}>
+                  <span style={{ color: inv.actual_return_pct >= 0 ? '#6d43d8' : '#ef4444', fontWeight: 600 }}>
                     {inv.actual_return_pct >= 0 ? '+' : ''}{inv.actual_return_pct}%
                   </span>
                   <div style={{ fontSize: 10, color: '#8aa0ac' }}>Target: {inv.projected_return_pct}%</div>
@@ -117,7 +117,7 @@ export default function AdminInvestmentsPage() {
                   <div style={{ display: 'flex', gap: 6 }}>
                     {inv.status === 'pending' && (
                       <button onClick={() => updateStatus(inv.id, 'active')} title="Activate"
-                        style={{ background: '#0fa987', color: '#fff', border: 0, borderRadius: 4, padding: '4px 8px', cursor: 'pointer', fontSize: 10, fontWeight: 600 }}>
+                        style={{ background: '#6d43d8', color: '#fff', border: 0, borderRadius: 4, padding: '4px 8px', cursor: 'pointer', fontSize: 10, fontWeight: 600 }}>
                         <CheckCircle2 size={12} /> Activate
                       </button>
                     )}

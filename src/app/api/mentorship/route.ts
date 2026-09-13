@@ -52,7 +52,7 @@ export async function GET(req: NextRequest) {
   }
 
   const strategies = db.prepare("SELECT * FROM trading_strategies WHERE status = 'active' ORDER BY created_at DESC").all();
-  const mentors = db.prepare("SELECT id, name, specialty, bio, experience_years, markets, telegram_handle, total_students, rating, youtube_channel, guide_pdf FROM mentors WHERE status = 'active' ORDER BY rating DESC").all();
+  const mentors = db.prepare("SELECT id, name, specialty, bio, experience_years, markets, telegram_handle, total_students, rating, youtube_channel, guide_pdf, youtube_video_id FROM mentors WHERE status = 'active' ORDER BY rating DESC").all();
   const wallets = db.prepare("SELECT blockchain_network, receiving_address FROM administrative_wallets WHERE is_active = 1").all();
   return NextResponse.json({ strategies, mentors, wallets });
 }

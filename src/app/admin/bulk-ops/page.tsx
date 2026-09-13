@@ -131,7 +131,7 @@ export default function BulkOpsPage() {
           background: result.failCount === 0 ? '#f0fbf8' : '#fef9ee',
           border: `1px solid ${result.failCount === 0 ? '#b7ded5' : '#fcd34d'}`,
         }}>
-          <CheckSquare size={16} style={{ color: result.failCount === 0 ? '#078d73' : '#d97706' }} />
+          <CheckSquare size={16} style={{ color: result.failCount === 0 ? '#6d43d8' : '#d97706' }} />
           <span style={{ fontSize: '12px', color: '#173247' }}>
             <b>Bulk {result.type} update complete:</b> {result.successCount} of {result.total} items updated to &quot;{result.action}&quot;.
             {result.failCount > 0 && <span style={{ color: '#dc2626' }}> {result.failCount} failed.</span>}
