@@ -124,9 +124,9 @@ function PdfPreviewModal({ mentor, onClose, hasAccess }: { mentor: Mentor; onClo
             <div className="pdf-paywall-card">
               <Lock size={28} />
               <h3>Continue reading</h3>
-              <p>This guide is exclusive to BTE mentorship students. Pay the one-time $150 access fee to unlock all mentor guides and the private mentorship class.</p>
+              <p>This guide is exclusive to BTE mentorship students. Create your BTE account and complete the registration step from your dashboard to unlock the learning library.</p>
               <a href="#student-access" onClick={(e) => { e.preventDefault(); onClose(); const el = document.querySelector('[data-tab="student"]'); if (el instanceof HTMLElement) el.click(); }}>
-                <Shield size={14} /> Register &amp; Pay $150 to Unlock
+                <Shield size={14} /> Create account to unlock
               </a>
             </div>
           </div>
@@ -218,7 +218,7 @@ export default function MentorshipPage() {
           <div className="mentorship-hero-stats">
             <div className="mh-stat"><BookOpen size={18} /><strong>{strategies.length}</strong><span>Strategies</span></div>
             <div className="mh-stat"><Users size={18} /><strong>{mentors.length}</strong><span>Active Mentors</span></div>
-            <div className="mh-stat"><DollarSign size={18} /><strong>$150</strong><span>Student Access</span></div>
+            <div className="mh-stat"><DollarSign size={18} /><strong>Included</strong><span>Student Access</span></div>
             <div className="mh-stat"><Award size={18} /><strong>Verified</strong><span>Profitable Traders</span></div>
           </div>
         </div>
@@ -304,12 +304,12 @@ export default function MentorshipPage() {
             <div className="mentor-apply-wrap">
               <div className="mentor-apply-info">
                 <h2>Join the mentorship class</h2>
-                <p>Get full access to all mentor guides, copy trading documents, and the private mentorship class. One-time payment of $150 reviewed by admin.</p>
+                <p>Get full access to all mentor guides, copy trading documents, and the private mentorship class after completing your BTE account registration from the dashboard.</p>
 
                 <div className="apply-fee-box">
-                  <h4><DollarSign size={16} /> Mentorship Access Fee</h4>
-                  <div className="apply-fee-amount">$150 <span>one-time payment</span></div>
-                  <p>Send exactly $150 in crypto to any wallet below, then paste your transaction hash in the registration form.</p>
+                  <h4><DollarSign size={16} /> Account registration</h4>
+                  <div className="apply-fee-amount">$150 <span>shown on your dashboard</span></div>
+                  <p>Create your account first. Your $150 registration payment instructions and verification status appear in your personal dashboard.</p>
                 </div>
 
                 {wallets.length > 0 && (
@@ -324,7 +324,7 @@ export default function MentorshipPage() {
                         </div>
                       </div>
                     ))}
-                    <p className="wallet-note">Send exactly <strong>$150 USDT</strong> to any network above. Copy the transaction hash after sending.</p>
+                    <p className="wallet-note">Payment instructions for account registration are shown in your dashboard after you create an account.</p>
                   </div>
                 )}
 
@@ -345,12 +345,12 @@ export default function MentorshipPage() {
                 <h3>Student registration</h3>
                 <div className="student-fee-reminder">
                   <DollarSign size={16} />
-                  <span>Fee: <strong>$150</strong> — Send USDT to a wallet above, then paste your TX hash below</span>
+                  <span>Registration: <strong>$150</strong> — Complete payment from your account dashboard</span>
                 </div>
                 {studentResult && <div className={`invest-alert invest-alert-${studentResult.type}`}>{studentResult.message}</div>}
                 <label>Full name *<input value={studentForm.fullName} onChange={e => setStudentForm(p => ({ ...p, fullName: e.target.value }))} required /></label>
                 <label>Email *<input type="email" value={studentForm.email} onChange={e => setStudentForm(p => ({ ...p, email: e.target.value }))} required /></label>
-                <label>Payment reference / transaction hash *<input value={studentForm.paymentReference} onChange={e => setStudentForm(p => ({ ...p, paymentReference: e.target.value }))} placeholder="Paste your $150 USDT transaction hash" required /></label>
+                <label>Payment reference / transaction hash *<input value={studentForm.paymentReference} onChange={e => setStudentForm(p => ({ ...p, paymentReference: e.target.value }))} placeholder="Paste the transaction hash from your dashboard payment" required /></label>
                 <button type="submit">Submit for approval <Send size={14} /></button>
               </form>
             </div>
