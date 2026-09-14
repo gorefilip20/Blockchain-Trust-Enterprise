@@ -204,7 +204,7 @@ export default function MentorshipPage() {
     if (token) fetch('/api/mentorship?section=student', { headers: { Authorization: `Bearer ${token}` } }).then(r => r.ok ? r.json() : null).then(d => d && setStudentAccess(d.subscription ? { ...d.subscription, notionUrl: d.notionUrl } : null));
   }, []);
 
-  const categories = ['All', ...Array.from(new Set(strategies.map(s => s.category)))];
+  const categories = ['All', 'Stocks', 'Options', 'Futures', 'Forex', 'Crypto', 'Memecoin', 'Swing Trading', 'Day Trading', 'Mindset', ...Array.from(new Set(strategies.map(s => s.category))).filter(c => !['All', 'Stocks', 'Options', 'Futures', 'Forex', 'Crypto', 'Memecoin', 'Swing Trading', 'Day Trading', 'Mindset'].includes(c))];
   const normalizedSearch = search.trim().toLowerCase();
   const filtered = strategies.filter(s => {
     const matchesFilter = filter === 'All' || s.category === filter;

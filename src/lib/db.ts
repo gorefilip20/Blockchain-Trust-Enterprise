@@ -772,6 +772,13 @@ function initializeDatabase(db: SqliteDatabase) {
       WHEN '@itsvladify' THEN '85qG_F9X0w'
       ELSE youtube_video_id END
       WHERE name IN ('@TrencherMatt','@OrangieWEB3','@CryptoGorilla','@itsvladify');
+    UPDATE trading_strategies SET source_url = CASE trader_name
+      WHEN '@TrencherMatt' THEN 'https://www.youtube.com/watch?v=u3dvYR9JR6I'
+      WHEN '@OrangieWEB3' THEN 'https://www.youtube.com/watch?v=dVxtJGybGfI'
+      WHEN '@CryptoGorilla' THEN 'https://www.youtube.com/watch?v=3YRJ4Jblzvg'
+      WHEN '@itsvladify' THEN 'https://www.youtube.com/watch?v=85qG_F9X0w'
+      ELSE source_url END
+      WHERE trader_name IN ('@TrencherMatt','@OrangieWEB3','@CryptoGorilla','@itsvladify');
   `);
 }
 
