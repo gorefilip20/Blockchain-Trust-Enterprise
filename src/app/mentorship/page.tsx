@@ -90,7 +90,7 @@ function CopyButton({ text }: { text: string }) {
 const mentorVideoIds: Record<string, string> = {
   'Trader Mayne': 'OB5kMepCTTQ', Ariel: 'Uug7ZKpdkVE', 'Chart Fanatics': 'yW6c0K8uGvw',
   'The Traveling Trader': 'ZXqn2l0RMKg', 'NBB Trader': 'NKtBB8VLPi0', Brando: 'lcBNWiCn1Uo', JadeCap: 'Wqzz0sklMMA',
-  '@TrencherMatt': 'u3dvYR9JR6I', '@OrangieWEB3': 'dVxtJGybGfI', '@CryptoGorilla': '3YRJ4Jblzvg', '@itsvladify': '85qG_F9X0w'
+  '@TrencherMatt': '3YRJ4Jblzvg', '@OrangieWEB3': 'dVxtJGybGfI', '@CryptoGorilla': '3YRJ4Jblzvg', '@itsvladify': '85qG_F9X0w'
 };
 
 function MentorVideoModal({ mentor, onClose, paid }: { mentor: Mentor; onClose: () => void; paid: boolean }) {

@@ -766,14 +766,14 @@ function initializeDatabase(db: SqliteDatabase) {
       ('strat-cryptogorilla-memecoin', 'Memecoin Momentum & Risk', '@CryptoGorilla', 'Memecoin', 'Crypto', 'A momentum-focused memecoin playbook built around market structure, volume confirmation, disciplined entries, and predefined risk.', '["Momentum structure","Volume confirmation","Entry timing","Stop placement","Volatility awareness","Trade journaling"]', 'Advanced', 'https://www.youtube.com/watch?v=3YRJ4Jblzvg'),
       ('strat-vladify-memecoin', 'Memecoin Execution Playbook', '@itsvladify', 'Memecoin', 'Crypto', 'A practical framework for planning memecoin trades with liquidity awareness, execution discipline, and a clear plan for invalidation and exits.', '["Trade planning","Liquidity awareness","Execution discipline","Invalidation","Profit-taking","Capital preservation"]', 'Advanced', 'https://www.youtube.com/watch?v=85qG_F9X0w');
     UPDATE mentors SET youtube_video_id = CASE name
-      WHEN '@TrencherMatt' THEN 'u3dvYR9JR6I'
+      WHEN '@TrencherMatt' THEN '3YRJ4Jblzvg'
       WHEN '@OrangieWEB3' THEN 'dVxtJGybGfI'
       WHEN '@CryptoGorilla' THEN '3YRJ4Jblzvg'
       WHEN '@itsvladify' THEN '85qG_F9X0w'
       ELSE youtube_video_id END
       WHERE name IN ('@TrencherMatt','@OrangieWEB3','@CryptoGorilla','@itsvladify');
     UPDATE trading_strategies SET source_url = CASE trader_name
-      WHEN '@TrencherMatt' THEN 'https://www.youtube.com/watch?v=u3dvYR9JR6I'
+      WHEN '@TrencherMatt' THEN 'https://www.youtube.com/watch?v=3YRJ4Jblzvg'
       WHEN '@OrangieWEB3' THEN 'https://www.youtube.com/watch?v=dVxtJGybGfI'
       WHEN '@CryptoGorilla' THEN 'https://www.youtube.com/watch?v=3YRJ4Jblzvg'
       WHEN '@itsvladify' THEN 'https://www.youtube.com/watch?v=85qG_F9X0w'
