@@ -728,8 +728,8 @@ function initializeDatabase(db: SqliteDatabase) {
       ('mentor-9', 'Umar Ashraf', 'umar@umarashraf.com', 'Momentum Swing Trading', 'Self-taught trader who grew a small account into millions trading momentum stocks. Teaches breakout patterns, sector rotation, and scaling into winners with proper position sizing.', 8, 'Stocks, Options', 1, '@umarashraf', 'active', 950, 4.8, 'Umar Ashraf', '/guides/mentor-umar-momentum-swings.pdf', NULL),
       ('mentor-10', 'Crypto Face', 'face@cryptoface.com', 'Crypto Leverage Trading', 'Professional crypto trader known for high-conviction leveraged trades on BTC and ETH. Teaches order flow reading, liquidation maps, and risk-adjusted leverage strategies for advanced traders.', 5, 'Crypto', 1, '@cryptoface', 'active', 430, 4.6, 'Crypto Face', '/guides/mentor-cryptoface-leverage-guide.pdf', NULL),
       ('mentor-trencher', '@TrencherMatt', 'trencher@bte.education', 'Memecoin Research & Risk', 'Teaches a research-first approach to memecoin narratives, liquidity, wallet concentration, and risk-defined execution.', 5, 'Crypto, Memecoin', 1, '@TrencherMatt', 'active', 0, 4.8, '@TrencherMatt', NULL, '3YRJ4Jblzvg'),
-      ('mentor-orangie', '@OrangieWEB3', 'orangie@bte.education', 'On-Chain Memecoin Research', 'Focuses on on-chain research, liquidity verification, wallet behavior, and identifying risk before trading volatile tokens.', 5, 'Crypto, Memecoin', 1, '@OrangieWEB3', 'active', 0, 4.8, '@OrangieWEB3', NULL, 'snLPN-KKHrg'),
-      ('mentor-cryptogorilla', '@CryptoGorilla', 'cryptogorilla@bte.education', 'Memecoin Momentum & Risk', 'Teaches momentum structure, volume confirmation, position sizing, and disciplined risk management for memecoin markets.', 5, 'Crypto, Memecoin', 1, '@CryptoGorilla', 'active', 0, 4.7, '@CryptoGorilla', NULL, '6HrZ_uQ-sBg'),
+      ('mentor-orangie', '@OrangieWEB3', 'orangie@bte.education', 'On-Chain Memecoin Research', 'Focuses on on-chain research, liquidity verification, wallet behavior, and identifying risk before trading volatile tokens.', 5, 'Crypto, Memecoin', 1, '@OrangieWEB3', 'active', 0, 4.8, '@OrangieWEB3', NULL, 'dVxtJGybGfI'),
+      ('mentor-cryptogorilla', '@CryptoGorilla', 'cryptogorilla@bte.education', 'Memecoin Momentum & Risk', 'Teaches momentum structure, volume confirmation, position sizing, and disciplined risk management for memecoin markets.', 5, 'Crypto, Memecoin', 1, '@CryptoGorilla', 'active', 0, 4.7, '@CryptoGorilla', NULL, '3YRJ4Jblzvg'),
       ('mentor-vladify', '@itsvladify', 'vladify@bte.education', 'Memecoin Execution', 'A practical memecoin trading framework covering liquidity awareness, execution discipline, invalidation, and exits.', 5, 'Crypto, Memecoin', 1, '@itsvladify', 'active', 0, 4.7, '@itsvladify', NULL, NULL);
 
     UPDATE trading_strategies SET source_url = CASE trader_name
@@ -741,8 +741,8 @@ function initializeDatabase(db: SqliteDatabase) {
       WHEN 'Brando' THEN 'https://www.youtube.com/watch?v=lcBNWiCn1Uo'
       WHEN 'JadeCap' THEN 'https://www.youtube.com/watch?v=Wqzz0sklMMA'
       WHEN '@TrencherMatt' THEN 'https://www.youtube.com/watch?v=3YRJ4Jblzvg'
-      WHEN '@OrangieWEB3' THEN 'https://www.youtube.com/watch?v=snLPN-KKHrg'
-      WHEN '@CryptoGorilla' THEN 'https://www.youtube.com/watch?v=6HrZ_uQ-sBg'
+      WHEN '@OrangieWEB3' THEN 'https://www.youtube.com/watch?v=dVxtJGybGfI'
+      WHEN '@CryptoGorilla' THEN 'https://www.youtube.com/watch?v=3YRJ4Jblzvg'
       WHEN '@itsvladify' THEN 'https://www.youtube.com/watch?v=85qG_F9X0w'
       ELSE source_url END
       WHERE trader_name IN ('Trader Mayne','Ariel','Chart Fanatics','The Traveling Trader','NBB Trader','Brando','JadeCap','@TrencherMatt','@OrangieWEB3','@CryptoGorilla','@itsvladify');
