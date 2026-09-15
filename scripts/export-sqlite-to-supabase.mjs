@@ -9,7 +9,7 @@ console.log('-- BTE SQLite -> Supabase Postgres export');
 console.log('-- Review in Supabase SQL Editor before applying. Run with: node scripts/export-sqlite-to-supabase.mjs > supabase/migration.sql');
 for (const table of tables) {
   let ddl = table.sql.replaceAll('INTEGER PRIMARY KEY AUTOINCREMENT','BIGSERIAL PRIMARY KEY').replaceAll('INTEGER PRIMARY KEY','BIGINT PRIMARY KEY').replaceAll('REAL','DOUBLE PRECISION').replaceAll("datetime('now')",'CURRENT_TIMESTAMP').replaceAll('INSERT OR IGNORE','INSERT');
-  ddl = ddl.replace(/CHECK\s*\([^)]*\)/gi, '');
+  ddl = ddl.replace(/CHECK\s*\([^)]*\)/gi, '').replace(/,\s*\)/g, '\n)');
   console.log(`\n-- ${table.name}\n${ddl};`);
   const cols = db.prepare(`PRAGMA table_info("${table.name.replaceAll('"','""')}")`).all().map(c => c.name);
   const rows = db.prepare(`SELECT * FROM "${table.name.replaceAll('"','""')}"`).all();
