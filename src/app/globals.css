@@ -998,3 +998,13 @@ html:not([data-theme="dark"]) .terminal-shell ::-webkit-scrollbar-thumb { backgr
 
 .frontpage-mentor-videos { width:min(1160px,calc(100% - 48px)); margin:0 auto; padding:82px 0 30px; }.frontpage-mentor-video-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:16px; }.frontpage-mentor-video-card { overflow:hidden; border:1px solid #e8e0f0; border-radius:16px; background:#fff; box-shadow:0 14px 34px rgba(57,31,91,.08); }.frontpage-mentor-iframe { aspect-ratio:16/10; background:#211734; }.frontpage-mentor-iframe iframe { width:100%; height:100%; border:0; display:block; }.frontpage-mentor-video-copy { padding:14px 15px 16px; }.frontpage-mentor-video-copy h3 { margin:5px 0 4px; font:500 20px Georgia,serif; }.frontpage-mentor-video-copy p:last-child { margin:0; color:#806d95; font-size:11px; }.frontpage-mentor-video-copy .catalog-kicker { margin:0; font-size:9px; }
 @media (max-width:900px){.frontpage-mentor-video-grid{grid-template-columns:repeat(2,minmax(0,1fr));}} @media (max-width:560px){.frontpage-mentor-videos{width:calc(100% - 32px);padding-top:55px}.frontpage-mentor-video-grid{grid-template-columns:1fr;}}
+
+/* Reference-style strategy cards: large, legible inline video previews. */
+.strategy-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; align-items: start; }
+.strategy-card { overflow: hidden; padding: 0; border-color: #e5dff0; background: #fff; }
+.strategy-card-content { padding: 22px 24px 24px; }
+.strategy-video-preview { position: relative; aspect-ratio: 16 / 9; width: 100%; overflow: hidden; background: #241a35; }
+.strategy-video-preview iframe { width: 100%; height: 100%; border: 0; display: block; }
+.strategy-video-play { position: absolute; left: 14px; bottom: 13px; display: inline-flex; align-items: center; gap: 7px; border: 1px solid rgba(255,255,255,.55); border-radius: 999px; padding: 8px 12px; color: #fff; background: rgba(43,26,67,.84); backdrop-filter: blur(6px); font: 800 11px 'Manrope', sans-serif; cursor: pointer; }
+.strategy-video-play:hover { background: #6d43d8; border-color: #fff; }
+@media (max-width: 700px) { .strategy-grid { grid-template-columns: 1fr; gap: 16px; } .strategy-card-content { padding: 19px 18px 20px; } .strategy-video-play { left: 11px; bottom: 10px; } }

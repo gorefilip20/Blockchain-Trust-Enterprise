@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { BookOpen, Users, TrendingUp, Star, ChevronDown, ChevronUp, Send, Award, BarChart3, Target, Shield, Zap, MessageCircle, FileText, Video, Play, Lock, Copy, Check, Wallet, DollarSign, Eye, X } from 'lucide-react';
+import { BookOpen, Users, TrendingUp, Star, ChevronDown, ChevronUp, Send, Award, BarChart3, Target, Shield, Zap, MessageCircle, FileText, Video, Play, Lock, Wallet, DollarSign, Eye, X } from 'lucide-react';
 
 interface Strategy {
   id: string; title: string; trader_name: string; category: string; markets: string;
@@ -75,22 +75,11 @@ const guidePreview: Record<string, { title: string; sections: string[]; previewT
   },
 };
 
-function CopyButton({ text }: { text: string }) {
-  const [copied, setCopied] = useState(false);
-  return (
-    <button
-      className="wallet-copy-btn"
-      onClick={() => { navigator.clipboard.writeText(text); setCopied(true); setTimeout(() => setCopied(false), 2000); }}
-    >
-      {copied ? <><Check size={12} /> Copied</> : <><Copy size={12} /> Copy</>}
-    </button>
-  );
-}
 
 const mentorVideoIds: Record<string, string> = {
   'Trader Mayne': '-Y0jslIFFGM', 'Chart Fanatics': 'yW6c0K8uGvw',
   'The Traveling Trader': 'chahOEXjQRE', 'NBB Trader': 'CLyhuudwq24', JadeCap: 'gZLj1fqVtsQ', '@socialcapofficial': 'CefxjriF-N8', Brando: 'lcBNWiCn1Uo',
-  '@TrencherMatt': '3YRJ4Jblzvg', '@OrangieWEB3': 'dVxtJGybGfI', '@CryptoGorilla': '3YRJ4Jblzvg', '@itsvladify': '85qG_F9X0w'
+  '@TrencherMatt': '3YRJ4Jblzvg', '@OrangieWEB3': 'dVxtJGybGfI', '@CryptoGorilla': '6HrZ_uQ-sBg', '@itsvladify': '85qG_F9X0w'
 };
 
 function MentorVideoModal({ mentor, onClose, paid }: { mentor: Mentor; onClose: () => void; paid: boolean }) {
@@ -292,6 +281,13 @@ export default function MentorshipPage() {
                 const isOpen = expanded === s.id;
                 return (
                   <div className="strategy-card" key={s.id}>
+                    {mentorVideoIds[s.trader_name] && (
+                      <div className="strategy-video-preview">
+                        <iframe src={`https://www.youtube-nocookie.com/embed/${mentorVideoIds[s.trader_name]}?rel=0&modestbranding=1`} title={`${s.trader_name} ${s.title} video`} loading="lazy" allow="accelerometer; autoplay; encrypted-media; picture-in-picture" allowFullScreen />
+                        <button className="strategy-video-play" onClick={() => setVideoMentor({ id: s.id, name: s.trader_name, specialty: s.title, bio: s.description, experience_years: 0, markets: s.markets, telegram_handle: '', total_students: 0, rating: 0, youtube_channel: s.trader_name, youtube_video_id: mentorVideoIds[s.trader_name] })} aria-label={`Play ${s.trader_name} video`}><Play size={15} fill="currentColor" /> Watch video</button>
+                      </div>
+                    )}
+                    <div className="strategy-card-content">
                     <div className="strategy-card-header">
                       <div className="strategy-card-cat">
                         {categoryIcon[s.category] || <Target size={16} />}
@@ -315,6 +311,7 @@ export default function MentorshipPage() {
                     <div className="strategy-footer">
                       <span className="strategy-source">Source: {s.source}</span>
                       <span className="strategy-free-badge">FREE</span>
+                    </div>
                     </div>
                   </div>
                 );
@@ -362,7 +359,6 @@ export default function MentorshipPage() {
                         <div className="wallet-network-badge">{w.blockchain_network}</div>
                         <div className="wallet-address-wrap">
                           <code className="wallet-address-code">{w.receiving_address}</code>
-                          <CopyButton text={w.receiving_address} />
                         </div>
                       </div>
                     ))}
