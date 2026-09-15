@@ -63,9 +63,13 @@ export async function POST(req: NextRequest) {
       const account = db.prepare('SELECT id, full_name, email FROM app_users WHERE email = ?').get(email) as { id: string; full_name: string; email: string } | undefined;
       if (account) {
         const token = uuidv4(); db.prepare("UPDATE app_users SET reset_token = ?, reset_expires_at = datetime('now', '+1 hour') WHERE id = ?").run(token, account.id);
-        await sendEmail(account.email, 'Reset your BTE password', `<p>Hi ${account.full_name},</p><p><a href="${APP_URL}/account?reset=${token}">Reset your password</a></p><p>This link expires in one hour.</p>`);
+        const emailSent = await sendEmail(account.email, 'Reset your BTE password', `<p>Hi ${account.full_name},</p><p><a href="${APP_URL}/account?reset=${token}">Reset your password</a></p><p>This link expires in one hour.</p>`);
+        if (!emailSent && process.env.NODE_ENV === 'production') {
+          console.error('[BTE] Password reset email was not sent. Configure RESEND_API_KEY and RESEND_FROM on the host.');
+        }
+        return NextResponse.json({ success: true, emailSent, message: emailSent ? 'A password reset email has been sent. Check your inbox and spam folder.' : 'Your reset request was recorded, but email delivery is not configured yet. Please contact support or configure the email provider.' });
       }
-      return NextResponse.json({ success: true, message: 'If an account exists for that email, a reset link has been sent.' });
+      return NextResponse.json({ success: true, emailSent: false, message: 'If an account exists for that email, a reset email will be sent.' });
     }
     if (body.action === 'reset-password') {
       if (!body.token || !body.password || String(body.password).length < 8) return NextResponse.json({ error: 'A valid reset link and password of at least 8 characters are required.' }, { status: 400 });

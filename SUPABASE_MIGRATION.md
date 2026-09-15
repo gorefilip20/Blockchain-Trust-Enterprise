@@ -27,3 +27,15 @@ Until that adapter cutover is completed, keep `data/platform.db` persistent on H
 ## Account recovery flow
 
 The current frontend exposes **Forgot password?** on the sign-in form. The backend creates a one-hour reset token, and the reset form consumes it once to replace the bcrypt password hash. In production, configure an email provider or notification transport if reset links should be delivered by email; otherwise the API returns a development reset URL for the user-facing recovery flow.
+
+## Email delivery required for account recovery
+
+The reset-token logic is implemented, but production delivery requires these Hostinger environment variables:
+
+```text
+RESEND_API_KEY=re_...
+RESEND_FROM=Blockchain Trust <no-reply@your-verified-domain.com>
+NEXT_PUBLIC_APP_URL=https://blocktrustenterprise.online
+```
+
+Create the API key in Resend, verify the sending domain, and use a `RESEND_FROM` address on that verified domain. After redeploying, test **Forgot password?** with an existing account and confirm the response reports `emailSent: true`; also check spam. Without `RESEND_API_KEY`, the application cannot send reset emails and will explicitly report that email delivery is not configured.
