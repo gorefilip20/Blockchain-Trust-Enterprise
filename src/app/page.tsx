@@ -23,9 +23,11 @@ const featuredMentorVideos = [
   { name: '@OrangieWEB3', specialty: 'On-Chain Memecoin Research', videoId: 'dVxtJGybGfI' },
   { name: '@CryptoGorilla', specialty: 'Memecoin Momentum & Risk', videoId: '6HrZ_uQ-sBg' },
   { name: '@itsvladify', specialty: 'Memecoin Execution', videoId: '85qG_F9X0w' },
+  { name: '@socialcapofficial', specialty: 'Crypto Market Structure', videoId: 'CefxjriF-N8' },
 ];
 
 const strategyVideoIds: Record<string, string> = {
+  'Trader Mayne': '-Y0jslIFFGM', 'Chart Fanatics': 'yW6c0K8uGvw', 'The Traveling Trader': 'chahOEXjQRE', 'NBB Trader': 'CLyhuudwq24', 'JadeCap': 'gZLj1fqVtsQ', '@socialcapofficial': 'CefxjriF-N8',
   'Ariel Hernandez': 'Nq-p7Bu1YT0', 'Brando Elite': 'Nziws-GG3uQ',
   'CryptoBanter': 'HNuRp9Z1bMs', 'Marco Trades': 'HNuRp9Z1bMs', 'Umar Ashraf': 'Nq-p7Bu1YT0',
   '@TrencherMatt': '3YRJ4Jblzvg', 'TrencherMatt': '3YRJ4Jblzvg'
@@ -49,6 +51,7 @@ export default function HomePage() {
   }, []);
 
   const filtered = useMemo(() => strategies.filter((strategy) => {
+    if (strategy.trader_name === 'Ariel' || strategy.trader_name === 'Ariel Hernandez') return false;
     const matchesCategory = filter === 'All' || strategy.category === filter || strategy.markets.includes(filter);
     const haystack = `${strategy.title} ${strategy.trader_name} ${strategy.category} ${strategy.markets}`.toLowerCase();
     return matchesCategory && haystack.includes(query.toLowerCase());

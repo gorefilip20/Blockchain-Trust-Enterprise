@@ -130,20 +130,6 @@ function formatDate(dateStr: string): string {
   return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 }
 
-function WalletCopyButton({ address }: { address: string }) {
-  const [copied, setCopied] = useState(false);
-  function copy() {
-    navigator.clipboard.writeText(address).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    });
-  }
-  return (
-    <button onClick={copy} title="Copy address" style={{ display: 'inline-flex', alignItems: 'center', gap: 4, padding: '4px 8px', border: `2px solid ${C.surface}`, background: '#fff', fontSize: 11, fontWeight: 600, fontFamily: FONT, color: copied ? C.accent : C.text, cursor: 'pointer' }}>
-      {copied ? <><CheckCircle2 size={12} /> Copied</> : <><Copy size={12} /> Copy</>}
-    </button>
-  );
-}
 
 function PaymentSubmissionSection({ wallets }: { wallets: WalletInfo[] }) {
   const [txHash, setTxHash] = useState('');
@@ -198,7 +184,6 @@ function PaymentSubmissionSection({ wallets }: { wallets: WalletInfo[] }) {
                   <div key={w.blockchain_network} style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
                     <span style={{ display: 'inline-block', padding: '3px 8px', fontSize: 10, fontWeight: 700, letterSpacing: '0.04em', textTransform: 'uppercase', color: '#fff', background: net.color }}>{w.blockchain_network}</span>
                     <code style={{ fontSize: 11, color: C.text, wordBreak: 'break-all' }}>{w.receiving_address}</code>
-                    <WalletCopyButton address={w.receiving_address} />
                   </div>
                 );
               })}
@@ -661,8 +646,7 @@ export default function DashboardPage() {
                             <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.04em', textTransform: 'uppercase', color: 'rgba(32,30,29,0.5)', marginBottom: 4 }}>Deposit Address</div>
                             <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
                               <code style={{ fontSize: 10, wordBreak: 'break-all', color: C.text, flex: 1 }}>{w.receiving_address}</code>
-                              <WalletCopyButton address={w.receiving_address} />
-                            </div>
+                                      </div>
                           </div>
                         );
                       })}

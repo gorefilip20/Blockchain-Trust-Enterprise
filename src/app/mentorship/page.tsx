@@ -88,8 +88,8 @@ function CopyButton({ text }: { text: string }) {
 }
 
 const mentorVideoIds: Record<string, string> = {
-  'Trader Mayne': 'OB5kMepCTTQ', Ariel: 'Uug7ZKpdkVE', 'Chart Fanatics': 'yW6c0K8uGvw',
-  'The Traveling Trader': 'ZXqn2l0RMKg', 'NBB Trader': 'NKtBB8VLPi0', Brando: 'lcBNWiCn1Uo', JadeCap: 'Wqzz0sklMMA',
+  'Trader Mayne': '-Y0jslIFFGM', 'Chart Fanatics': 'yW6c0K8uGvw',
+  'The Traveling Trader': 'chahOEXjQRE', 'NBB Trader': 'CLyhuudwq24', JadeCap: 'gZLj1fqVtsQ', '@socialcapofficial': 'CefxjriF-N8', Brando: 'lcBNWiCn1Uo',
   '@TrencherMatt': '3YRJ4Jblzvg', '@OrangieWEB3': 'dVxtJGybGfI', '@CryptoGorilla': '3YRJ4Jblzvg', '@itsvladify': '85qG_F9X0w'
 };
 
@@ -206,7 +206,7 @@ export default function MentorshipPage() {
 
   const categories = ['All', 'Stocks', 'Options', 'Futures', 'Forex', 'Crypto', 'Memecoin', 'Swing Trading', 'Day Trading', 'Mindset', ...Array.from(new Set(strategies.map(s => s.category))).filter(c => !['All', 'Stocks', 'Options', 'Futures', 'Forex', 'Crypto', 'Memecoin', 'Swing Trading', 'Day Trading', 'Mindset'].includes(c))];
   const normalizedSearch = search.trim().toLowerCase();
-  const filtered = strategies.filter(s => {
+  const filtered = strategies.filter(s => s.trader_name !== 'Ariel' && s.trader_name !== 'Ariel Hernandez').filter(s => {
     const matchesFilter = filter === 'All' || s.category === filter;
     const haystack = `${s.title} ${s.trader_name} ${s.description} ${s.markets}`.toLowerCase();
     return matchesFilter && (!normalizedSearch || haystack.includes(normalizedSearch));

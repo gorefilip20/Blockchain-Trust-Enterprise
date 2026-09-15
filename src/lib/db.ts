@@ -733,13 +733,13 @@ function initializeDatabase(db: SqliteDatabase) {
       ('mentor-vladify', '@itsvladify', 'vladify@bte.education', 'Memecoin Execution', 'A practical memecoin trading framework covering liquidity awareness, execution discipline, invalidation, and exits.', 5, 'Crypto, Memecoin', 1, '@itsvladify', 'active', 0, 4.7, '@itsvladify', NULL, NULL);
 
     UPDATE trading_strategies SET source_url = CASE trader_name
-      WHEN 'Trader Mayne' THEN 'https://www.youtube.com/watch?v=OB5kMepCTTQ'
+      WHEN 'Trader Mayne' THEN 'https://www.youtube.com/watch?v=-Y0jslIFFGM'
       WHEN 'Ariel' THEN 'https://www.youtube.com/watch?v=Uug7ZKpdkVE'
       WHEN 'Chart Fanatics' THEN 'https://www.youtube.com/watch?v=yW6c0K8uGvw'
-      WHEN 'The Traveling Trader' THEN 'https://www.youtube.com/watch?v=ZXqn2l0RMKg'
-      WHEN 'NBB Trader' THEN 'https://www.youtube.com/watch?v=NKtBB8VLPi0'
+      WHEN 'The Traveling Trader' THEN 'https://www.youtube.com/watch?v=chahOEXjQRE'
+      WHEN 'NBB Trader' THEN 'https://www.youtube.com/watch?v=CLyhuudwq24'
       WHEN 'Brando' THEN 'https://www.youtube.com/watch?v=lcBNWiCn1Uo'
-      WHEN 'JadeCap' THEN 'https://www.youtube.com/watch?v=Wqzz0sklMMA'
+      WHEN 'JadeCap' THEN 'https://www.youtube.com/watch?v=gZLj1fqVtsQ'
       WHEN '@TrencherMatt' THEN 'https://www.youtube.com/watch?v=3YRJ4Jblzvg'
       WHEN '@OrangieWEB3' THEN 'https://www.youtube.com/watch?v=dVxtJGybGfI'
       WHEN '@CryptoGorilla' THEN 'https://www.youtube.com/watch?v=6HrZ_uQ-sBg'
@@ -779,6 +779,16 @@ function initializeDatabase(db: SqliteDatabase) {
       WHEN '@itsvladify' THEN 'https://www.youtube.com/watch?v=85qG_F9X0w'
       ELSE source_url END
       WHERE trader_name IN ('@TrencherMatt','@OrangieWEB3','@CryptoGorilla','@itsvladify');
+    INSERT OR IGNORE INTO trading_strategies (id, title, trader_name, category, markets, description, key_concepts, difficulty, source_url) VALUES
+      ('strat-trader-mayne-video', 'ICT Smart Money Concepts', 'Trader Mayne', 'Futures', 'Futures, Forex, Crypto', 'A structured ICT and smart-money framework for reading market structure, liquidity, and timing.', '["Market structure","Liquidity","Timing","Risk management"]', 'Intermediate', 'https://www.youtube.com/watch?v=-Y0jslIFFGM'),
+      ('strat-chart-fanatics-video', 'Institutional Scalping Strategies', 'Chart Fanatics', 'Day Trading', 'Futures, Forex, Crypto', 'A systematic strategy lesson covering backtesting, rules, and execution discipline.', '["Backtesting","Scalping","Strategy rules","Execution"]', 'Advanced', 'https://www.youtube.com/watch?v=yW6c0K8uGvw'),
+      ('strat-traveling-trader-video', 'Technical Analysis for Beginners', 'The Traveling Trader', 'Day Trading', 'Futures, Forex, Crypto', 'A clear technical-analysis foundation for charts, momentum, support, and resistance.', '["Candles","Moving averages","Momentum","Support and resistance"]', 'Beginner', 'https://www.youtube.com/watch?v=chahOEXjQRE'),
+      ('strat-nbb-video', 'Scaling Capital Effectively', 'NBB Trader', 'Forex', 'Forex, Crypto', 'A disciplined approach to scaling capital, avoiding common mistakes, and managing risk.', '["Capital scaling","Risk","Position sizing","Execution"]', 'Intermediate', 'https://www.youtube.com/watch?v=CLyhuudwq24'),
+      ('strat-jadecap-video', 'A+ ICT Strategy', 'JadeCap', 'Day Trading', 'Futures, Forex, Crypto', 'A structured strategy lesson covering targets, timing, high-probability entries, and trading psychology.', '["Targets","Entries","ICT","Psychology"]', 'Advanced', 'https://www.youtube.com/watch?v=gZLj1fqVtsQ'),
+      ('strat-socialcap-video', 'Crypto Market Structure', '@socialcapofficial', 'Crypto', 'Crypto, Memecoin', 'A practical crypto education video for understanding market structure and responsible digital-asset decisions.', '["Market structure","Crypto risk","Narratives","Decision making"]', 'Intermediate', 'https://www.youtube.com/watch?v=CefxjriF-N8');
+    INSERT OR IGNORE INTO mentors (id, name, email, specialty, bio, experience_years, markets, fee_paid, telegram_handle, status, total_students, rating, youtube_channel, guide_pdf, youtube_video_id) VALUES
+      ('mentor-socialcap', '@socialcapofficial', 'socialcap@bte.education', 'Crypto Market Structure', 'Teaches practical crypto market structure, risk awareness, and responsible digital-asset analysis.', 5, 'Crypto, Memecoin', 1, '@socialcapofficial', 'active', 0, 4.7, '@socialcapofficial', NULL, 'CefxjriF-N8');
+
   `);
 }
 
