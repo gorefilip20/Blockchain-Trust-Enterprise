@@ -711,7 +711,7 @@ function initializeDatabase(db: SqliteDatabase) {
 
       ('strat-trencher-memecoin', 'Narrative + Liquidity Memecoin Playbook', '@TrencherMatt', 'Memecoin', 'Crypto', 'A risk-first framework for evaluating memecoin narratives, liquidity, holder concentration, and invalidation levels before entering a volatile token.', '["Narrative strength","Liquidity checks","Holder concentration","Entry invalidation","Position sizing","Exit planning"]', 'Advanced', 'https://www.youtube.com/watch?v=u3dvYR9JR6I'),
       ('strat-orangie-memecoin', 'On-Chain Memecoin Research', '@OrangieWEB3', 'Memecoin', 'Crypto', 'An educational on-chain research workflow for screening memecoins, checking liquidity and wallets, and separating actionable information from hype.', '["On-chain screening","Liquidity verification","Wallet behavior","Scam-risk checks","Catalyst mapping","Risk controls"]', 'Advanced', 'https://www.youtube.com/watch?v=dVxtJGybGfI'),
-      ('strat-cryptogorilla-memecoin', 'Memecoin Momentum & Risk', '@CryptoGorilla', 'Memecoin', 'Crypto', 'A momentum-focused memecoin playbook built around market structure, volume confirmation, disciplined entries, and predefined risk.', '["Momentum structure","Volume confirmation","Entry timing","Stop placement","Volatility awareness","Trade journaling"]', 'Advanced', 'https://www.youtube.com/watch?v=3YRJ4Jblzvg'),
+      ('strat-cryptogorilla-memecoin', 'Memecoin Momentum & Risk', '@CryptoGorilla', 'Memecoin', 'Crypto', 'A momentum-focused memecoin playbook built around market structure, volume confirmation, disciplined entries, and predefined risk.', '["Momentum structure","Volume confirmation","Entry timing","Stop placement","Volatility awareness","Trade journaling"]', 'Advanced', 'https://www.youtube.com/watch?v=6HrZ_uQ-sBg'),
       ('strat-vladify-memecoin', 'Memecoin Execution Playbook', '@itsvladify', 'Memecoin', 'Crypto', 'A practical framework for planning memecoin trades with liquidity awareness, execution discipline, and a clear plan for invalidation and exits.', '["Trade planning","Liquidity awareness","Execution discipline","Invalidation","Profit-taking","Capital preservation"]', 'Advanced', 'https://www.youtube.com/watch?v=85qG_F9X0w');
 
     -- Seed demo mentors
@@ -729,7 +729,7 @@ function initializeDatabase(db: SqliteDatabase) {
       ('mentor-10', 'Crypto Face', 'face@cryptoface.com', 'Crypto Leverage Trading', 'Professional crypto trader known for high-conviction leveraged trades on BTC and ETH. Teaches order flow reading, liquidation maps, and risk-adjusted leverage strategies for advanced traders.', 5, 'Crypto', 1, '@cryptoface', 'active', 430, 4.6, 'Crypto Face', '/guides/mentor-cryptoface-leverage-guide.pdf', NULL),
       ('mentor-trencher', '@TrencherMatt', 'trencher@bte.education', 'Memecoin Research & Risk', 'Teaches a research-first approach to memecoin narratives, liquidity, wallet concentration, and risk-defined execution.', 5, 'Crypto, Memecoin', 1, '@TrencherMatt', 'active', 0, 4.8, '@TrencherMatt', NULL, '3YRJ4Jblzvg'),
       ('mentor-orangie', '@OrangieWEB3', 'orangie@bte.education', 'On-Chain Memecoin Research', 'Focuses on on-chain research, liquidity verification, wallet behavior, and identifying risk before trading volatile tokens.', 5, 'Crypto, Memecoin', 1, '@OrangieWEB3', 'active', 0, 4.8, '@OrangieWEB3', NULL, 'dVxtJGybGfI'),
-      ('mentor-cryptogorilla', '@CryptoGorilla', 'cryptogorilla@bte.education', 'Memecoin Momentum & Risk', 'Teaches momentum structure, volume confirmation, position sizing, and disciplined risk management for memecoin markets.', 5, 'Crypto, Memecoin', 1, '@CryptoGorilla', 'active', 0, 4.7, '@CryptoGorilla', NULL, '3YRJ4Jblzvg'),
+      ('mentor-cryptogorilla', '@CryptoGorilla', 'cryptogorilla@bte.education', 'Memecoin Momentum & Risk', 'Teaches momentum structure, volume confirmation, position sizing, and disciplined risk management for memecoin markets.', 5, 'Crypto, Memecoin', 1, '@CryptoGorilla', 'active', 0, 4.7, '@CryptoGorilla', NULL, '6HrZ_uQ-sBg'),
       ('mentor-vladify', '@itsvladify', 'vladify@bte.education', 'Memecoin Execution', 'A practical memecoin trading framework covering liquidity awareness, execution discipline, invalidation, and exits.', 5, 'Crypto, Memecoin', 1, '@itsvladify', 'active', 0, 4.7, '@itsvladify', NULL, NULL);
 
     UPDATE trading_strategies SET source_url = CASE trader_name
@@ -742,7 +742,7 @@ function initializeDatabase(db: SqliteDatabase) {
       WHEN 'JadeCap' THEN 'https://www.youtube.com/watch?v=Wqzz0sklMMA'
       WHEN '@TrencherMatt' THEN 'https://www.youtube.com/watch?v=3YRJ4Jblzvg'
       WHEN '@OrangieWEB3' THEN 'https://www.youtube.com/watch?v=dVxtJGybGfI'
-      WHEN '@CryptoGorilla' THEN 'https://www.youtube.com/watch?v=3YRJ4Jblzvg'
+      WHEN '@CryptoGorilla' THEN 'https://www.youtube.com/watch?v=6HrZ_uQ-sBg'
       WHEN '@itsvladify' THEN 'https://www.youtube.com/watch?v=85qG_F9X0w'
       ELSE source_url END
       WHERE trader_name IN ('Trader Mayne','Ariel','Chart Fanatics','The Traveling Trader','NBB Trader','Brando','JadeCap','@TrencherMatt','@OrangieWEB3','@CryptoGorilla','@itsvladify');
@@ -763,19 +763,19 @@ function initializeDatabase(db: SqliteDatabase) {
     INSERT OR IGNORE INTO trading_strategies (id, title, trader_name, category, markets, description, key_concepts, difficulty, source_url) VALUES
       ('strat-trencher-memecoin', 'Narrative + Liquidity Memecoin Playbook', '@TrencherMatt', 'Memecoin', 'Crypto', 'A risk-first framework for evaluating memecoin narratives, liquidity, holder concentration, and invalidation levels before entering a volatile token.', '["Narrative strength","Liquidity checks","Holder concentration","Entry invalidation","Position sizing","Exit planning"]', 'Advanced', 'https://www.youtube.com/watch?v=u3dvYR9JR6I'),
       ('strat-orangie-memecoin', 'On-Chain Memecoin Research', '@OrangieWEB3', 'Memecoin', 'Crypto', 'An educational on-chain research workflow for screening memecoins, checking liquidity and wallets, and separating actionable information from hype.', '["On-chain screening","Liquidity verification","Wallet behavior","Scam-risk checks","Catalyst mapping","Risk controls"]', 'Advanced', 'https://www.youtube.com/watch?v=dVxtJGybGfI'),
-      ('strat-cryptogorilla-memecoin', 'Memecoin Momentum & Risk', '@CryptoGorilla', 'Memecoin', 'Crypto', 'A momentum-focused memecoin playbook built around market structure, volume confirmation, disciplined entries, and predefined risk.', '["Momentum structure","Volume confirmation","Entry timing","Stop placement","Volatility awareness","Trade journaling"]', 'Advanced', 'https://www.youtube.com/watch?v=3YRJ4Jblzvg'),
+      ('strat-cryptogorilla-memecoin', 'Memecoin Momentum & Risk', '@CryptoGorilla', 'Memecoin', 'Crypto', 'A momentum-focused memecoin playbook built around market structure, volume confirmation, disciplined entries, and predefined risk.', '["Momentum structure","Volume confirmation","Entry timing","Stop placement","Volatility awareness","Trade journaling"]', 'Advanced', 'https://www.youtube.com/watch?v=6HrZ_uQ-sBg'),
       ('strat-vladify-memecoin', 'Memecoin Execution Playbook', '@itsvladify', 'Memecoin', 'Crypto', 'A practical framework for planning memecoin trades with liquidity awareness, execution discipline, and a clear plan for invalidation and exits.', '["Trade planning","Liquidity awareness","Execution discipline","Invalidation","Profit-taking","Capital preservation"]', 'Advanced', 'https://www.youtube.com/watch?v=85qG_F9X0w');
     UPDATE mentors SET youtube_video_id = CASE name
       WHEN '@TrencherMatt' THEN '3YRJ4Jblzvg'
       WHEN '@OrangieWEB3' THEN 'dVxtJGybGfI'
-      WHEN '@CryptoGorilla' THEN '3YRJ4Jblzvg'
+      WHEN '@CryptoGorilla' THEN '6HrZ_uQ-sBg'
       WHEN '@itsvladify' THEN '85qG_F9X0w'
       ELSE youtube_video_id END
       WHERE name IN ('@TrencherMatt','@OrangieWEB3','@CryptoGorilla','@itsvladify');
     UPDATE trading_strategies SET source_url = CASE trader_name
       WHEN '@TrencherMatt' THEN 'https://www.youtube.com/watch?v=3YRJ4Jblzvg'
       WHEN '@OrangieWEB3' THEN 'https://www.youtube.com/watch?v=dVxtJGybGfI'
-      WHEN '@CryptoGorilla' THEN 'https://www.youtube.com/watch?v=3YRJ4Jblzvg'
+      WHEN '@CryptoGorilla' THEN 'https://www.youtube.com/watch?v=6HrZ_uQ-sBg'
       WHEN '@itsvladify' THEN 'https://www.youtube.com/watch?v=85qG_F9X0w'
       ELSE source_url END
       WHERE trader_name IN ('@TrencherMatt','@OrangieWEB3','@CryptoGorilla','@itsvladify');
