@@ -20,7 +20,7 @@ const categories = ['All', 'Stocks', 'Options', 'Futures', 'Forex', 'Crypto', 'M
 const coverColors = ['cover-lilac', 'cover-plum', 'cover-sky', 'cover-rose', 'cover-lavender', 'cover-sand'];
 const featuredMentorVideos = [
   { name: '@TrencherMatt', specialty: 'Memecoin Research & Risk', videoId: '3YRJ4Jblzvg' },
-  { name: '@OrangieWEB3', specialty: 'On-Chain Memecoin Research', videoId: 'snLPN-KKHrg' },
+  { name: '@OrangieWEB3', specialty: 'On-Chain Memecoin Research', videoId: 'dVxtJGybGfI' },
   { name: '@CryptoGorilla', specialty: 'Memecoin Momentum & Risk', videoId: '6HrZ_uQ-sBg' },
   { name: '@itsvladify', specialty: 'Memecoin Execution', videoId: '85qG_F9X0w' },
 ];
